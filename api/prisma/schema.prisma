@@ -1,0 +1,168 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+enum Role {
+  Root
+  Operator
+  Agent
+}
+
+model User {
+  id         BigInt       @id @default(autoincrement()) @db.UnsignedBigInt
+  username   String       @db.VarChar(64)
+  password   String       @db.Char(64)
+  role       Role         @default(Root)
+  enabled    Boolean      @default(true)
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @updatedAt @map("updated_at")
+  deletedAt  DateTime?    @map("deleted_at")
+  advertiser Advertiser[]
+
+  @@index([username], name: "username")
+  @@index([enabled], name: "enabled")
+  @@map("users")
+}
+
+model Advertiser {
+  id          BigInt        @id @default(autoincrement()) @db.UnsignedBigInt
+  username    String        @db.VarChar(64)
+  password    String        @db.Char(32)
+  wallet      Wallet?
+  bill        Bill[]
+  companyName String?       @map("company_name")
+  taxNumber   String?       @map("tax_number")
+  address     String?
+  enabled     Boolean       @default(true)
+  cpmPrice    Int           @default(30000)
+  user        User          @relation(fields: [userId], references: [id])
+  userId      BigInt        @map("user_id")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+  deletedAt   DateTime?     @map("deleted_at")
+  AdMaterial  AdMaterial[]
+  AdPlacement AdPlacement[]
+
+  @@index([enabled], name: "enabled")
+  @@index([username], name: "username")
+  @@index([userId], name: "user_id")
+  @@map("agents")
+}
+
+// 钱包
+model Wallet {
+  id           BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  balance      Int        @default(0)
+  advertiserId BigInt     @unique @map("advertiser_id")
+  advertiser   Advertiser @relation(fields: [advertiserId], references: [id])
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  deletedAt    DateTime?  @map("deleted_at")
+
+  @@index([advertiserId], name: "advertiser_id")
+  @@map("wallets")
+}
+
+// 钱包账单
+model Bill {
+  id           BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  amount       Int        @default(0)
+  advertiser   Advertiser @relation(fields: [advertiserId], references: [id])
+  advertiserId BigInt     @db.UnsignedBigInt
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  deletedAt    DateTime?  @map("deleted_at")
+
+  @@index([advertiserId], name: "advertiser_id")
+  @@map("bills")
+}
+
+// 广告素材
+model AdMaterial {
+  id           BigInt        @id @default(autoincrement()) @db.UnsignedBigInt
+  name         String
+  // 媒体类型 1网站 2pc软件
+  mediaType    Int
+  // 类型 1:图片 2:视频 3:文字
+  contentType  Int           @default(1)
+  // 广告位置 1.列表页 2.详情页 3.侧边栏 4.全屏弹窗(仅 pc 有)
+  position     Int           @default(1)
+  // 广告内容
+  content      String
+  // 广告链接
+  url          String?       @default("#")
+  enabled      Boolean       @default(true)
+  // 广告主id
+  advertiserId BigInt        @map("advertiser_id")
+  advertiser   Advertiser    @relation(fields: [advertiserId], references: [id])
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  deletedAt    DateTime?     @map("deleted_at")
+  AdPlacement  AdPlacement[]
+
+  @@index([position], name: "position")
+  @@index([enabled], name: "enabled")
+  @@index([contentType], name: "content_type")
+  @@index([advertiserId], name: "advertiser_id")
+  @@map("ad_materials")
+}
+
+// 投放媒体管理表
+model AdMedia {
+  id        BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name      String
+  enabled   Boolean   @default(true)
+  // 类型 1 网站 2pc 软件
+  type      Int       @default(1)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([enabled], name: "enabled")
+  @@index([type], name: "type")
+  @@map("ad_medias")
+}
+
+// 广告投放计划表
+model AdPlacement {
+  id           BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  name         String
+  enabled      Boolean    @default(true)
+  // 广告素材
+  adMaterialId BigInt     @map("ad_material_id")
+  adMaterial   AdMaterial @relation(fields: [adMaterialId], references: [id])
+  // 预算金额上限
+  budget       BigInt     @default(0) @db.UnsignedBigInt
+  // 媒体类型
+  mediaType    Int        @default(1)
+  // 开始日期
+  startedAt    DateTime   @default(now()) @map("started_at")
+  // 结束日期
+  endedAt      DateTime?  @default(now()) @map("ended_at")
+  // 已消耗预算
+  usedBudget   BigInt     @default(0) @map("used_budget") @db.UnsignedBigInt
+  // 展现次数
+  displayCount BigInt     @default(0) @map("display_count") @db.UnsignedBigInt
+  advertiserId BigInt     @map("advertiser_id")
+  advertiser   Advertiser @relation(fields: [advertiserId], references: [id])
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  deletedAt    DateTime?  @map("deleted_at")
+
+  @@index([adMaterialId], name: "ad_material_id")
+  @@index([enabled], name: "enabled")
+  @@index([mediaType], name: "media_type")
+  @@index([startedAt], name: "started_at")
+  @@index([endedAt], name: "ended_at")
+  @@index([advertiserId], name: "advertiser_id")
+  @@map("ad_placements")
+}

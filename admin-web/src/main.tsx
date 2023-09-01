@@ -1,0 +1,120 @@
+import React, {lazy, Suspense} from 'react'
+import ReactDOM from 'react-dom/client'
+import utc from 'dayjs/plugin/utc';
+import '@unocss/reset/normalize.css'
+import '@unocss/reset/sanitize/sanitize.css'
+import 'virtual:uno.css'
+import App from '@/App.tsx'
+import '@/index.css'
+import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import AdminLayout from "@/layouts/admin";
+import dayjs from "dayjs";
+
+import {RecoilRoot} from "recoil";
+import {UserIndexPageProps} from "@/pages/user";
+
+dayjs.extend(utc);
+const HelpIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/help"));
+const UserIndexPage: React.LazyExoticComponent<React.FC<UserIndexPageProps>> = lazy(() => import("@/pages/user"));
+const VideoIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/video"));
+const FeaturedCardIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/featured-card"));
+const TagIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/tag"));
+const PopularIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/popular"));
+const LoginPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/login"));
+const DashboardPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/dashboard"));
+const PaymentSettingPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/setting/payment"));
+const SystemSettingPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/setting/system"));
+const PromotionSettingPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/setting/promotion"));
+const PaymentChannelIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/payment-channel"));
+const PlacementChannelIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/placement-channel"));
+const AgentIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/agent"));
+const RechargeOrderIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/recharge-order"))
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <App/>,
+        children: [
+            {
+                path: "login",
+                element: <LoginPage/>,
+            },
+            {
+                path: "admin",
+                element: <AdminLayout/>,
+                children: [
+                    {
+                        path: "dashboard",
+                        element: <Suspense> <DashboardPage/></Suspense>,
+                    },
+                    {
+                        path: "content/populars",
+                        element: <Suspense><PopularIndexPage/></Suspense>,
+                    },
+                    {
+                        path: "content/tags",
+                        element: <Suspense><TagIndexPage/></Suspense>,
+                    },
+                    {
+                        path: "content/featured-cards",
+                        element: <Suspense><FeaturedCardIndexPage/></Suspense>,
+                    },
+                    {
+                        path: "content/videos",
+                        element: <Suspense><VideoIndexPage/></Suspense>,
+                    },
+                    {
+                        path: 'user/creators',
+                        element: <Suspense><UserIndexPage role="CREATOR" roleName="创作者"/></Suspense>,
+                    },
+                    {
+                        path: 'user/operators',
+                        element: <Suspense><UserIndexPage role="OPERATOR" roleName="运营者"/></Suspense>,
+                    },
+                    {
+                        path: 'user/supers',
+                        element: <Suspense><UserIndexPage role="SUPER" roleName="超级管理员"/></Suspense>,
+                    },
+                    {
+                        path: 'content/helps',
+                        element: <Suspense><HelpIndexPage/></Suspense>
+                    },
+                    {
+                        path: 'setting/system',
+                        element: <Suspense><SystemSettingPage/></Suspense>
+                    },
+                    {
+                        path: 'setting/payment',
+                        element: <Suspense><PaymentSettingPage/></Suspense>
+                    },
+                    {
+                        path: 'setting/promotion',
+                        element: <Suspense><PromotionSettingPage/></Suspense>
+                    },
+                    {
+                        path: "payment/channels",
+                        element: <Suspense><PaymentChannelIndexPage/></Suspense>,
+                    },
+                    {
+                        path: 'placement/channels',
+                        element: <Suspense><PlacementChannelIndexPage/></Suspense>
+                    },
+                    {
+                        path: 'placement/agents',
+                        element: <Suspense><AgentIndexPage/></Suspense>
+                    },
+                    {
+                        path: "order/recharge-orders",
+                        element: <Suspense><RechargeOrderIndexPage/></Suspense>
+                    }
+                ]
+            }
+        ],
+    }
+])
+ReactDOM.createRoot(document.getElementById('root')!).render(
+    <React.StrictMode>
+        <RecoilRoot>
+            <RouterProvider router={router}/>
+        </RecoilRoot>
+    </React.StrictMode>,
+)
