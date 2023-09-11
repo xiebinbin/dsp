@@ -1,17 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class LoginDto {
-  @IsNotEmpty()
-  username: string;
-  @IsNotEmpty()
-  password: string;
-  @IsNotEmpty()
-  inputCode: string;
-  @IsNotEmpty()
-  codeid: string;
-}
-
-export class UserUpdateDto {
+export class UserDto {
   @IsNotEmpty()
   id: bigint;
   @IsNotEmpty()
@@ -24,9 +13,4 @@ export class UserUpdateDto {
   updatedAt: string;
   @IsNotEmpty()
   enabled: boolean;
-}
-export enum Role {
-  Root,
-  Agent,
-  Operator,
 }

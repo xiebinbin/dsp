@@ -26,7 +26,12 @@ export class AuthMiddleware implements NestMiddleware {
       | string
       | undefined
       | null;
-    if (!authorization && req.path != '/api/admin/auth/login') {
+    if (
+      !authorization &&
+      req.path != '/api/admin/auth/login' &&
+      req.path != '/api/admin/auth/getcode' &&
+      req.path != '/api/admin/users/list'
+    ) {
       res.status(400).json({
         code: 400,
         message: '请先登录',

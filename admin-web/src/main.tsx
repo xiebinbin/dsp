@@ -64,15 +64,15 @@ const router = createBrowserRouter([
                     },
                     {
                         path: 'user/creators',
-                        element: <Suspense><UserIndexPage role="CREATOR" roleName="创作者"/></Suspense>,
+                        element: <Suspense><UserIndexPage role="Agent" roleName="创作者"/></Suspense>,
                     },
                     {
                         path: 'user/operators',
-                        element: <Suspense><UserIndexPage role="OPERATOR" roleName="运营者"/></Suspense>,
+                        element: <Suspense><UserIndexPage role="Operator" roleName="运营者"/></Suspense>,
                     },
                     {
                         path: 'user/supers',
-                        element: <Suspense><UserIndexPage role="SUPER" roleName="超级管理员"/></Suspense>,
+                        element: <Suspense><UserIndexPage role="Root" roleName="超级管理员"/></Suspense>,
                     },
                     {
                         path: 'content/helps',

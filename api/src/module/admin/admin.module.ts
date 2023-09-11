@@ -5,15 +5,29 @@ import { UserService } from './services/user.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../services/prisma.service';
 import { AuthMiddleware } from './middlewares/auth.middleware';
+import { CodeService } from './services/code.service';
+import { RedisCacheService } from '../cache/services/redis-cache.service';
 
+import { CacheModule } from '@nestjs/cache-manager';
+import { UserController } from './controllers/user.controller';
+import { PrismaClient } from '@prisma/client';
 @Module({
   imports: [
     ConfigModule.forRoot({
       cache: true,
     }),
+    CacheModule.register(),
   ],
-  controllers: [AuthController],
-  providers: [AuthService, UserService, ConfigService, PrismaService],
+  controllers: [AuthController, UserController],
+  providers: [
+    AuthService,
+    UserService,
+    ConfigService,
+    PrismaService,
+    CodeService,
+    RedisCacheService,
+    PrismaClient,
+  ],
 })
 export class AdminModule {
   configure(consumer: MiddlewareConsumer) {

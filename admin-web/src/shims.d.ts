@@ -10,23 +10,44 @@ declare global {
         Message: MessageInstance
     }
 }
-
 interface AuthUser {
+    username: string,
+    role: string,
+}
+interface SuperUser {
+    id: bigint;
+    nickname: string;
     username: string;
+    password: string;
     role: string;
+    updatedAt: string;
+    enabled: boolean;
 }
 
+interface Operator {
+    id: bigint;
+    nickname: string;
+    username: string;
+    password: string;
+    role: string;
+    updatedAt: string;
+    enabled: boolean;
+}
 interface User {
     id: bigint;
     name: string;
     address: string;
-    role: "SUPER" | "CREATOR" | "OPERATOR";
+    role: "Root" | "Operator" | "Agent";
     remark: string;
     enabled: boolean;
     videoNumber: number;
     createdAt: string;
     updatedAt: string;
     avatar: string | null;
+}
+interface RootInfo{
+    name: string;
+
 }
 
 interface Tag {

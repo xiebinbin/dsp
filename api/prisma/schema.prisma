@@ -21,6 +21,7 @@ model User {
   id         BigInt       @id @default(autoincrement()) @db.UnsignedBigInt
   username   String       @db.VarChar(64)
   password   String       @db.Char(64)
+  nickname   String       @db.VarChar(64)  @default("default")
   role       Role         @default(Root)
   enabled    Boolean      @default(true)
   createdAt  DateTime     @default(now()) @map("created_at")

@@ -19,6 +19,25 @@ const GetRouter = (): Route => {
                 icon: <DashboardOutlined/>
             },
             {
+                name: '用户管理',
+                path: '/admin/user',
+                icon: <UserOutlined/>,
+                routes: [
+                    {
+                        name: '超级管理员',
+                        path: '/admin/user/supers',
+                    },
+                    {
+                        name: '运营',
+                        path: '/admin/user/operators',
+                    },
+                    {
+                        name: '创作者',
+                        path: '/admin/user/creators',
+                    }
+                ]
+            },
+            {
                 path: '/admin/content',
                 name: '内容管理',
                 icon: <div className="i-ri-sticky-note-line text-1rem"/>,
@@ -98,25 +117,7 @@ const GetRouter = (): Route => {
                     // },
                 ],
             },
-            {
-                name: '用户管理',
-                path: '/admin/user',
-                icon: <UserOutlined/>,
-                routes: [
-                    {
-                        name: '超级管理员',
-                        path: '/admin/user/supers',
-                    },
-                    {
-                        name: '运营',
-                        path: '/admin/user/operators',
-                    },
-                    {
-                        name: '创作者',
-                        path: '/admin/user/creators',
-                    }
-                ]
-            },
+           
             {
                 name: '设置',
                 path: '/admin/setting',

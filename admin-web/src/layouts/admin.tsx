@@ -7,17 +7,30 @@ import setting from "@/layouts/setting.ts";
 import GetRouter from "@/routers";
 import {useRecoilState} from "recoil";
 import {AuthInfo} from "@/stores/auth-info.ts";
-import {LogoutOutlined} from "@ant-design/icons";
+import {LockTwoTone, LogoutOutlined} from "@ant-design/icons";
 import localforage from "localforage";
+import ChangepwdComp from './changepwdComp';
 
 const AdminLayout = () => {
     const [settings, setSetting] = useState<Partial<ProSettings>>(setting);
     const outlet = useOutlet();
     const navigate = useNavigate();
-
+    const [changepwdVisible, setChangepwdVisible] = useState(false);
     const [authUser,] = useRecoilState(AuthInfo)
     console.log(authUser,'authUser');
     const [pathname, setPathname] = useState('/admin/dashboard');
+ 
+
+    const showChangepwdModal = () => {
+        setChangepwdVisible(true);
+      };
+    
+      const handleChangepwdCancel = () => {
+        setChangepwdVisible(false);
+      };
+    
+    
+      
     if (typeof document === 'undefined') {
         return <div/>;
     }
@@ -65,14 +78,25 @@ const AdminLayout = () => {
                                                 key: 'logout',
                                                 icon: <LogoutOutlined />,
                                                 label: '退出登录',
+                                            },{
+                                                
+                                                onClick:showChangepwdModal,
+                                                key: 'changepwd',
+                                                icon: <LockTwoTone />,
+                                                label: '修改密码',
                                             },
                                         ],
+                                    
                                     }}
                                 >
                                     <Button size="small" type="primary">{authUser.username}({authUser.role})</Button>
                                 </Dropdown>
+                               
                             </div>),
-                        }}
+                        }
+                    
+                    }
+                      
                         headerTitleRender={(logo, title, _) => {
                             const defaultDom = (
                                 <a>
@@ -122,6 +146,8 @@ const AdminLayout = () => {
                             disableUrlParams={false}
                         />
                     </ProLayout>
+                    <ChangepwdComp visible={changepwdVisible} onCancel={handleChangepwdCancel} />
+
                 </ConfigProvider>
             </ProConfigProvider>
         </div>

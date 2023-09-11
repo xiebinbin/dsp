@@ -3,22 +3,22 @@ import {
     ProForm,
     ProFormInstance,
     ProFormRadio,
+    ProFormSelect,
     ProFormText,
-    ProFormTextArea,
+    // ProFormTextArea,
 } from '@ant-design/pro-components';
-import {Avatar, message, Upload, UploadFile} from 'antd';
-import ImgCrop from 'antd-img-crop';
+import {message} from 'antd';
 import {useMount, useSafeState, useUnmount} from "ahooks";
 import Emittery from 'emittery';
-import {useCallback, useRef} from "react";
+import { useCallback, useRef, useState} from "react";
 import UserApi, {UserEditDto} from "@/api/user.ts";
-import {RcFile} from "antd/es/upload";
-import {CloudUploadOutlined} from "@ant-design/icons";
-import {upload} from "@/utils/form-tool.ts";
+// import {RcFile} from "antd/es/upload";
+// import {CloudUploadOutlined} from "@ant-design/icons";
+// import {upload} from "@/utils/form-tool.ts";
 // eslint-disable-next-line react-refresh/only-export-components
 export const $emit = new Emittery();
 const EditForm = (props: {
-    role: 'CREATOR' | 'SUPER' | 'OPERATOR';
+    role: 'Root' | 'Operator' | 'Agent';
     roleName: string;
 }) => {
     const {role, roleName} = props;
@@ -26,42 +26,52 @@ const EditForm = (props: {
     const [mode, setMode] = useSafeState('add');
     const [id, setId] = useSafeState<bigint>(BigInt(0));
     const formRef = useRef<ProFormInstance>();
-    const [fileList, setFileList] = useSafeState<UploadFile[]>([]);
-    const [avatar, setAvatar] = useSafeState('');
-    const customRequest = useCallback(async (file: RcFile) => {
-        setFileList([{
-            uid: file.uid,
-            name: file.name,
-            originFileObj: file,
-            status: "uploading",
-        }])
-        try {
-            const res = await upload(file);
-            const uploadFile: UploadFile = {
-                uid: file.uid,
-                name: res.key,
-                url: res.url,
-                thumbUrl: res.url,
-                status: "success",
-            }
-            setFileList([uploadFile]);
-            setAvatar(res.key);
-        }catch (e) {
-            setFileList([]);
-            setAvatar('');
-            message.error('上传失败');
-        }
-    }, [setAvatar, setFileList]);
+    const [nickname, setNickname] = useSafeState('');
+    const [username, setUsername] = useSafeState('');
+    const [password, setPassword] = useSafeState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
+    const [enabled, setEnabled] = useSafeState(true);
+ 
+    
+    // const [fileList, setFileList] = useSafeState<UploadFile[]>([]);
+    // const [avatar, setAvatar] = useSafeState('');
+    // const customRequest = useCallback(async (file: RcFile) => {
+    //     setFileList([{
+    //         uid: file.uid,
+    //         name: file.name,
+    //         originFileObj: file,
+    //         status: "uploading",
+    //     }])
+    //     try {
+    //         const res = await upload(file);
+    //         const uploadFile: UploadFile = {
+    //             uid: file.uid,
+    //             name: res.key,
+    //             url: res.url,
+    //             thumbUrl: res.url,
+    //             status: "success",
+    //         }
+    //         setFileList([uploadFile]);
+    //         setAvatar(res.key);
+    //     }catch (e) {
+    //         setFileList([]);
+    //         setAvatar('');
+    //         message.error('上传失败');
+    //     }
+    // }, [setAvatar, setFileList]);
     useMount(() => {
         $emit.on('add', () => {
             setMode('add');
             formRef.current?.resetFields();
-            setId(BigInt(0));
+            setUsername('')
+            // setId(BigInt(0));
             setShow(true);
         });
         $emit.on('update', (val: bigint) => {
             setMode('update');
             setId(val);
+          
             loadInfo(val).then(() => {
                 setShow(true);
             }).catch(() => {
@@ -71,35 +81,78 @@ const EditForm = (props: {
     });
     useUnmount(() => {
         $emit.clearListeners();
-    });
 
+    });
+    // formRef.current?.resetFields();
     const loadInfo = useCallback(async (val: bigint) => {
         const user = await UserApi.getInfo(val);
+        console.log('edit user',user)
+    
         setTimeout(() => {
+
             formRef.current?.setFieldsValue({
-                name: user.name,
-                remark: user.remark,
-                address: user.address,
+                nickname: user.nickname,
+                username: user.username,
+                password: user.password,
+                confirmPassword:  user.password,
                 enabled: user.enabled,
             });
-            setAvatar(user.avatar ?? "");
-        }, 1000);
-    }, [setAvatar]);
+            // setNickname(user.nickname?? "")
+            // setUsername(user.username?? "")
+            // setEnabled(user.enabled?? "")
+        }, 500);
+    }, [setNickname,setUsername,setEnabled,setPassword,setConfirmPassword]);
     const create = useCallback(async (data: UserEditDto) => {
-        data.role = role;
-        const tag = await UserApi.create(data);
-        message.success('新建成功');
-        formRef.current?.resetFields();
-        $emit.emit('update', tag.id);
-        $emit.emit('reload');
-        setShow(false);
-    }, [role, setShow]);
+        console.log('create data',data)
+        try {
+            const res = await UserApi.create(data);
+            if (!res) {
+              window.Message.error('新建失败，请重试');
+            } else {
+              window.Message.success('修改成功');
+              formRef.current?.resetFields();
+            //   $emit.emit('update', res.id);
+              $emit.emit('reload');
+              setShow(false);
+            }
+          } catch (error) {
+            console.log(error);
+            console.error('发生错误', error);
+          }
+        // const tag = await UserApi.create(data).then (async (res) => {
+        //     if(!res)
+        //     {
+             
+        //         window.Message.error('新建失败，请重试');
+              
+    
+        //     }
+        //     else{
+        //         window.Message.success('修改成功');
+        //     }
+        //   })
+        // console.log("create finish",tag)
+        // // formRef.current?.resetFields();
+        // // $emit.emit('update', tag.id);
+        // $emit.emit('reload');
+        // setShow(false);
+    }, [setShow,setNickname,setUsername,setEnabled,setPassword,setConfirmPassword]);
     const update = useCallback(async (vId: bigint, data: UserEditDto) => {
+       
+
+        // console.log('password',data.password,
+        // 'confirmPassword',data.confirmPassword,
+        // " data.role", data.role)
+        if(data.password!=data.confirmPassword)
+        {
+            message.error('两次密码不一致');
+            return ;
+        }
         await UserApi.update(vId, data);
         message.success('更新成功');
         $emit.emit('reload');
         setShow(false);
-    }, [setShow]);
+    }, [setShow,setNickname,setUsername,setEnabled,setPassword,setConfirmPassword]);
     return (
         <ModalForm
             formRef={formRef}
@@ -108,11 +161,14 @@ const EditForm = (props: {
             onFinish={async () => {
                 if (formRef.current) {
                     const data = await formRef.current.validateFields();
-                    data.avatar = avatar;
+                    // data.avatar = avatar;
+                    console.log('validateFields data',data)
                     if (mode === 'add') {
                         await create(data);
                     }
                     if (mode === 'update') {
+                        console.log('update data',data)
+
                         await update(id, data);
                     }
                 }
@@ -123,59 +179,62 @@ const EditForm = (props: {
             <ProForm.Group>
                 <ProFormText
                     required
-                    rules={[{required: true, message: '请输入名称'}]}
+                    rules={[{required: true, message: '请输入名昵称'}]}
                     initialValue={""}
                     width="xl"
-                    name="name"
-                    label="名称"
-                    placeholder="请输入名称"
+                    name="nickname"
+                    label="昵称"
+                    placeholder="请输入名昵称"
                 />
-            </ProForm.Group>
-            <ProForm.Group>
-                <ProForm.Item label="头像">
-                    <ImgCrop rotationSlider>
-                        <Upload
-                            name="avatar"
-                            accept="image/*"
-                            maxCount={1}
-                            showUploadList={false}
-                            onChange={(info) => {
-                                setFileList(info.fileList);
-                            }}
-                            onRemove={() => {
-                                setFileList([]);
-                                setAvatar('');
-                            }}
-                            fileList={fileList}
-                            customRequest={({file}) => customRequest(file as RcFile)}
-                        >
-                            <div className="cursor-pointer">
-                                {avatar != "" ?
-                                    <Avatar src={'https://file.acg.fans/' + avatar} size={64}/> :
-                                    <Avatar size={64} icon={<CloudUploadOutlined/>}/>
-                                }
-                            </div>
-                        </Upload>
-                    </ImgCrop>
-                </ProForm.Item>
-
             </ProForm.Group>
             <ProForm.Group>
                 <ProFormText
-                    required
-                    rules={[{required: true, message: '请输入地址'}, {
-                        pattern: /^0x[a-fA-F0-9]{40}$/,
-                        message: '请输入正确的地址'
+                    required 
+                    disabled={mode != 'add'} // Conditionally disable based on 'mode'
+                    rules={[{required: true, message: '请输入用户名'}, {
+                        // pattern: /^0x[a-fA-F0-9]{40}$/,
+                        // message: '请输入正确的地址'
                     }]}
                     initialValue={""}
                     width="xl"
-                    name="address"
-                    transform={(v) => v.toLowerCase()}
-                    label="地址"
-                    placeholder="请输入地址"
+                    name="username"
+                    label="用户名"
+                    placeholder="请输入用户名"
                 />
             </ProForm.Group>
+            <ProForm.Group>
+                <ProFormText.Password
+                    rules={[{required: mode == "add", message: '请输入登录密码'}]}
+                    initialValue={""}
+                    width="xl"
+                    name="password"
+                    label="登录密码"
+                    placeholder="请输入登录密码"
+                />
+            </ProForm.Group>
+            <ProForm.Group >
+                <ProFormText.Password
+                    rules={[{required: mode == "add", message: '再次输入登录密码'}]}
+                    initialValue={""}
+                    width="xl"
+                    name="confirmPassword"
+                    label="确认登录密码"
+                    placeholder="再次输入登录密码"
 
+                />  
+            </ProForm.Group>
+            <ProForm.Group>
+                <ProFormSelect
+                    name="role"
+                    label="角色"
+                    initialValue="Root" // Set the initial selected value if needed
+                    valueEnum={{
+                        Root: 'Root',
+                        Agent: 'Agent',
+                        Operator: 'Operator',
+                    }}
+                />
+            </ProForm.Group>
             <ProForm.Group>
                 <ProFormRadio.Group
                     name="enabled"
@@ -192,26 +251,6 @@ const EditForm = (props: {
                             value: false
                         },
                     ]}
-                />
-            </ProForm.Group>
-            <ProForm.Group>
-                <ProFormText
-                    required={mode == "add"}
-                    rules={[{required: mode == "add", message: '请输入登录口令'}]}
-                    initialValue={""}
-                    width="xl"
-                    name="password"
-                    label="登录口令"
-                    placeholder="请输入登录口令"
-                />
-            </ProForm.Group>
-            <ProForm.Group>
-                <ProFormTextArea
-                    initialValue={""}
-                    width="xl"
-                    name="remark"
-                    label="备注"
-                    placeholder="请输入备注"
                 />
             </ProForm.Group>
         </ModalForm>
