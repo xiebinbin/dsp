@@ -3,7 +3,6 @@ import {
     ProForm,
     ProFormInstance,
     ProFormRadio,
-    ProFormSelect,
     ProFormText,
     // ProFormTextArea,
 } from '@ant-design/pro-components';
