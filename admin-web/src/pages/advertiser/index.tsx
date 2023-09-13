@@ -16,9 +16,10 @@ import AdvAPI from "@/api/advertiser.ts";
 import { useMount, useUnmount } from "ahooks";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
-import RechargeForm,{$rechargeemit} from "./recharge-form.tsx";
-import RechargeHist,{$histemit} from "./recharge-hist.tsx";
+import RechargeForm, { $rechargeemit } from "./recharge-form.tsx";
+import RechargeHist, { $histemit } from "./recharge-hist.tsx";
 
+import AdvertiserDetail, { $detailemit } from "./advertiser-detail.tsx";
 
 const maps = new Map<
   string | number | boolean,
@@ -121,7 +122,10 @@ const advcolumns: ProColumns<Advertiser>[] = [
       <a
         key="record"
         onClick={() => {
-          $histemit.emit("record", { val: record.id, companyName: record.companyName });
+          $histemit.emit("record", {
+            val: record.id,
+            companyName: record.companyName,
+          });
         }}
       >
         充值记录
@@ -165,6 +169,77 @@ const advcolumns: ProColumns<Advertiser>[] = [
     ],
   },
 ];
+const agentcolumns: ProColumns<Advertiser>[] = [
+  {
+    title: "公司名",
+    key: "companyName",
+    dataIndex: "companyName",
+    ellipsis: true,
+    sorter: true,
+    valueType: "text",
+    width: 100,
+    hideInSearch: true,
+  },
+
+  {
+    title: "账号",
+    key: "username",
+    dataIndex: "username",
+    ellipsis: true,
+    valueType: "text",
+    width: 100,
+    formItemProps: {
+      name: "q",
+    },
+  },
+  {
+    title: "更新时间",
+    key: "updatedAt",
+    width: 100,
+    dataIndex: "updatedAt",
+    valueType: "dateTime",
+    sorter: true,
+    hideInSearch: true,
+  },
+  {
+    title: "状态",
+    key: "enabled",
+    dataIndex: "enabled",
+    ellipsis: true,
+    valueType: "text",
+    width: 100,
+    hideInSearch: true,
+    valueEnum: maps,
+  },
+  {
+    title: "操作",
+    valueType: "option",
+    width: 100,
+    fixed: "right",
+    key: "option",
+    render: (_text, record) => [
+      <a
+        key="detail"
+        onClick={() => {
+          console.log(
+            record.id,
+            record.companyName,
+            record.cpmPrice,
+            record.taxNumber
+          );
+          $detailemit.emit("detail", {
+            val: record.id,
+            companyName: record.companyName,
+            cpmPrice: record.cpmPrice,
+            taxNumber: record.taxNumber,
+          });
+        }}
+      >
+        查看
+      </a>,
+    ],
+  },
+];
 export interface AdvIndexPageProps {
   role: "Root" | "Agent";
   roleName: string;
@@ -180,16 +255,16 @@ const AdvertiserIndexPage = (props: AdvIndexPageProps) => {
       reload();
     });
     $rechargeemit.on("reload", () => {
-        reload();
-      });
+      reload();
+    });
   });
   useUnmount(() => {
     $emit.off("reload", () => {
       reload();
     });
     $rechargeemit.off("reload", () => {
-        reload();
-      });
+      reload();
+    });
   });
   const location = useLocation();
   useEffect(() => {
@@ -227,7 +302,7 @@ const AdvertiserIndexPage = (props: AdvIndexPageProps) => {
               // if (params?.address) {
               //     extra.address = params.address;
               // }
-             
+
               const result = await AdvAPI.getList({
                 page: params.current ?? 1,
                 limit: params.pageSize ?? 10,
@@ -277,9 +352,79 @@ const AdvertiserIndexPage = (props: AdvIndexPageProps) => {
           />
           <EditForm {...props} />
           <RechargeForm {...props} />
-            <RechargeHist {...props}/>
+          <RechargeHist {...props} />
         </div>
       );
+    } else if (role == "Agent") {
+      return (
+        <div>
+          <ProTable<Advertiser>
+            scroll={{ x: "100%" }}
+            columns={agentcolumns}
+            actionRef={actionRef}
+            cardBordered
+            request={async (params = {}, sort, filters) => {
+              const orderBy: { [key: string]: "asc" | "desc" } = {};
+              for (const sortKey in sort) {
+                console.log("sortKey", sortKey);
+                const field = sortKey.replace(
+                  /_(\w)/g,
+                  function (_all, letter) {
+                    return letter.toUpperCase();
+                  }
+                );
+                console.log("field", field);
+                orderBy[field] = sort[sortKey] === "ascend" ? "asc" : "desc";
+                console.log(" orderBy[field] ", orderBy[field]);
+              }
+              const extra: Record<string, boolean | number | string> = {
+                role,
+              };
+              // if (typeof params.enabled === 'boolean') {
+              //     extra.enabled = params.enabled;
+              // }
+              // if (params?.address) {
+              //     extra.address = params.address;
+              // }
+
+              const result = await AdvAPI.getList({
+                page: params.current ?? 1,
+                limit: params.pageSize ?? 10,
+                q: params.q ?? "",
+                filters,
+                orderBy,
+                extra,
+              });
+              const data = result.data.map((item) => {
+                return {
+                  ...item,
+                };
+              });
+              return {
+                ...result,
+                data: data, // 更新 data 字段为处理后的数据
+                success: true,
+              };
+            }}
+            rowKey="username"
+            search={{
+              labelWidth: "auto",
+            }}
+            options={{
+              setting: {
+                listsHeight: 400,
+              },
+            }}
+            pagination={{
+              pageSize: 10,
+            }}
+            dateFormatter="string"
+          />
+          <AdvertiserDetail {...props} />
+        </div>
+      );
+    } else {
+      return <div>None</div>;
     }
   };
   return (

@@ -65,8 +65,12 @@ const router = createBrowserRouter([
                         element: <Suspense><VideoIndexPage/></Suspense>,
                     },
                     {
-                        path: 'advertiser/advertiser',
-                        element: <Suspense><AdvertiserIndexPage role="Root" roleName="广告主"/></Suspense>,
+                        path: 'advertiser/root',
+                        element: <Suspense><AdvertiserIndexPage role="Root" roleName="管理员广告主"/></Suspense>,
+                    },
+                    {
+                        path: 'advertiser/agent',
+                        element: <Suspense><AdvertiserIndexPage role="Agent" roleName="管理员广告主"/></Suspense>,
                     },
                     {
                         path: 'user/creators',

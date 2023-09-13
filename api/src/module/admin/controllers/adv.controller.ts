@@ -29,6 +29,7 @@ export class AdvController {
   @Post('list')
   @UseInterceptors(ApiResInterceptor)
   async getList(@Req() req: Request, @Body() queryParams: any) {
+    console.log('queryParams', queryParams);
     console.log('req', req.user);
     const { page, limit, q, filters, orderBy, extra } = queryParams;
     try {
@@ -39,6 +40,7 @@ export class AdvController {
         // nickname: queryParams.nickname || '',
         username: queryParams.q || '',
         role: queryParams.extra.role,
+        userId: req.user.id,
         // choserole: queryParams.extra.choserole,
         // role: queryParams.role || '',
         // updatedAt: queryParams.updatedAt || '',

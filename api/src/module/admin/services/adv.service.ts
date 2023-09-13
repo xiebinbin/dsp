@@ -51,8 +51,24 @@ export class AdvService {
     return Advinfo;
   }
   async getList(queryParams: any) {
-    const { page, limit, username, orderBy, role } = queryParams;
-    const selectFields = {
+    type MyType = {
+      id: boolean;
+      companyName: boolean;
+      username: boolean;
+      taxNumber: boolean;
+      cpmPrice: boolean;
+      createdAt: boolean;
+      enabled: boolean;
+      updatedAt?: boolean;
+      userId?: boolean;
+      wallet?: {
+        select: {
+          balance: boolean;
+        };
+      };
+    };
+    const { page, limit, username, orderBy, role, userId } = queryParams;
+    let selectFields: MyType = {
       id: true,
       companyName: true,
       username: true,
@@ -61,40 +77,131 @@ export class AdvService {
       createdAt: true,
       updatedAt: true,
       enabled: true,
-      userId: true,
-      wallet: {
-        select: {
-          balance: true,
-        },
-      },
     };
     const where: any = {};
+
+    if (role === 'Root') {
+      selectFields = {
+        ...selectFields,
+        userId: true,
+        wallet: {
+          select: {
+            balance: true,
+          },
+        },
+      };
+    }
 
     if (username) {
       where.username = username;
     }
+
+    if (role === 'Agent') {
+      where.userId = userId;
+    }
+
     const total = await this.prisma.advertiser.count({ where });
 
-    const advertiser = await this.prisma.advertiser.findMany({
+    const advertisers = await this.prisma.advertiser.findMany({
       where,
       select: selectFields,
-
       skip: (page - 1) * limit,
       take: limit,
       orderBy: orderBy,
     });
 
-    const advertiserWithNumberID = advertiser.map((advertiser) => ({
+    const advertisersWithNumberID = advertisers.map((advertiser) => ({
       ...advertiser,
       id: Number(advertiser.id),
-      userId: Number(advertiser.userId),
+      userId: role === 'Root' ? Number(advertiser.userId) : undefined,
     }));
 
     return {
-      data: advertiserWithNumberID,
+      data: advertisersWithNumberID,
       total,
     };
   }
+
+  // async getList(queryParams: any) {
+  //   const { page, limit, username, orderBy, role, userId } = queryParams;
+
+  //   if (role == 'Root') {
+  //     const selectFields = {
+  //       id: true,
+  //       companyName: true,
+  //       username: true,
+  //       taxNumber: true,
+  //       cpmPrice: true,
+  //       createdAt: true,
+  //       updatedAt: true,
+  //       enabled: true,
+  //       userId: true,
+  //       wallet: {
+  //         select: {
+  //           balance: true,
+  //         },
+  //       },
+  //     };
+  //     const where: any = {};
+
+  //     if (username) {
+  //       where.username = username;
+  //     }
+  //     const total = await this.prisma.advertiser.count({ where });
+
+  //     const advertiser = await this.prisma.advertiser.findMany({
+  //       where,
+  //       select: selectFields,
+
+  //       skip: (page - 1) * limit,
+  //       take: limit,
+  //       orderBy: orderBy,
+  //     });
+
+  //     const advertiserWithNumberID = advertiser.map((advertiser) => ({
+  //       ...advertiser,
+  //       id: Number(advertiser.id),
+  //       userId: Number(advertiser.userId),
+  //     }));
+  //   } else if (role == 'Agent') {
+  //     const selectFields = {
+  //       id: true,
+  //       companyName: true,
+  //       username: true,
+  //       taxNumber: true,
+  //       cpmPrice: true,
+  //       createdAt: true,
+  //       enabled: true,
+  //     };
+  //     const where: any = {};
+
+  //     if (username) {
+  //       where.username = username;
+  //     }
+  //     where.userId = userId;
+  //     const total = await this.prisma.advertiser.count({ where });
+
+  //     const advertiser = await this.prisma.advertiser.findMany({
+  //       where,
+  //       select: selectFields,
+
+  //       skip: (page - 1) * limit,
+  //       take: limit,
+  //       orderBy: orderBy,
+  //     });
+
+  //     const advertiserWithNumberID = advertiser.map((advertiser) => ({
+  //       ...advertiser,
+  //       id: Number(advertiser.id),
+  //     }));
+  //   } else {
+  //     const advertiserWithNumberID = null;
+  //   }
+  //   return {
+  //     data: advertiserWithNumberID,
+  //     total,
+  //   };
+  // }
   async createUser(advDto: AdvDto): Promise<Advertiser> {
     try {
       advDto.password = await passwordHash(advDto.password);

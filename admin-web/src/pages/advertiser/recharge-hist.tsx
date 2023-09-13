@@ -94,6 +94,18 @@ const RechargeHist = (props: { role: "Root" | "Agent"; roleName: string }) => {
         }
         setShow(isOpen);
       }}
+      submitter={{
+        resetButtonProps: {
+          type: 'dashed',
+        },
+        submitButtonProps: {
+          style: {
+            display: 'none',
+          },
+        },
+      }}// 渲染一个空内容，相当于隐藏确定按钮
+    
+
     >
       {mode === "record" && (
         <ProTable<RechargeHistDto>
@@ -160,6 +172,7 @@ const RechargeHist = (props: { role: "Root" | "Agent"; roleName: string }) => {
           }}
         />
       )}
+      
     </ModalForm>
   );
 };

@@ -72,8 +72,15 @@ const AdminLayout = () => {
                                         items: [
                                             {
                                                 onClick: () => {
-                                                    localforage.removeItem("token");
-                                                    location.reload();
+                                                    console.log("点击退出登录按钮");
+                                                    localforage.removeItem("token")
+                                                        .then(() => {
+                                                        console.log("token 已移除");
+                                                        location.reload();
+                                                        })
+                                                        .catch((error) => {
+                                                        console.error("移除 token 时出错", error);
+                                                        });
                                                 },
                                                 key: 'logout',
                                                 icon: <LogoutOutlined />,

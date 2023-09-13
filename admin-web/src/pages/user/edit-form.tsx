@@ -112,7 +112,7 @@ const EditForm = (props: {
             // setUsername(user.username?? "")
             // setEnabled(user.enabled?? "")
         }, 500);
-    }, [setNickname,setUsername,setEnabled,setPassword,setConfirmPassword,setTaxnumber]);
+    }, []);
     const create = useCallback(async (data: UserEditDto) => {
         console.log('create data',data)
         try {
@@ -131,7 +131,7 @@ const EditForm = (props: {
             console.log(error);
             console.error('发生错误', error);
           }
-    }, [setShow,setNickname,setUsername,setEnabled,setPassword,setConfirmPassword,setTaxnumber]);
+    }, [setShow]);
     const update = useCallback(async (vId: bigint, data: UserEditDto) => {
        
 
@@ -148,7 +148,7 @@ const EditForm = (props: {
         formRef.current?.resetFields();
         $emit.emit('reload');
         setShow(false);
-    }, [setShow,setNickname,setUsername,setEnabled,setPassword,setConfirmPassword]);
+    }, [setShow]);
     return (
         <ModalForm
             formRef={formRef}

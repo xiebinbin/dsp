@@ -297,7 +297,7 @@ const EditForm = () => {
                                 value: 'CNY'
                             },
                             {
-                                label: '美元',
+                                label: '美',
                                 value: 'USD'
                             },
                             {

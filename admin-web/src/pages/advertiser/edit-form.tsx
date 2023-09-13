@@ -231,7 +231,7 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
           initialValue={0} // 设置初始值为字符串 "0"
           width="xl"
           name="cpmPrice"
-          label="千次展现价格"
+          label="千次展现价格(元)"
           placeholder="请输入千次展现价格"
         />
       </ProForm.Group>

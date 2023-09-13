@@ -38,8 +38,12 @@ const GetRouter = (): Route => {
                         path: '/admin/user/creators',
                     },
                     {
-                        name: '广告主',
-                        path: '/admin/advertiser/advertiser',
+                        name: '管理员-广告主',
+                        path: '/admin/advertiser/root',
+                    },
+                    {
+                        name: '代理商-广告主',
+                        path: '/admin/advertiser/agent',
                     }
                 ]
             },
