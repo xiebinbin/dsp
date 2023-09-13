@@ -26,14 +26,20 @@ const GetRouter = (): Route => {
                     {
                         name: '超级管理员',
                         path: '/admin/user/supers',
+
                     },
                     {
                         name: '运营',
                         path: '/admin/user/operators',
+                        // access: ['operator'], // 该菜单项需要的角色
                     },
                     {
-                        name: '创作者',
+                        name: '代理商',
                         path: '/admin/user/creators',
+                    },
+                    {
+                        name: '广告主',
+                        path: '/admin/advertiser/advertiser',
                     }
                 ]
             },
@@ -139,6 +145,7 @@ const GetRouter = (): Route => {
             }
         ],
     };
+    
 }
 
 

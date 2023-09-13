@@ -7,7 +7,7 @@ import {
     ProFormText,
     // ProFormTextArea,
 } from '@ant-design/pro-components';
-import {message} from 'antd';
+import { message} from 'antd';
 import {useMount, useSafeState, useUnmount} from "ahooks";
 import Emittery from 'emittery';
 import { useCallback, useRef, useState} from "react";
@@ -30,6 +30,7 @@ const EditForm = (props: {
     const [username, setUsername] = useSafeState('');
     const [password, setPassword] = useSafeState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [taxnumber, setTaxnumber] = useState('');
 
     const [enabled, setEnabled] = useSafeState(true);
  
@@ -64,7 +65,16 @@ const EditForm = (props: {
         $emit.on('add', () => {
             setMode('add');
             formRef.current?.resetFields();
-            setUsername('')
+            formRef.current?.setFieldsValue({
+                nickname: '',
+                username: '',
+                password: '',
+                taxnumber:'',
+                confirmPassword:  '',
+                enabled: '',
+                role: role,
+            });
+            console.log('username',username)
             // setId(BigInt(0));
             setShow(true);
         });
@@ -93,15 +103,17 @@ const EditForm = (props: {
             formRef.current?.setFieldsValue({
                 nickname: user.nickname,
                 username: user.username,
+                taxnumber:user.taxnumber,
                 password: user.password,
                 confirmPassword:  user.password,
                 enabled: user.enabled,
+                role: user.role,
             });
             // setNickname(user.nickname?? "")
             // setUsername(user.username?? "")
             // setEnabled(user.enabled?? "")
         }, 500);
-    }, [setNickname,setUsername,setEnabled,setPassword,setConfirmPassword]);
+    }, [setNickname,setUsername,setEnabled,setPassword,setConfirmPassword,setTaxnumber]);
     const create = useCallback(async (data: UserEditDto) => {
         console.log('create data',data)
         try {
@@ -111,6 +123,7 @@ const EditForm = (props: {
             } else {
               window.Message.success('修改成功');
               formRef.current?.resetFields();
+              
             //   $emit.emit('update', res.id);
               $emit.emit('reload');
               setShow(false);
@@ -119,24 +132,7 @@ const EditForm = (props: {
             console.log(error);
             console.error('发生错误', error);
           }
-        // const tag = await UserApi.create(data).then (async (res) => {
-        //     if(!res)
-        //     {
-             
-        //         window.Message.error('新建失败，请重试');
-              
-    
-        //     }
-        //     else{
-        //         window.Message.success('修改成功');
-        //     }
-        //   })
-        // console.log("create finish",tag)
-        // // formRef.current?.resetFields();
-        // // $emit.emit('update', tag.id);
-        // $emit.emit('reload');
-        // setShow(false);
-    }, [setShow,setNickname,setUsername,setEnabled,setPassword,setConfirmPassword]);
+    }, [setShow,setNickname,setUsername,setEnabled,setPassword,setConfirmPassword,setTaxnumber]);
     const update = useCallback(async (vId: bigint, data: UserEditDto) => {
        
 
@@ -150,6 +146,7 @@ const EditForm = (props: {
         }
         await UserApi.update(vId, data);
         message.success('更新成功');
+        formRef.current?.resetFields();
         $emit.emit('reload');
         setShow(false);
     }, [setShow,setNickname,setUsername,setEnabled,setPassword,setConfirmPassword]);
@@ -162,8 +159,14 @@ const EditForm = (props: {
                 if (formRef.current) {
                     const data = await formRef.current.validateFields();
                     // data.avatar = avatar;
+                    
                     console.log('validateFields data',data)
                     if (mode === 'add') {
+                        data.role=role;
+                        // if(role!='Root')
+                        // {
+                        // data.role=role;
+                        // }
                         await create(data);
                     }
                     if (mode === 'update') {
@@ -174,9 +177,18 @@ const EditForm = (props: {
                 }
                 return false;
             }}
-            onOpenChange={setShow}
+            // onOpenChange={setShow}
+            onOpenChange={(isOpen) => {
+                // 在 Modal 关闭时清空数据
+                if (!isOpen) {
+                  formRef.current?.resetFields(); // 清空表单字段
+                  setUsername(''); // 清空相关状态
+                  setId(BigInt(0));
+                }
+                setShow(isOpen);
+              }}
         >
-            <ProForm.Group>
+            {/* <ProForm.Group>
                 <ProFormText
                     required
                     rules={[{required: true, message: '请输入名昵称'}]}
@@ -185,10 +197,49 @@ const EditForm = (props: {
                     name="nickname"
                     label="昵称"
                     placeholder="请输入名昵称"
+                   
                 />
-            </ProForm.Group>
+            </ProForm.Group> */}
             <ProForm.Group>
-                <ProFormText
+                {role === 'Agent' ? (
+                    <ProFormText
+                    required
+                    rules={[{ required: true, message: '请输入公司名称' }]}
+                    initialValue={''}
+                    width="xl"
+                    name="nickname"
+                    label="公司"
+                    placeholder="请输入公司名称"
+                    />
+                ) : (
+                    <ProFormText
+                    required
+                    rules={[{ required: true, message: '请输入昵称' }]}
+                    initialValue={''}
+                    width="xl"
+                    name="nickname"
+                    label="昵称"
+                    placeholder="请输入昵称"
+                    />
+                )}
+                </ProForm.Group>
+                <ProForm.Group>
+                {role === 'Agent' ? (
+                    <ProFormText
+                    required
+                    rules={[{ required: true, message: '请输入纳税人识别号' }]}
+                    initialValue={''}
+                    width="xl"
+                    name="taxnumber"
+                    label="纳税人识别号"
+                    placeholder="请输入纳税人识别号"
+                    />
+                ) : (
+                   null
+                )}
+                </ProForm.Group>
+            <ProForm.Group>
+                <ProFormText         
                     required 
                     disabled={mode != 'add'} // Conditionally disable based on 'mode'
                     rules={[{required: true, message: '请输入用户名'}, {
@@ -204,6 +255,10 @@ const EditForm = (props: {
             </ProForm.Group>
             <ProForm.Group>
                 <ProFormText.Password
+                     fieldProps={{
+                        autoComplete: 'off' 
+                    }}            
+                required 
                     rules={[{required: mode == "add", message: '请输入登录密码'}]}
                     initialValue={""}
                     width="xl"
@@ -214,6 +269,7 @@ const EditForm = (props: {
             </ProForm.Group>
             <ProForm.Group >
                 <ProFormText.Password
+
                     rules={[{required: mode == "add", message: '再次输入登录密码'}]}
                     initialValue={""}
                     width="xl"
@@ -224,19 +280,24 @@ const EditForm = (props: {
                 />  
             </ProForm.Group>
             <ProForm.Group>
-                <ProFormSelect
+                {/* <ProFormSelect
                     name="role"
                     label="角色"
-                    initialValue="Root" // Set the initial selected value if needed
+                    // initialValue="Agent" 
+                    initialValue={role === 'Root' ? 'Root' : role}
+
                     valueEnum={{
                         Root: 'Root',
                         Agent: 'Agent',
                         Operator: 'Operator',
                     }}
-                />
+                    style={{ display: role === 'Root' ? 'block' : 'none' }}
+                    formItemProps={{ label: role === 'Root' ? '角色' : undefined }}
+                /> */}
             </ProForm.Group>
             <ProForm.Group>
                 <ProFormRadio.Group
+           
                     name="enabled"
                     label="启用状态"
                     required

@@ -11,20 +11,6 @@ export class LoginDto {
   codeid: string;
 }
 
-export class UserUpdateDto {
-  @IsNotEmpty()
-  id: bigint;
-  @IsNotEmpty()
-  nickname: string;
-  @IsNotEmpty()
-  username: string;
-  password: string;
-  @IsNotEmpty()
-  role: string;
-  updatedAt: string;
-  @IsNotEmpty()
-  enabled: boolean;
-}
 export enum Role {
   Root,
   Agent,

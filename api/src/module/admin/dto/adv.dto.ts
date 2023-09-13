@@ -1,17 +1,19 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class UserDto {
+export class AdvDto {
   @IsNotEmpty()
-  id: bigint;
+  id: number;
   @IsNotEmpty()
-  nickname: string;
-  taxnumber: string;
+  companyName: string;
+  taxNumber: string;
+  wallet: { balance: number };
   @IsNotEmpty()
   username: string;
   password: string;
-  @IsNotEmpty()
-  role: string;
+  cpmPrice: number;
+  userId: number;
   updatedAt: string;
   @IsNotEmpty()
   enabled: boolean;
+  user: { id: number; name: string };
 }

@@ -8,7 +8,23 @@ import { AuthError } from 'src/utils/err_types';
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaClient) {}
+  async findAgents(): Promise<{ id: number; name: string }[]> {
+    const agents = await this.prisma.user.findMany({
+      where: {
+        role: 'Agent',
+      },
+      select: {
+        id: true,
+        username: true, // 假设代理商有一个用户名字段，你可以根据实际情况选择需要的字段
+      },
+    });
+    const agentsArray = agents.map((agent) => ({
+      id: Number(agent.id),
+      name: agent.username, // 这里假设代理商的用户名字段为 username
+    }));
 
+    return agentsArray;
+  }
   async findByUsername(username: string): Promise<User | null> {
     return await this.prisma.user.findFirst({
       where: {
@@ -76,76 +92,63 @@ export class UserService {
     });
   }
   async getList(queryParams: any) {
-    const { page, limit, username, orderBy } = queryParams;
+    const { page, limit, username, orderBy, role } = queryParams;
     const selectFields = {
       id: true,
       username: true,
       nickname: true,
+      taxnumber: true,
       createdAt: true,
       updatedAt: true,
       role: true,
       enabled: true,
     };
     const where: any = {};
+
+    if (role !== 'Root') {
+      where.role = this.mapStringToRole(role);
+    }
+    // if (choserole != 'all' && choserole != '') {
+    //   console.log('choserole', choserole);
+    //   where.role = this.mapStringToRole(choserole);
+    // }
+
     if (username) {
       where.username = username;
     }
-    if (!username) {
-      const total = await this.prisma.user.count({
-        where,
-      });
-      const allUsers = await this.prisma.user.findMany({
-        // 这里可以添加其他查询条件
-        select: selectFields, // 指定需要的字段
-
-        skip: (page - 1) * limit,
-        take: limit,
-        orderBy: orderBy,
-      });
-      const allusersWithNumberID = allUsers.map((allUsers) => {
-        return {
-          ...allUsers,
-          id: Number(allUsers.id),
-        };
-      });
-      return {
-        data: allusersWithNumberID,
-        total,
-      };
-    }
-
-    const total = await this.prisma.user.count({
-      where,
-    });
+    console.log('where ', where);
+    const total = await this.prisma.user.count({ where });
 
     const users = await this.prisma.user.findMany({
       where,
-      select: selectFields, // 指定需要的字段
-
+      select: selectFields,
       skip: (page - 1) * limit,
       take: limit,
       orderBy: orderBy,
     });
-    const usersWithNumberID = users.map((user) => {
-      return {
-        ...user,
-        id: Number(user.id),
-      };
-    });
+
+    const usersWithNumberID = users.map((user) => ({
+      ...user,
+      id: Number(user.id),
+    }));
+
     return {
       data: usersWithNumberID,
       total,
     };
   }
+
   async createUser(userDto: UserDto): Promise<User> {
     try {
       userDto.password = await passwordHash(userDto.password);
-      const { nickname, username, password, role, enabled } = userDto;
+      const { nickname, username, password, role, enabled, taxnumber } =
+        userDto;
 
       return await this.prisma.user.create({
         data: {
           nickname,
           username,
+          taxnumber: taxnumber,
           password,
           role: this.mapStringToRole(role),
           enabled,

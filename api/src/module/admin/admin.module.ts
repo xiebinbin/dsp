@@ -11,6 +11,10 @@ import { RedisCacheService } from '../cache/services/redis-cache.service';
 import { CacheModule } from '@nestjs/cache-manager';
 import { UserController } from './controllers/user.controller';
 import { PrismaClient } from '@prisma/client';
+import { AdvController } from './controllers/adv.controller';
+import { AdvService } from './services/adv.service';
+import { RechargeController } from './controllers/recharge.controller';
+import { RechargeService } from './services/recharge.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -18,7 +22,12 @@ import { PrismaClient } from '@prisma/client';
     }),
     CacheModule.register(),
   ],
-  controllers: [AuthController, UserController],
+  controllers: [
+    AuthController,
+    UserController,
+    AdvController,
+    RechargeController,
+  ],
   providers: [
     AuthService,
     UserService,
@@ -27,6 +36,8 @@ import { PrismaClient } from '@prisma/client';
     CodeService,
     RedisCacheService,
     PrismaClient,
+    AdvService,
+    RechargeService,
   ],
 })
 export class AdminModule {

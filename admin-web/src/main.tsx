@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 
 import {RecoilRoot} from "recoil";
 import {UserIndexPageProps} from "@/pages/user";
+import {AdvIndexPageProps}  from '@/pages/advertiser';
 
 dayjs.extend(utc);
 const HelpIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/help"));
@@ -28,7 +29,8 @@ const PromotionSettingPage: React.LazyExoticComponent<React.FC> = lazy(() => imp
 const PaymentChannelIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/payment-channel"));
 const PlacementChannelIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/placement-channel"));
 const AgentIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/agent"));
-const RechargeOrderIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/recharge-order"))
+const RechargeOrderIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/recharge-order"));
+const AdvertiserIndexPage:React.LazyExoticComponent<React.FC<AdvIndexPageProps>> = lazy(()=>import("@/pages/advertiser"));
 const router = createBrowserRouter([
     {
         path: "/",
@@ -63,8 +65,12 @@ const router = createBrowserRouter([
                         element: <Suspense><VideoIndexPage/></Suspense>,
                     },
                     {
+                        path: 'advertiser/advertiser',
+                        element: <Suspense><AdvertiserIndexPage role="Root" roleName="广告主"/></Suspense>,
+                    },
+                    {
                         path: 'user/creators',
-                        element: <Suspense><UserIndexPage role="Agent" roleName="创作者"/></Suspense>,
+                        element: <Suspense><UserIndexPage role="Agent" roleName="代理商"/></Suspense>,
                     },
                     {
                         path: 'user/operators',

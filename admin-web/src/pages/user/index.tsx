@@ -5,7 +5,7 @@ import {ProTable, TableDropdown} from '@ant-design/pro-components';
 import {Button, Popconfirm} from 'antd';
 import {ReactNode, useCallback, useEffect, useRef} from 'react';
 import EditForm, {$emit} from "./edit-form.tsx";
-import {SuperUser, User} from "@/shims";
+import {SuperUser} from "@/shims";
 import UserApi from "@/api/user.ts";
 import {useMount, useUnmount} from "ahooks";
 import {useLocation} from "react-router-dom";
@@ -22,16 +22,7 @@ maps.set(false, {
 
   
 const Supercolumns: ProColumns<SuperUser>[] = [
-    // {
-    //     title: 'ID',
-    //     key: 'id',
-    //     dataIndex: 'id',
-    //     render: (_dom, record) => {
-    //         return record.id.toString();
-    //     },
-    //     width: 120,
-    //     hideInSearch: true,
-    // },
+
     {
         title: '昵称',
         key: 'nickname',
@@ -41,6 +32,14 @@ const Supercolumns: ProColumns<SuperUser>[] = [
         valueType: 'text',
         width: 100,
         hideInSearch: true,
+        // render: (_, record) => {
+        //     // 在这里根据用户角色来判断是否显示列内容
+        //     if (record.role !== 'Root') {
+        //       return <span>{record.nickname}</span>;
+        //     }
+        //     return null; // 返回 null 来隐藏列内容
+        //   },
+
      
     },
     {
@@ -63,6 +62,15 @@ const Supercolumns: ProColumns<SuperUser>[] = [
         width: 100,
         hideInSearch: true,
 
+        // valueEnum: {
+        //     all: { text: '全部', status: 'All' },
+        //     Root: { text: '管理员', status: 'Root' },
+        //     Operator: { text: '运营者', status: 'Operator' },
+        //     Agent: { text: '代理商', status: 'Agent' },
+        //   },
+        //   formItemProps: {
+        //     name: 'r',
+        // }
     },
     {
         title: '更新时间',
@@ -125,7 +133,7 @@ const Supercolumns: ProColumns<SuperUser>[] = [
         ],
     },
 ]
-const Operatorcolumns: ProColumns<SuperUser>[] = [
+const AgentColumns: ProColumns<SuperUser>[] = [
     // {
     //     title: 'ID',
     //     key: 'id',
@@ -137,7 +145,7 @@ const Operatorcolumns: ProColumns<SuperUser>[] = [
     //     hideInSearch: true,
     // },
     {
-        title: '昵称',
+        title: '公司名',
         key: 'nickname',
         dataIndex: 'nickname',
         ellipsis: true,
@@ -147,6 +155,7 @@ const Operatorcolumns: ProColumns<SuperUser>[] = [
         hideInSearch: true,
      
     },
+ 
     {
         title: '账号',
         key: 'username',
@@ -158,16 +167,16 @@ const Operatorcolumns: ProColumns<SuperUser>[] = [
             name: 'q',
         }
     },
-    {
-        title: '角色',
-        key: 'role',
-        dataIndex: 'role',
-        ellipsis: true,
-        valueType: 'text',
-        width: 100,
-        hideInSearch: true,
+    // {
+    //     title: '角色',
+    //     key: 'role',
+    //     dataIndex: 'role',
+    //     ellipsis: true,
+    //     valueType: 'text',
+    //     width: 100,
+    //     hideInSearch: true,
 
-    },
+    // },
     {
         title: '更新时间',
         key: 'updatedAt',
@@ -258,7 +267,7 @@ const UserIndexPage = (props: UserIndexPageProps) => {
     }, [location, reload])
     console.log("UserIndexPage role: ",role)
     const renderContent = () => {
-        if (role === 'Root') {
+        if (role === 'Root'||role==='Operator') {
             // SUPER 角色的内容
                 return   <div>
                 <ProTable<SuperUser> 
@@ -331,78 +340,76 @@ const UserIndexPage = (props: UserIndexPageProps) => {
                 </div>;
                 
             } 
-            else if(role==='Operator'){
-        //     return <div>
-        //     <ProTable<SuperUser>
-        //         scroll={{x: "100%"}}
-        //         columns={Operatorcolumns}
-        //         actionRef={actionRef}
-        //         cardBordered
-        //         request={async (params = {}, sort, filters) => {
-        //             const orderBy: { [key: string]: 'asc' | 'desc' } = {};
-        //             for (const sortKey in sort) {
-        //                 const field = sortKey.replace(/_(\w)/g, function (_all, letter) {
-        //                     return letter.toUpperCase();
-        //                 });
-        //                 orderBy[field] = sort[sortKey] === 'ascend' ? 'asc' : 'desc'
-        //             }
-        //             const extra: Record<string, boolean | number | string> = {
-        //                 role,
-        //             }
-        //             if (typeof params.enabled === 'boolean') {
-        //                 extra.enabled = params.enabled;
-        //             }
-        //             if (params?.address) {
-        //                 extra.address = params.address;
-        //             }
-        //             const result = await UserApi.getOperList({
-        //                 page: params.current ?? 1,
-        //                 limit: params.pageSize ?? 10,
-        //                 q: params.q ?? '',
-        //                 filters,
-        //                 orderBy,
-        //                 extra
-        //             })
-        //             return {
-        //                 ...result,
-        //                 success: true,
-        //             };
-        //         }}
-        //         rowKey="id"
-        //         search={{
-        //             labelWidth: 'auto',
-        //         }}
-        //         options={{
-        //             setting: {
-        //                 listsHeight: 400,
-        //             },
-        //         }}
-        //         pagination={{
-        //             pageSize: 100,
-        //         }}
-        //         dateFormatter="string"
-        //         headerTitle={roleName + '列表'}
-        //         toolBarRender={() => [
-        //             <Button
-        //                 key="button"
-        //                 icon={<PlusOutlined/>}
-        //                 onClick={() => {
-        //                     $emit.emit('add')
-        //                 }}
-        //                 type="primary"
-        //             >
-        //                 新建{roleName}
-        //             </Button>,
-        //         ]}
-        //     />
-        //     <EditForm {...props} />
-            
-        // </div>
-            return <div>Operator 角色的内容</div>;
-        }
         else if(role==='Agent'){
-            // OPERATOR 角色的内容
-            return <div>Agent 角色的内容</div>;
+            return   <div>
+            <ProTable<SuperUser> 
+            scroll={{x:"100%"}}
+            columns={AgentColumns}
+            actionRef={actionRef}
+            cardBordered
+            request={async (params = {}, sort, filters) => {
+                    const orderBy: { [key: string]: 'asc' | 'desc' } = {};
+                    for (const sortKey in sort) {
+                        console.log('sortKey',sortKey)
+                        const field = sortKey.replace(/_(\w)/g, function (_all, letter) {
+                            return letter.toUpperCase();
+                        });
+                        console.log('field',field)
+                        orderBy[field] = sort[sortKey] === 'ascend' ? 'asc' : 'desc'
+                        console.log(' orderBy[field] ', orderBy[field] )
+                    }
+                    const extra: Record<string, boolean | number | string> = {
+                        role,
+                    }
+                    // if (typeof params.enabled === 'boolean') {
+                    //     extra.enabled = params.enabled;
+                    // }
+                    // if (params?.address) {
+                    //     extra.address = params.address;
+                    // }
+                    const result = await UserApi.getList({
+                        page: params.current ?? 1,
+                        limit: params.pageSize ?? 10,
+                        q: params.q ?? '',
+                        filters,
+                        orderBy,
+                        extra
+                    })
+                    return {
+                        ...result,
+                        success: true,
+                    };
+                }}
+                rowKey="username"
+                search={{
+                    labelWidth: 'auto',
+                }}
+                options={{
+                    setting: {
+                        listsHeight: 400,
+                    },
+                }}
+                pagination={{
+                    pageSize: 10,
+                }}
+                dateFormatter="string"
+                headerTitle={roleName + '列表'}
+                toolBarRender={() => [
+                    <Button
+                        key="button"
+                        icon={<PlusOutlined/>}
+                        onClick={() => {
+                            $emit.emit('add')
+                        }}
+                        type="primary"
+                    >
+                        新建{roleName}
+                    </Button>,
+                ]}
+            />
+                <EditForm {...props} />
+
+            </div>;
         }
         else{
             return <div></div>;
@@ -420,8 +427,7 @@ const UserIndexPage = (props: UserIndexPageProps) => {
             
         </PageContainer>
     );
-    return 
-        
+         
 }
 
 export default UserIndexPage;
