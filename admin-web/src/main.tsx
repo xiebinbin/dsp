@@ -13,11 +13,12 @@ import dayjs from "dayjs";
 import {RecoilRoot} from "recoil";
 import {UserIndexPageProps} from "@/pages/user";
 import {AdvIndexPageProps}  from '@/pages/advertiser';
+import { MaterialsPageProps } from '@/pages/materials';
 
 dayjs.extend(utc);
 const HelpIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/help"));
 const UserIndexPage: React.LazyExoticComponent<React.FC<UserIndexPageProps>> = lazy(() => import("@/pages/user"));
-const VideoIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/video"));
+// const VideoIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/video"));
 const FeaturedCardIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/featured-card"));
 const TagIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/tag"));
 const PopularIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/popular"));
@@ -31,6 +32,11 @@ const PlacementChannelIndexPage: React.LazyExoticComponent<React.FC> = lazy(() =
 const AgentIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/agent"));
 const RechargeOrderIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/recharge-order"));
 const AdvertiserIndexPage:React.LazyExoticComponent<React.FC<AdvIndexPageProps>> = lazy(()=>import("@/pages/advertiser"));
+const MaterialsIndexPage:React.LazyExoticComponent<React.FC<MaterialsPageProps>> = lazy(()=>import("@/pages/materials"));
+const MaterialsAgentIndexPage:React.LazyExoticComponent<React.FC<MaterialsPageProps>> = lazy(()=>import("@/pages/materials/index-agent"));
+
+const MaterialsAdvertiserIndexPage:React.LazyExoticComponent<React.FC<MaterialsPageProps>> = lazy(()=>import("@/pages/materials/index-advertiser"));
+
 const router = createBrowserRouter([
     {
         path: "/",
@@ -60,10 +66,14 @@ const router = createBrowserRouter([
                         path: "content/featured-cards",
                         element: <Suspense><FeaturedCardIndexPage/></Suspense>,
                     },
-                    {
-                        path: "content/videos",
-                        element: <Suspense><VideoIndexPage/></Suspense>,
-                    },
+                    // {
+                    //     path: "content/videos",
+                    //     element: <Suspense><VideoIndexPage/></Suspense>,
+                    // },
+                    // {
+                    //     path: "content/videos",
+                    //     element: <Suspense><VideoIndexPage/></Suspense>,
+                    // },
                     {
                         path: 'advertiser/root',
                         element: <Suspense><AdvertiserIndexPage role="Root" roleName="管理员广告主"/></Suspense>,
@@ -72,6 +82,20 @@ const router = createBrowserRouter([
                         path: 'advertiser/agent',
                         element: <Suspense><AdvertiserIndexPage role="Agent" roleName="管理员广告主"/></Suspense>,
                     },
+                    
+                    {
+                        path: '/admin/materials/root',
+                        element: <Suspense><MaterialsIndexPage role="Root" roleName="管理员素材"/></Suspense>,
+                    },
+                    {
+                        path: '/admin/materials/agent',
+                        element: <Suspense><MaterialsAgentIndexPage role="Agent" roleName="代理商素材"/></Suspense>,
+                    },
+                    {
+                        path: '/admin/materials/advertiser',
+                        element: <Suspense><MaterialsAdvertiserIndexPage role="Advertiser" roleName="广告主素材"/></Suspense>,
+                    },
+                    
                     {
                         path: 'user/creators',
                         element: <Suspense><UserIndexPage role="Agent" roleName="代理商"/></Suspense>,

@@ -24,7 +24,7 @@ import { Request } from 'express';
 export class UserController {
   constructor(private readonly UserService: UserService) {}
   private readonly logger = new Logger(UserController.name);
-  @Get('optlist')
+  @Get('agentslist')
   @UseInterceptors(ApiResInterceptor)
   async getAgent() {
     try {

@@ -10,6 +10,33 @@ import { userInfo } from 'os';
 @Injectable()
 export class AdvService {
   constructor(private prisma: PrismaClient) {}
+  async findAdvertisers(
+    queryParams: any,
+  ): Promise<{ id: number; name: string; agentId: number }[]> {
+    const { page, limit, username, orderBy, role, userId } = queryParams;
+    console.log('userId', userId, 'role', role);
+    const where: any = {};
+
+    if (role != 'Root' && userId) {
+      where.userId = userId;
+    }
+    console.log('where ', where);
+    const advertisers = await this.prisma.advertiser.findMany({
+      where,
+      select: {
+        id: true,
+        companyName: true,
+        userId: true,
+      },
+    });
+    const advertisersArray = advertisers.map((advertisers) => ({
+      id: Number(advertisers.id),
+      name: advertisers.companyName, // 这里假设代理商的用户名字段为 username
+      agentId: Number(advertisers.userId),
+    }));
+
+    return advertisersArray;
+  }
   async findByUsername(username: string): Promise<Advertiser | null> {
     return await this.prisma.advertiser.findFirst({
       where: {
@@ -95,8 +122,7 @@ export class AdvService {
     if (username) {
       where.username = username;
     }
-
-    if (role === 'Agent') {
+    if (role != 'Root' && userId) {
       where.userId = userId;
     }
 

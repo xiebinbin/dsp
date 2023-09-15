@@ -14,7 +14,6 @@ import AgentApi from "@/api/agent.ts";
 
 import { message } from "antd";
 
-
 export const $emit = new Emittery();
 
 const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
@@ -26,16 +25,24 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
   const [userId, setUserId] = useSafeState<{ id: number; name: string }[]>();
   const formRef = useRef<ProFormInstance>();
   const positiveNumberPattern = /^(?:[1-9]\d*|0)(?:\.\d+)?$/;
+  const getAgentList = useCallback(async () => {
+    try {
+      const agentOptList = await AgentApi.getAgentsList();
+      console.log("agentOptList", agentOptList);
 
+      setUserId(agentOptList);
+    } catch (error) {
+      console.error("Error fetching agent options:", error);
+    }
+  },[setUserId]);
   const handleSelectAgent = () => {
     // 在这里执行点击事件处理逻辑
     // 假设 agentOptList 是点击事件后要设置的值
     getAgentList();
-
   };
   useEffect(() => {
     getAgentList();
-  }, []);
+  }, [getAgentList]);
   useMount(() => {
     $emit.on("add", () => {
       setMode("add");
@@ -67,46 +74,38 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
   useUnmount(() => {
     $emit.clearListeners();
   });
-  const getAgentList = async () => {
-    try {
-        const agentOptList = await AgentApi.getOptList();
-      console.log("agentOptList", agentOptList);
-
-      setUserId(agentOptList);
-
-    } catch (error) {
-      console.error("Error fetching agent options:", error);
-    }
-  };
 
   // formRef.current?.resetFields();
-  const loadInfo = useCallback(async (val: bigint) => {
-    const user = await AdvAPI.getInfo(val);
-    // user.userId= [
-    //     { id: 1, name: 'Agent 1' },
-    //     { id: 2, name: 'Agent 2' },
-    //     // 可以添加更多的示例对象
-    //   ];
+  const loadInfo = useCallback(
+    async (val: bigint) => {
+      const user = await AdvAPI.getInfo(val);
+      // user.userId= [
+      //     { id: 1, name: 'Agent 1' },
+      //     { id: 2, name: 'Agent 2' },
+      //     // 可以添加更多的示例对象
+      //   ];
 
-    // const agentInfoArray: { id: bigint; name: string }[] =
-    // (user.agents as { id: bigint; name: string }[]).map(agent => ({ id: agent.id, name: agent.name }));
-    console.log("user.user",user.user)
-    setUserId([user.user]);
-    console.log("edit user", user);
+      // const agentInfoArray: { id: bigint; name: string }[] =
+      // (user.agents as { id: bigint; name: string }[]).map(agent => ({ id: agent.id, name: agent.name }));
+      console.log("user.user", user.user);
+      setUserId([user.user]);
+      console.log("edit user", user);
 
-    setTimeout(() => {
-      formRef.current?.setFieldsValue({
-        companyName: user.companyName,
-        username: user.username,
-        taxNumber: user.taxNumber,
-        password: user.password,
-        confirmPassword: user.password,
-        userId: user.userId,
-        enabled: user.enabled,
-        cpmPrice: user.cpmPrice,
-      });
-    }, 500);
-  }, [setUserId]);
+      setTimeout(() => {
+        formRef.current?.setFieldsValue({
+          companyName: user.companyName,
+          username: user.username,
+          taxNumber: user.taxNumber,
+          password: user.password,
+          confirmPassword: user.password,
+          userId: user.userId,
+          enabled: user.enabled,
+          cpmPrice: user.cpmPrice,
+        });
+      }, 500);
+    },
+    [setUserId]
+  );
   const create = useCallback(
     async (data: AdvEditDto) => {
       console.log("create data", data);
@@ -270,7 +269,6 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
           rules={[{ required: true, message: "请选择代理商" }]}
           onChange={handleSelectAgent}
         />
-
       </ProForm.Group>
       <ProForm.Group></ProForm.Group>
       <ProForm.Group>

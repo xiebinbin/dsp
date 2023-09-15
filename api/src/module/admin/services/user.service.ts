@@ -15,12 +15,12 @@ export class UserService {
       },
       select: {
         id: true,
-        username: true, // 假设代理商有一个用户名字段，你可以根据实际情况选择需要的字段
+        nickname: true, // 假设代理商有一个用户名字段，你可以根据实际情况选择需要的字段
       },
     });
     const agentsArray = agents.map((agent) => ({
       id: Number(agent.id),
-      name: agent.username, // 这里假设代理商的用户名字段为 username
+      name: agent.nickname, // 这里假设代理商的用户名字段为 username
     }));
 
     return agentsArray;

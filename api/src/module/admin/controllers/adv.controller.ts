@@ -25,7 +25,34 @@ import { AdvDto } from '../dto/adv.dto';
 export class AdvController {
   constructor(private readonly AdvService: AdvService) {}
   private readonly logger = new Logger(AdvController.name);
-
+  @Post('optlist')
+  @UseInterceptors(ApiResInterceptor)
+  async getOptList(@Req() req: Request, @Body() queryParams: any) {
+    console.log('getOptList queryParams', queryParams);
+    console.log('getOptList req', req.user);
+    const { page, limit, q, filters, orderBy, extra } = queryParams;
+    try {
+      const result = await this.AdvService.findAdvertisers({
+        page,
+        limit,
+        orderBy,
+        // nickname: queryParams.nickname || '',
+        username: queryParams.q || '',
+        role: req.user.role,
+        userId: req.user.id,
+        // choserole: queryParams.extra.choserole,
+        // role: queryParams.role || '',
+        // updatedAt: queryParams.updatedAt || '',
+        // enabled: queryParams.enabled || false,
+      });
+      //   return response.send(result);
+      console.log('result', result);
+      return result;
+    } catch (e) {
+      console.log(e);
+      throw new HttpException(e.message, e.status);
+    }
+  }
   @Post('list')
   @UseInterceptors(ApiResInterceptor)
   async getList(@Req() req: Request, @Body() queryParams: any) {
@@ -88,22 +115,10 @@ export class AdvController {
 
       const res = await this.AdvService.createUser(data);
       // console.log('res', res);
-      if (res.id) {
-        const advDto: AdvDto = {
-          id: Number(res.id),
-          companyName: res.companyName,
-          taxNumber: res.taxNumber,
-          username: res.username,
-          wallet: null,
-          password: '',
-          cpmPrice: Number(res.cpmPrice),
-          userId: Number(res.userId),
-          updatedAt: null,
-          enabled: res.enabled,
-          user: null,
-        };
-        return advDto;
+      if (!res.id) {
+        return false;
       }
+      return true;
     } catch (e) {
       console.log(e);
       throw new HttpException(e.message, e.status);

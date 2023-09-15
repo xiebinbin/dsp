@@ -20,6 +20,7 @@ const VideoIndexPage = () => {
     useMount(() => {
         $emit.on('reload', () => {
             reload()
+            
         })
     });
     useUnmount(() => {

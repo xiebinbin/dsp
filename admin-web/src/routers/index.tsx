@@ -48,31 +48,28 @@ const GetRouter = (): Route => {
                 ]
             },
             {
-                path: '/admin/content',
-                name: '内容管理',
+                path: '/admin/materials',
+                name: '广告管理',
                 icon: <div className="i-ri-sticky-note-line text-1rem"/>,
                 component: './Admin',
                 routes: [
                     {
-                        path: '/admin/content/videos',
-                        name: '视频',
+                        path: '/admin/materials/root',
+                        name: '广告创意管理',
                     },
+                    {
+                        path: '/admin/materials/agent',
+                        name: '广告创意管理代理商',
+                    },
+                    {
+                        path: '/admin/materials/advertiser',
+                        name: '广告创意管理广告主',
+                    },
+                    
                     {
                         path: '/admin/content/tags',
-                        name: '标签管理',
+                        name: '广告投放管理',
                     },
-                    {
-                        path: '/admin/content/populars',
-                        name: '热点管理',
-                    },
-                    {
-                        path: '/admin/content/featured-cards',
-                        name: '推荐卡片',
-                    },
-                    {
-                        path: '/admin/content/helps',
-                        name: '常见问题',
-                    }
                 ],
             },
             {

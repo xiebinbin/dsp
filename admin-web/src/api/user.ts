@@ -15,10 +15,10 @@ const getList = (
 ): Promise<{ data: SuperUser[]; total: number }> => {
   return createRequestInstance().post("/api/admin/users/list", params);
 };
-const getOperList = (
+const getAgentsList = (
   params: GetListDto
 ): Promise<{ data: User[]; total: number }> => {
-  return createRequestInstance().post("/api/admin/users/operlist", params);
+  return createRequestInstance().post("/api/admin/users/agentslist", params);
 };
 const getInfo = (id: bigint): Promise<SuperUser> => {
   return createRequestInstance().get(`/api/admin/users/${id}`);
@@ -39,6 +39,6 @@ export default {
   getInfo,
   update,
   getList,
-  getOperList,
+  getAgentsList,
   remove,
 };

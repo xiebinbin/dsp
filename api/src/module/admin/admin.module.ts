@@ -15,6 +15,8 @@ import { AdvController } from './controllers/adv.controller';
 import { AdvService } from './services/adv.service';
 import { RechargeController } from './controllers/recharge.controller';
 import { RechargeService } from './services/recharge.service';
+import { MaterialService } from './services/material.service';
+import { MaterialController } from './controllers/material.controller';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -27,6 +29,7 @@ import { RechargeService } from './services/recharge.service';
     UserController,
     AdvController,
     RechargeController,
+    MaterialController,
   ],
   providers: [
     AuthService,
@@ -38,6 +41,7 @@ import { RechargeService } from './services/recharge.service';
     PrismaClient,
     AdvService,
     RechargeService,
+    MaterialService,
   ],
 })
 export class AdminModule {

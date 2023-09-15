@@ -46,7 +46,47 @@ interface User {
   updatedAt: string;
   avatar: string | null;
 }
-
+interface AdMaterial {
+  id: bigint;
+  name: string;
+  // 媒体类型 1网站 2pc软件
+  mediaType: Int;
+  // 类型 1:图片 2:视频 3:文字
+  contentType: Int;
+  // 广告位置 1.列表页 2.详情页 3.侧边栏 4.全屏弹窗(仅 pc 有)
+  position: Int;
+  // 广告内容
+  content: string;
+  // 广告链接
+  url: string;
+  enabled: boolean;
+  // 广告主id
+  advertiserId: bigInt;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+  advertiser: {
+    id: number;
+    companyName: string;
+    user: { id: number; nickname: string };
+  };
+}
+interface AdMaterialAgent {
+  id: bigint;
+  // 媒体类型 1网站 2pc软件
+  mediaType: Int;
+  // 类型 1:图片 2:视频 3:文字
+  contentType: Int;
+  // 广告位置 1.列表页 2.详情页 3.侧边栏 4.全屏弹窗(仅 pc 有)
+  position: Int;
+  // 广告链接
+  url: string;
+  updatedAt: DateTime;
+  advertiser: {
+    id: number;
+    companyName: string;
+    taxNumber:string;
+  };
+}
 interface Advertiser {
   id: bigint;
   username: string;
@@ -63,16 +103,20 @@ interface Advertiser {
   userId: Record<number, string>[];
   createdAt: DateTime;
   updatedAt: DateTime;
-  user:{
+  user: {
     id: number;
     name: string;
   };
 }
-interface AgentOpt{
-  id:number;
-  name:string;
+interface AgentOpt {
+  id: number;
+  name: string;
 }
-
+interface AdvertiserOpt {
+  id: number;
+  name: string;
+  agentId:number;
+}
 interface RootInfo {
   name: string;
 }
