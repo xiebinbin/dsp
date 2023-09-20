@@ -22,6 +22,8 @@ export class AuthMiddleware implements NestMiddleware {
       });
       return;
     }
+    console.log('req.path', req.path);
+
     const authorization = req.header('Authorization') as
       | string
       | undefined
@@ -29,8 +31,8 @@ export class AuthMiddleware implements NestMiddleware {
     if (
       !authorization &&
       req.path != '/api/admin/auth/login' &&
-      req.path != '/api/admin/auth/getcode' &&
-      req.path != '/api/admin/users/list'
+      req.path != '/api/admin/auth/getcode'
+      // &&req.path != '/api/admin/users/list'
     ) {
       res.status(400).json({
         code: 400,
@@ -66,6 +68,7 @@ export class AuthMiddleware implements NestMiddleware {
         return;
       }
       req.user = user;
+      console.log('req.user role', req.user.role);
     }
     next();
   }

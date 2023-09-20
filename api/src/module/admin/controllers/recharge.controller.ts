@@ -20,12 +20,14 @@ import { Request } from 'express';
 import { RechargeDto } from '../dto/recharge.dto';
 import { AuthError } from 'src/utils/err_types';
 import { AdvService } from '../services/adv.service';
+import { UserService } from '../services/user.service';
 
 @Controller('/api/admin/recharge-orders')
 export class RechargeController {
   constructor(
     private readonly RechargeService: RechargeService,
     private readonly AdvService: AdvService,
+    private readonly UserService: UserService,
   ) {}
   private readonly logger = new Logger(RechargeController.name);
 
@@ -44,15 +46,22 @@ export class RechargeController {
   }
   @Post('store')
   @UseInterceptors(ApiResInterceptor)
-  async userstore(@Body() data: RechargeDto) {
+  async userstore(@Body() data: RechargeDto, @Req() req: Request) {
     console.log('data,data', data);
 
     try {
-      const userinfo = await this.AdvService.findById(BigInt(data.id));
+      const userinfo = await this.UserService.findById(BigInt(req.user.id));
+      if (userinfo.role != 'Root' && userinfo.role != 'Operator') {
+        throw new HttpException(
+          AuthError.USER_NOT_Permission.message,
+          AuthError.USER_NOT_Permission.code,
+        );
+      }
+      const advinfo = await this.AdvService.findById(BigInt(data.id));
 
       console.log('data,username', userinfo);
 
-      if (!userinfo) {
+      if (!advinfo) {
         throw new HttpException(
           AuthError.USERNAME_IS_SAME.message,
           AuthError.USERNAME_IS_SAME.code,

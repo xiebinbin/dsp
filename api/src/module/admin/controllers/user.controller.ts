@@ -89,12 +89,19 @@ export class UserController {
 
   @Post('store')
   @UseInterceptors(ApiResInterceptor)
-  async userstore(@Body() data: UserDto) {
+  async userstore(@Req() req: Request, @Body() data: UserDto) {
     console.log('data,data', data);
     const username = data.username;
     const id = data.id;
 
     try {
+      const userinfo = await this.UserService.findById(BigInt(req.user.id));
+      if (userinfo.role != 'Root' && userinfo.role != 'Operator') {
+        throw new HttpException(
+          AuthError.USER_NOT_Permission.message,
+          AuthError.USER_NOT_Permission.code,
+        );
+      }
       const username = await this.UserService.findByUsername(data.username);
       console.log('data,username', username);
 
@@ -127,8 +134,18 @@ export class UserController {
   }
   @Delete(':id')
   @UseInterceptors(ApiResInterceptor)
-  async removeUser(@Param('id') id: bigint): Promise<boolean> {
+  async removeUser(
+    @Req() req: Request,
+    @Param('id') id: bigint,
+  ): Promise<boolean> {
     console.log('id', id);
+    const userinfo = await this.UserService.findById(BigInt(req.user.id));
+    if (userinfo.role != 'Root' && userinfo.role != 'Operator') {
+      throw new HttpException(
+        AuthError.USER_NOT_Permission.message,
+        AuthError.USER_NOT_Permission.code,
+      );
+    }
     return this.UserService.removeUser(id);
   }
   convertUserInfo(user: any): any {

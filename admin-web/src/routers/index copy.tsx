@@ -1,81 +1,44 @@
+import { Route } from "@ant-design/pro-layout/es/typing";
 import {
   DashboardOutlined,
   ShareAltOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-interface Route {
-  name: string;
-  path: string;
-  access?: string[];
-  icon?: React.ReactNode;
-  component?: string;
-  routes?: Route[];
-}
 
-function hasAccess(route: Route, role: string) {
-  return !route.access || route.access.includes(role);
-}
-
-
-function filterRoutes(routes: Route[] | undefined, role: string) {
-  const result: Route[] = [];  
-
-  routes?.forEach((r) => {
-    if (hasAccess(r, role)) {
-      const filteredRoute = { ...r };
-      if (filteredRoute.routes) {
-        filteredRoute.routes = filterRoutes(filteredRoute.routes, role);
-      }
-      result.push(filteredRoute);
-    }
-  });
-  return result;
-}
-const GetRouter = (userRole:string): Route => {
-
-
-  const fullRoutes: Route = {
+const GetRouter = (): Route => {
+  return {
     path: "admin",
     routes: [
       {
         path: "/admin/dashboard",
         name: "控制台",
         icon: <DashboardOutlined />,
-
       },
       {
         name: "用户管理",
         path: "/admin/user",
         icon: <UserOutlined />,
-
         routes: [
           {
-            
             name: "超级管理员",
             path: "/admin/user/supers",
-            access: ["Root"]
           },
           {
             name: "运营管理",
             path: "/admin/user/operators",
-            access: ["Root"]
+            // access: ['operator'], // 该菜单项需要的角色
           },
           {
             name: "代理商管理",
             path: "/admin/user/creators",
-            access: ["Root","Operator"]
-
           },
           {
             name: "管理员-广告主管理",
             path: "/admin/advertiser/root",
-            access: ["Root","Operator"]
-
           },
           {
             name: "代理商-广告主列表",
             path: "/admin/advertiser/agent",
-            access: ["Agent"]
           },
         ],
       },
@@ -88,27 +51,27 @@ const GetRouter = (userRole:string): Route => {
           {
             path: "/admin/materials/root",
             name: "广告创意管理",
-            access: ["Root","Operator"]
           },
           {
             path: "/admin/materials/agent",
             name: "代理商-广告创意列表",
-            access: ["Agent"]
           },
           {
             path: "/admin/materials/advertiser",
             name: "广告主-广告素材列表",
           },
- 
+
+          // {
+          //     path: '/admin/content/tags',
+          //     name: '广告投放管理',
+          // },
           {
             path: "/admin/placements/root",
             name: "管理员-广告投放计划",
-            access: ["Root","Operator"]
           },
           {
             path: "/admin/placements/agent",
             name: "代理商-广告计划列表",
-            access: ["Agent"]
           },
           {
             path: "/admin/placements/advertiser",
@@ -116,7 +79,7 @@ const GetRouter = (userRole:string): Route => {
           },
         ],
       },
-
+    
       {
         name: "媒体管理",
         icon: <ShareAltOutlined />,
@@ -125,21 +88,31 @@ const GetRouter = (userRole:string): Route => {
           {
             path: "/admin/media/manage",
             name: "投放媒体管理",
-            access: ["Root","Operator"]
           },
         ],
       },
-      // 根据用户角色配置允许访问的路由
-    ],
-    name: ""
-  };
- // 根据用户角色过滤路由
- const filteredRoutes = filterRoutes(fullRoutes.routes, userRole);
 
- return {
-   ...fullRoutes,
-   routes: filteredRoutes,
- };
+    //   {
+    //     name: "设置",
+    //     path: "/admin/setting",
+    //     icon: <SettingOutlined />,
+    //     routes: [
+    //       {
+    //         name: "系统设置",
+    //         path: "/admin/setting/system",
+    //       },
+    //       {
+    //         name: "支付设置",
+    //         path: "/admin/setting/payment",
+    //       },
+    //       {
+    //         name: "推广设置",
+    //         path: "/admin/setting/promotion",
+    //       },
+    //     ],
+    //   },
+    ],
+  };
 };
 
 export default GetRouter;

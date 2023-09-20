@@ -16,6 +16,7 @@ export class AuthError extends HttpException {
   static MediaName_IS_SAME = new AuthError('媒体名已存在，请修改', 10009);
   static PLACEMENTNAME_IS_SAME = new AuthError('计划名已存在，请修改', 10010);
   static BALANCE_NOTENOUGH = new AuthError('该广告主余额不足,请充值', 10011);
+  static USER_NOT_Permission = new AuthError('用户无权限', 10012);
 
   constructor(public message: string, public code: number) {
     super(message, code);

@@ -50,7 +50,7 @@ const AdminLayout = () => {
                 >
                     <ProLayout
                         prefixCls="my-prefix"
-                        route={GetRouter()}
+                        route={GetRouter(authUser.role)}
                         location={{
                             pathname,
                         }}

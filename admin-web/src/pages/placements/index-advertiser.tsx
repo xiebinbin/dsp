@@ -15,7 +15,6 @@ import type {
   
   // import { boolMap } from "@/utils/list-tool.ts";
   import AdvAPI from "@/api/advertiser.ts";
-  import { PlusOutlined } from "@ant-design/icons";
   export interface PlacementsPageProps {
     role: "Root" | "Agent" | "Advertiser";
     roleName: string;

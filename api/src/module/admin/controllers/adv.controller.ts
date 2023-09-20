@@ -77,6 +77,11 @@ export class AdvController {
   async getUser(@Param('id') id: number) {
     try {
       const userinfo = await this.AdvService.findById(BigInt(id));
+      if (userinfo.wallet == null) {
+        userinfo.wallet = {
+          balance: 0,
+        };
+      }
       const res = this.convertAdvInfo(userinfo);
       console.log('getresult', res);
 
