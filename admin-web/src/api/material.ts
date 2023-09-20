@@ -1,5 +1,5 @@
 import createRequestInstance from "@/api/lib/create-request-instance.ts";
-import { GetListDto, AdMaterial ,AdMaterialAgent} from "@/shims";
+import { GetListDto, AdMaterial ,AdMaterialAgent,AdvertiserOpt} from "@/shims";
 
 export interface MaterialEditDto {
   name: string;
@@ -29,7 +29,14 @@ const getList = (
 }> => {
   return createRequestInstance().post("/api/admin/material/list", params);
 };
-
+const getOptList = (
+  params: GetListDto
+): Promise<{
+  total: number;
+  data: AdvertiserOpt[];
+}> => {
+  return createRequestInstance().post("/api/admin/material/optlist", params);
+};
 const getInfo = (id: bigint): Promise<AdMaterial> => {
   return createRequestInstance().get(`/api/admin/material/${id}`);
 };
@@ -60,4 +67,5 @@ export default {
   update,
   getDetailInfo,
   getListByAdvertiser,
+  getOptList,
 };

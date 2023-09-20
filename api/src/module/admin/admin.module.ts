@@ -17,19 +17,31 @@ import { RechargeController } from './controllers/recharge.controller';
 import { RechargeService } from './services/recharge.service';
 import { MaterialService } from './services/material.service';
 import { MaterialController } from './controllers/material.controller';
+import { HttpModule } from '@nestjs/axios';
+import { PlacementController } from './controllers/placement.controller';
+import { FileService } from './services/file.service';
+import { PlacementService } from './services/placement.service';
+import { MediaController } from './controllers/media.controller';
+import { MediaService } from './services/media.service';
+import { MediaRelationService } from './services/mediarelation.service';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       cache: true,
     }),
     CacheModule.register(),
+    HttpModule,
   ],
+
   controllers: [
     AuthController,
     UserController,
     AdvController,
     RechargeController,
     MaterialController,
+    PlacementController,
+    MediaController,
   ],
   providers: [
     AuthService,
@@ -42,6 +54,10 @@ import { MaterialController } from './controllers/material.controller';
     AdvService,
     RechargeService,
     MaterialService,
+    FileService,
+    PlacementService,
+    MediaService,
+    MediaRelationService,
   ],
 })
 export class AdminModule {

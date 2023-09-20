@@ -84,7 +84,7 @@ interface AdMaterialAgent {
   advertiser: {
     id: number;
     companyName: string;
-    taxNumber:string;
+    taxNumber: string;
   };
 }
 interface Advertiser {
@@ -115,12 +115,63 @@ interface AgentOpt {
 interface AdvertiserOpt {
   id: number;
   name: string;
-  agentId:number;
+  agentId: number;
+}
+interface MaterialOpt {
+  id: number;
+  name: string;
+  advertiserId: number;
 }
 interface RootInfo {
   name: string;
 }
-
+interface AdPlacement {
+  id: bigint;
+  name: string;
+  enabled: boolean;
+  // 广告素材
+  adMaterialId: bigint;
+  adMaterial: {
+    name: string;
+    url: string;
+  };
+  // 预算金额上限
+  budget: bigint;
+  // 媒体类型
+  mediaType: Int;
+  // 开始日期
+  startedAt: DateTime;
+  // 结束日期
+  endedAt: DateTime;
+  // 已消耗预算
+  usedBudget: bigint;
+  // 展现次数
+  displayCount: bigint;
+  // 点击次数
+  clickCount: bigint;
+  advertiserId: bigint;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+  advertiser: {
+    id: number;
+    companyName: string;
+    user: { id: number; nickname: string };
+  };
+  adMediaRelations: [{mediaId: number, mediaName: string}];
+}
+interface Admedia {
+  id: number;
+  name: string;
+  enabled: number;
+  // 类型 1 网站 2pc 软件
+  type: number;
+  createdAt: string;
+  updatedAt: string;
+}
+interface AdmediaOpt {
+  id: number;
+  name: string;
+}
 interface Tag {
   id: bigint;
   title: string;

@@ -27,7 +27,7 @@ export class AdvController {
   private readonly logger = new Logger(AdvController.name);
   @Post('optlist')
   @UseInterceptors(ApiResInterceptor)
-  async getOptList(@Req() req: Request, @Body() queryParams: any) {
+  async getOptionList(@Req() req: Request, @Body() queryParams: any) {
     console.log('getOptList queryParams', queryParams);
     console.log('getOptList req', req.user);
     const { page, limit, q, filters, orderBy, extra } = queryParams;
@@ -40,10 +40,6 @@ export class AdvController {
         username: queryParams.q || '',
         role: req.user.role,
         userId: req.user.id,
-        // choserole: queryParams.extra.choserole,
-        // role: queryParams.role || '',
-        // updatedAt: queryParams.updatedAt || '',
-        // enabled: queryParams.enabled || false,
       });
       //   return response.send(result);
       console.log('result', result);
@@ -64,14 +60,9 @@ export class AdvController {
         page,
         limit,
         orderBy,
-        // nickname: queryParams.nickname || '',
         username: queryParams.q || '',
         role: queryParams.extra.role,
         userId: req.user.id,
-        // choserole: queryParams.extra.choserole,
-        // role: queryParams.role || '',
-        // updatedAt: queryParams.updatedAt || '',
-        // enabled: queryParams.enabled || false,
       });
       //   return response.send(result);
       console.log('result', result);

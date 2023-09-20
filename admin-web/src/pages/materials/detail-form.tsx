@@ -35,9 +35,9 @@ const MaterialDetail = (props: {
       setId(val);
       loadInfo(val)
         .then(() => {
-          //   setTimeout(() => {
-          setShow(true);
-          //   }, 500);
+          // setTimeout(() => {
+            setShow(true);
+          // }, 500);
         })
         .catch(() => {
           message.error("加载失败");
@@ -53,13 +53,15 @@ const MaterialDetail = (props: {
       // const user = await AdvAPI.getInfo(val);
       const data = await MaterialApi.getDetailInfo(id);
       formRef.current?.resetFields();
-      formRef.current?.setFieldsValue({
-        companyName: data.advertiser.companyName,
-        taxNumber: data.advertiser.taxNumber,
-        mediaType: data.mediaType,
-        position: data.position,
-        url: data.url,
-      });
+      setTimeout(() => {
+        formRef.current?.setFieldsValue({
+          companyName: data.advertiser.companyName,
+          taxNumber: data.advertiser.taxNumber,
+          mediaType: data.mediaType,
+          position: data.position,
+          url: data.url,
+        });
+      }, 500);
       if (data.mediaType === 2) {
         setPositionOptions([
           { label: "列表页", value: 1 },
@@ -146,7 +148,6 @@ const MaterialDetail = (props: {
       )}
       {mode === "detail" && role === "Advertiser" && (
         <>
-
           <ProFormRadio.Group
             name="mediaType"
             label="媒体类型"
@@ -158,6 +159,8 @@ const MaterialDetail = (props: {
               { label: "pc软件", value: 2 },
             ]}
           />
+          <div className="custom-radio-group">
+
           <ProFormRadio.Group
             name="position"
             label="广告位置"
@@ -165,7 +168,8 @@ const MaterialDetail = (props: {
             disabled
             initialValue={true}
             options={positionOptions}
-          />
+          /></div>
+
         </>
       )}
     </ModalForm>

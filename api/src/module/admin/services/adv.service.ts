@@ -46,7 +46,7 @@ export class AdvService {
   }
 
   async findById(id: bigint) {
-    const Advinfo = await this.prisma.advertiser.findFirst({
+    const advinfo = await this.prisma.advertiser.findFirst({
       select: {
         id: true,
         username: true,
@@ -57,7 +57,6 @@ export class AdvService {
         userId: true,
         updatedAt: true,
         enabled: true,
-        // 其他 Advertiser 模型的字段...
         user: {
           select: {
             id: true,
@@ -74,8 +73,9 @@ export class AdvService {
         id,
       },
     });
-    console.log('Advinfo', Advinfo);
-    return Advinfo;
+    console.log('Advinfo', advinfo);
+
+    return advinfo;
   }
   async getList(queryParams: any) {
     type MyType = {
@@ -301,9 +301,14 @@ export class AdvService {
     if (!user) {
       throw AuthError.USER_NOT_FOUND;
     }
+    await this.prisma.adMaterial.deleteMany({
+      where: { advertiserId: user.id },
+    });
+
+    await this.prisma.wallet.deleteMany({ where: { advertiserId: user.id } });
 
     // 执行删除操作
-    await this.prisma.advertiser.delete({ where: { id } });
+    await this.prisma.advertiser.delete({ where: { id: user.id } });
 
     return true;
   }

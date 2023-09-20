@@ -221,12 +221,6 @@ const agentcolumns: ProColumns<Advertiser>[] = [
       <a
         key="detail"
         onClick={() => {
-          console.log(
-            record.id,
-            record.companyName,
-            record.cpmPrice,
-            record.taxNumber
-          );
           $detailemit.emit("detail", {
             val: record.id,
             companyName: record.companyName,

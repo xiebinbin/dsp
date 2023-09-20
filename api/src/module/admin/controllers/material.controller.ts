@@ -22,12 +22,14 @@ import { Request } from 'express';
 import { AdvDto } from '../dto/adv.dto';
 import { MaterialDto } from '../dto/material.dto';
 import { AdvService } from '../services/adv.service';
+import { FileService } from '../services/file.service';
 
 @Controller('/api/admin/material')
 export class MaterialController {
   constructor(
     private readonly MaterialService: MaterialService,
     private readonly AdvService: AdvService,
+    private readonly fileService: FileService,
   ) {}
   private readonly logger = new Logger(MaterialController.name);
 
@@ -36,7 +38,7 @@ export class MaterialController {
   async getList(@Req() req: Request, @Body() queryParams: any) {
     const { page, limit, q, filters, orderBy, extra } = queryParams;
     try {
-      if (req.user.role != 'Root') {
+      if (req.user.role != 'Root' && req.user.role != 'Operator') {
         extra.agentid = req.user.id;
       }
       const result = await this.MaterialService.getList({
@@ -46,9 +48,34 @@ export class MaterialController {
         name: queryParams.q || '',
         role: extra.role,
         advertiserId: extra.advid,
-        userId: extra.agentid,
       });
       return result;
+    } catch (e) {
+      console.log(e);
+      throw new HttpException(e.message, e.status);
+    }
+  }
+  @Post('optlist')
+  @UseInterceptors(ApiResInterceptor)
+  async getOptionList(@Req() req: Request, @Body() queryParams: any) {
+    const { page, limit, q, filters, orderBy, extra } = queryParams;
+    try {
+      if (req.user.role != 'Root' && req.user.role != 'Operator') {
+        extra.agentid = req.user.id;
+      }
+      const result = await this.MaterialService.getList({
+        page,
+        limit,
+        orderBy,
+        advertiserId: queryParams.q || '',
+      });
+      const resultopt = result.data.map((res) => ({
+        id: res.id,
+        name: res.name,
+        advertiserId: res.advertiserId,
+      }));
+      console.log(resultopt);
+      return { data: resultopt };
     } catch (e) {
       console.log(e);
       throw new HttpException(e.message, e.status);
@@ -59,20 +86,26 @@ export class MaterialController {
   async getListByAdvertiser(@Req() req: Request, @Body() queryParams: any) {
     const { page, limit, q, filters, orderBy, extra } = queryParams;
     try {
-      const Advinfo = await this.AdvService.findById(BigInt(req.user.id));
-      if (!Advinfo) {
-        throw new HttpException(
-          AuthError.ADV_NOT_FOUND.message,
-          AuthError.ADV_NOT_FOUND.code,
-        );
+      console.log('req.user.id', req.user.id);
+      let Advinfo; // 将 Advinfo 的定义移到方法作用域之外
+
+      if (req.user.role != 'Root' && req.user.role != 'Operator') {
+        Advinfo = await this.AdvService.findById(BigInt(req.user.id));
+        if (!Advinfo) {
+          throw new HttpException(
+            AuthError.ADV_NOT_FOUND.message,
+            AuthError.ADV_NOT_FOUND.code,
+          );
+        }
       }
+
       const result = await this.MaterialService.getList({
         page,
         limit,
         orderBy,
         name: queryParams.q || '',
         role: '',
-        advertiserId: Advinfo.id,
+        advertiserId: Advinfo?.id || '',
         userId: '',
       });
       return result;
@@ -80,6 +113,12 @@ export class MaterialController {
       console.log(e);
       throw new HttpException(e.message, e.status);
     }
+  }
+
+  @Get('files/gettoken/:fileName')
+  async getToken(@Param('fileName') fileName: string): Promise<any> {
+    return true;
+    return this.fileService.getToken(fileName);
   }
   @Get(':id')
   @UseInterceptors(ApiResInterceptor)
