@@ -58,7 +58,7 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
   const loadAgents = useCallback(async () => {
     try {
       const agentslist = await AgentApi.getAgentsList();
-      console.log("agentslist", agentslist);
+      // console.log("agentslist", agentslist);
 
       setAgents(
         agentslist.map((agent) => {
@@ -75,7 +75,6 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
 
   const loadAdvertisers = useCallback(
     async (q: string) => {
-      console.log("loadAdv");
       const extra: Record<string, boolean | string> = {
         role,
       };
@@ -89,7 +88,7 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
         orderBy,
         extra,
       });
-      console.log("advlist res", res);
+      // console.log("advlist res", res);
 
       setadvertisersList(
         res.map((item) => {
@@ -100,7 +99,7 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
           };
         })
       );
-      console.log("advlist advertisersList", advertisersList);
+      // console.log("advlist advertisersList", advertisersList);
     },
     [setadvertisersList, role]
   );
@@ -370,14 +369,13 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
                 orderBy[field] = sort[sortKey] === "ascend" ? "asc" : "desc";
               }
               const extra: Record<string, boolean> = {};
-              console.log("request params", params);
+              // console.log("request params", params);
               if (params.advid) {
                 extra.advid = params.advid;
               }
               if (params.agentid) {
                 extra.agentid = params.agentid;
               }
-              console.log("extra", extra);
               const result = await PlacementApi.getList({
                 page: (params?.current ?? 1) as number,
                 limit: (params.pageSize ?? 10) as number,

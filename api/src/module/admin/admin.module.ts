@@ -24,6 +24,9 @@ import { PlacementService } from './services/placement.service';
 import { MediaController } from './controllers/media.controller';
 import { MediaService } from './services/media.service';
 import { MediaRelationService } from './services/mediarelation.service';
+import { ReportController } from './controllers/report.controller';
+import { ReportService } from './services/report.service';
+import { UploadController } from './controllers/upload.controller';
 
 @Module({
   imports: [
@@ -42,6 +45,8 @@ import { MediaRelationService } from './services/mediarelation.service';
     MaterialController,
     PlacementController,
     MediaController,
+    ReportController,
+    UploadController,
   ],
   providers: [
     AuthService,
@@ -58,6 +63,7 @@ import { MediaRelationService } from './services/mediarelation.service';
     PlacementService,
     MediaService,
     MediaRelationService,
+    ReportService,
   ],
 })
 export class AdminModule {

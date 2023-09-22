@@ -49,20 +49,6 @@ import type {
         hideInTable: true,
       },
       
-    //   {
-    //     title: "广告主",
-    //     key: "advertiser",
-    //     dataIndex: "advertiser",
-    //     ellipsis: true,
-    //     valueType: "text",
-    //     width: 200,
-  
-    //     render: (_, record) => {
-    //       // 自定义渲染函数，将 AdMaterial 中的 companyName 放到 agentname 处
-    //       return record.advertiser?.companyName || "-";
-    //     },
-    //     hideInSearch: true,
-    //   },
       {
         title: "名称",
         key: "name",

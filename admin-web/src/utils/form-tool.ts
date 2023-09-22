@@ -2,9 +2,8 @@ import TagApi from "@/api/tag.ts";
 import FileApi from "@/api/file.ts";
 import { v4 } from "uuid";
 import * as mimeTypes from "mime-types";
-// import * as AWS from 'aws-sdk';
-
-//  import S3 from 'aws-sdk/clients/s3';
+import * as AWS from 'aws-sdk';
+import { GetTokenParam } from "@/api/file"; //  import S3 from 'aws-sdk/clients/s3';
 export const uploads3 = (file: File): Promise<any> => {
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
@@ -15,44 +14,52 @@ export const uploads3 = (file: File): Promise<any> => {
       key.substring(2, 4),
       key + "." + mimeTypes.extension(file.type),
     ].join("/");
-
-    await FileApi.getToken(fileName)
+    const param: GetTokenParam = {
+      name: fileName,
+    };
+    await FileApi.getToken(param)
       .then((rep) => {
-        const { Credentials, Buckets, s3_url } = rep.data;
-        const s3client = new  (window as any).AWS.S3({
-          // 用服务端返回的信息初始化一个 S3 实例
-          region: "automatic",
-          endpoint: Buckets[0].s3Endpoint,
-          credentials: Credentials,
-          params: {
-            Bucket: Buckets[0].s3Bucket,
-          },
-        });
-        const s3Upload = s3client.upload({
-          Key: fileName,
-          Body: file,
-          Bucket: Buckets[0].s3Bucket,
-          ContentType: file.type, // 设置上传后文件的 Content-Type 头，即 MIME 类型
-        });
-        s3Upload.on(
-          "httpUploadProgress",
-          (evt: { loaded: number; total: number }) => {
-            // 上传进度回调函数
-            const percent = ((evt.loaded * 100) / evt.loaded).toFixed(2);
-            console.log("进度 : " + percent + "%");
-          }
-        );
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        s3Upload.send((err: any, data: any) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve({
-              url: s3_url + "/" + data.Key,
-              size: file.size,
-            });
-          }
-        });
+        console.log("rep.data;", rep.data);
+        // const { credentials, s3Bucket,s3Endpoint, keyPrefix } = rep.data;
+        // const s3client = new (window as any).AWS.S3({
+        //   // 用服务端返回的信息初始化一个 S3 实例
+        //   region: "automatic",
+        //   endpoint: s3Endpoint,
+        //   credentials: credentials,
+        //   params: {
+        //     Bucket:s3Bucket,
+        //   },
+        // });
+        // const s3Upload = s3client.upload({
+        //   Key: fileName,
+        //   Body: file,
+        //   Bucket: s3Bucket,
+        //   ContentType: file.type, // 设置上传后文件的 Content-Type 头，即 MIME 类型
+        // });
+        // s3Upload.on(
+        //   "httpUploadProgress",
+        //   (evt: { loaded: number; total: number }) => {
+        //     // 上传进度回调函数
+        //     const percent = ((evt.loaded * 100) / evt.loaded).toFixed(2);
+        //     console.log("进度 : " + percent + "%");
+        //   }
+        // );
+        // // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // s3Upload.send((err: any, data: any) => {
+        //   if (err) {
+        //     reject(err);
+        //   } else {
+        //     resolve({
+        //       url: keyPrefix + "/" + data.Key,
+        //       size: file.size,
+        //     });
+        //   }
+        // });
+
+        resolve({
+                url: rep.data.keyPrefix ,
+                size: file.size,
+              });
       })
       .catch((err) => {
         reject(err);

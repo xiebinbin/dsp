@@ -24,10 +24,10 @@ import MaterialApi from "@/api/material.ts";
 import AgentApi from "@/api/agent.ts";
 import AdvAPI from "@/api/advertiser.ts";
 import { CloudUploadOutlined } from "@ant-design/icons";
-import { getImgUrl } from "@/utils/file";
+import { getImgUrl, removeImgUrl } from "@/utils/file";
 import { RcFile } from "antd/es/upload";
 import { upload, uploads3 } from "@/utils/form-tool";
-
+import FileApi from "@/api/file.ts";
 // eslint-disable-next-line react-refresh/only-export-components
 export const $emit = new Emittery();
 
@@ -39,7 +39,7 @@ const EditForm = () => {
   const [show, setShow] = useSafeState(false);
   const [id, setId] = useSafeState<bigint>(BigInt(0));
   const formRef = useRef<ProFormInstance>();
-  const [materialurl, setMaterialurl] = useSafeState("");
+  const [materialurl, setMaterialurl] = useSafeState(""); //http://static-edu-test.leleshuju.com/
   const [fileList, setFileList] = useSafeState<UploadFile[]>([]);
   const [mode, setMode] = useSafeState("add");
   const [positionOptions, setPositionOptions] = useState([
@@ -55,6 +55,7 @@ const EditForm = () => {
     { id: number; name: string; agentId: number }[]
   >([]);
   const [selectedAgent, setSelectedAgent] = useState<number | string>("");
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleMediaTypeChange = (e: RadioChangeEvent) => {
     if (e.target.value === 2) {
@@ -126,6 +127,8 @@ const EditForm = () => {
       loadAgentsRelation();
       loadAdvertisers("");
       setMode("add");
+      setMaterialurl("");
+
       formRef.current?.resetFields();
       formRef.current?.setFieldsValue({
         name: "",
@@ -134,6 +137,7 @@ const EditForm = () => {
         agent: "",
         advertiser: "",
         position: "",
+        url: "",
       });
       // setId(BigInt(0));
       setShow(true);
@@ -172,9 +176,10 @@ const EditForm = () => {
           agent: data.advertiser.user.id,
           advertiserId: data.advertiser.id,
           position: data.position,
-          materialurl:data.url,
+          materialurl: data.url,
         });
       }, 500);
+      setMaterialurl(data.url);
       setAgents([
         { name: data.advertiser.user.nickname, id: data.advertiser.user.id },
       ]);
@@ -214,21 +219,23 @@ const EditForm = () => {
         },
       ]);
       try {
-        const res = await uploads3(file);
-        const uploadFile: UploadFile = {
-          uid: file.uid,
-          name: res.key,
-          url: res.url,
-          thumbUrl: res.url,
-          status: "success",
-        };
-        setFileList([uploadFile]);
-        setMaterialurl(res.key);
+        setIsUploading(true);
+
+        // const res = await FileApi.uploadLocal(file);
+        const res = await FileApi.uploadcloud(file);
+
+        setTimeout(() => {
+          setMaterialurl(res.fileurl);
+        }, 1000);
       } catch (e) {
         setFileList([]);
         setMaterialurl("");
         console.log(e);
         message.error("上传失败");
+      } finally {
+        setTimeout(() => {
+          setIsUploading(false);
+        }, 1500);
       }
     },
     [setFileList, setMaterialurl]
@@ -244,7 +251,7 @@ const EditForm = () => {
   );
   const create = useCallback(
     async (data: MaterialEditDto) => {
-      console.log("create data", data);
+      // console.log("create data", data);
       try {
         const res = await MaterialApi.create(data);
         if (!res) {
@@ -273,16 +280,15 @@ const EditForm = () => {
         if (formRef.current) {
           const data = await formRef.current.validateFields();
           // data.avatar = avatar;
+          data.url = removeImgUrl(materialurl);
 
-          console.log("validateFields data", data);
+          // console.log("validateFields data", data);
           if (mode === "add") {
             // data.role = role;
 
             await create(data);
           }
           if (mode === "update") {
-            console.log("update data", data);
-
             await update(id, data);
           }
         }
@@ -392,14 +398,14 @@ const EditForm = () => {
           <ProForm.Item label="上传素材">
             {materialurl != "" ? (
               <img
-                className="w-50px h-50px mr-1rem"
+                className="w-200px h-200px mr-1rem"
                 src={getImgUrl(materialurl)}
                 alt=""
               />
             ) : null}
             <Upload
               name="materialurl"
-              accept="image/*, .svg"
+              accept="image/*, .svg, .png, .jpg, .jpeg"
               maxCount={1}
               showUploadList={false}
               onChange={(info) => {
@@ -412,7 +418,9 @@ const EditForm = () => {
               fileList={fileList}
               customRequest={({ file }) => customRequest(file as RcFile)}
             >
-              <Button icon={<CloudUploadOutlined />}>上传</Button>
+              <Button loading={isUploading} icon={<CloudUploadOutlined />}>
+                上传
+              </Button>
             </Upload>
           </ProForm.Item>
         </ProForm.Group>

@@ -16,6 +16,7 @@ import { AdvIndexPageProps } from "@/pages/advertiser";
 import { MaterialsPageProps } from "@/pages/materials";
 import { PlacementsPageProps } from "./pages/placements";
 import { MediaPageProps } from "@/pages/media/index";
+import { ReportPageProps } from "@/pages/report";
 dayjs.extend(utc);
 const HelpIndexPage: React.LazyExoticComponent<React.FC> = lazy(
   () => import("@/pages/help")
@@ -23,6 +24,7 @@ const HelpIndexPage: React.LazyExoticComponent<React.FC> = lazy(
 const UnauthorizedPage: React.LazyExoticComponent<React.FC> = lazy(
   () => import("@/pages/unauthorized")
 );
+
 const UserIndexPage: React.LazyExoticComponent<React.FC<UserIndexPageProps>> =
   lazy(() => import("@/pages/user"));
 // const VideoIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/video"));
@@ -84,7 +86,12 @@ const PlacementsAdvertiserIndexPage: React.LazyExoticComponent<
 > = lazy(() => import("@/pages/placements/index-advertiser"));
 const MediaIndexPage: React.LazyExoticComponent<React.FC<MediaPageProps>> =
   lazy(() => import("@/pages/media/index"));
-
+  const ReportIndexPage: React.LazyExoticComponent<React.FC<ReportPageProps>> = lazy(
+    () => import("@/pages/report")
+  );
+  const ReportAgentIndexPage: React.LazyExoticComponent<React.FC<ReportPageProps>> = lazy(
+    () => import("@/pages/report/index-agent")
+  );
 const router = createBrowserRouter([
   {
     path: "/",
@@ -299,15 +306,33 @@ const router = createBrowserRouter([
               </Suspense>
             ),
           },
+          {
+            path: "report/index",
+            element: (
+              <Suspense>
+                <ReportIndexPage role="Root" roleName="管理员"/>
+              </Suspense>
+            ),
+          },
+          {
+            path: "report/agent",
+            element: (
+              <Suspense>
+                <ReportAgentIndexPage role="Agent" roleName="代理商"/>
+              </Suspense>
+            ),
+          },
+          
+          
         ],
       },
     ],
   },
 ]);
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <RecoilRoot>
       <RouterProvider router={router} />
     </RecoilRoot>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

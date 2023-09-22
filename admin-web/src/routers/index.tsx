@@ -1,4 +1,5 @@
 import {
+  BarChartOutlined,
   DashboardOutlined,
   ShareAltOutlined,
   UserOutlined,
@@ -126,6 +127,23 @@ const GetRouter = (userRole:string): Route => {
             path: "/admin/media/manage",
             name: "投放媒体管理",
             access: ["Root","Operator"]
+          },
+        ],
+      },
+      {
+        name: "数据报表",
+        icon: <BarChartOutlined />,
+        path: "/admin/report",
+        routes: [
+          {
+            path: "/admin/report/index",
+            name: "数据报表",
+            access: ["Root","Operator"]
+          },
+          {
+            path: "/admin/report/agent",
+            name: "代理商数据报表",
+            access: ["Agent","Root"]
           },
         ],
       },

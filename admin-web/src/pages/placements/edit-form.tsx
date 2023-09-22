@@ -74,9 +74,7 @@ const EditForm = () => {
       loadMaterials(e);
     }
   };
-  const handleMaterialChange = (e) => {
-    console.log("hand adverchange e,", e);
-  };
+ 
   const loadAgentsRelation = useCallback(async () => {
     const agentList = await AgentApi.getAgentsList();
     setAgents(agentList);
@@ -124,7 +122,7 @@ const EditForm = () => {
         const filters: Record<string, (number | string | boolean)[] | null> =
           {};
         const orderBy: { [key: string]: "asc" | "desc" } = {};
-        console.log("materials load q", q);
+        // console.log("materials load q", q);
         const res = await MaterialApi.getOptList({
           page: 1,
           limit: 1000,
@@ -174,7 +172,7 @@ const EditForm = () => {
     });
     $emit.on("update", (val: bigint) => {
       setMode("update");
-      console.log("update id", val);
+      // console.log("update id", val);
       setId(val);
       //   setShow(true);
 
@@ -249,7 +247,7 @@ const EditForm = () => {
   );
   const create = useCallback(
     async (data: PlacementEditDto) => {
-      console.log("create data", data);
+      // console.log("create data", data);
       try {
         const res = await PlacementApi.create(data);
         if (!res) {
@@ -279,14 +277,14 @@ const EditForm = () => {
           const data = await formRef.current.validateFields();
           // data.avatar = avatar;
 
-          console.log("validateFields data", data);
+          // console.log("validateFields data", data);
           if (mode === "add") {
             // data.role = role;
 
             await create(data);
           }
           if (mode === "update") {
-            console.log("update data", data);
+            // console.log("update data", data);
 
             await update(id, data);
           }
@@ -351,9 +349,9 @@ const EditForm = () => {
             label: material.name,
             value: material.id,
           }))}
-          fieldProps={{
-            onChange: handleMaterialChange,
-          }}
+          // fieldProps={{
+          //   onChange: handleMaterialChange,
+          // }}
         />
         <ProFormDigit
           name="budget"

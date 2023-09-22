@@ -120,14 +120,14 @@ model AdMaterial {
 
 // 投放媒体管理表
 model AdMedia {
-  id              BigInt            @id @default(autoincrement()) @db.UnsignedBigInt
-  name            String
-  enabled         Boolean           @default(true)
+  id               BigInt            @id @default(autoincrement()) @db.UnsignedBigInt
+  name             String
+  enabled          Boolean           @default(true)
   // 类型 1 网站 2pc 软件
-  type            Int               @default(1)
-  createdAt       DateTime          @default(now()) @map("created_at")
-  updatedAt       DateTime          @updatedAt @map("updated_at")
-  deletedAt       DateTime?         @map("deleted_at")
+  type             Int               @default(1)
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+  deletedAt        DateTime?         @map("deleted_at")
   adMediaRelations AdMediaRelation[]
 
   @@index([enabled], name: "enabled")
@@ -137,15 +137,16 @@ model AdMedia {
 
 // 投放媒体关系表
 model AdMediaRelation {
-  id          BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
+  id          BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
   // 广告主id
-  mediaId     BigInt  @map("media_id")
-  admedia     AdMedia @relation(fields: [mediaId], references: [id])
-  enabled     Boolean @default(true)
-  placementId BigInt  @map("placement_id")
+  mediaId     BigInt      @map("media_id")
+  admedia     AdMedia     @relation(fields: [mediaId], references: [id])
+  enabled     Boolean     @default(true)
+  placementId BigInt      @map("placement_id")
   adPlacement AdPlacement @relation(fields: [placementId], references: [id])
-  createdAt   DateTime      @default(now()) @map("created_at")
-  updatedAt   DateTime      @updatedAt @map("updated_at")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
   @@index([placementId], name: "placement_id")
   @@index([mediaId], name: "media_id")
   @@index([enabled], name: "enabled")
@@ -154,31 +155,31 @@ model AdMediaRelation {
 
 // 广告投放计划表
 model AdPlacement {
-  id                BigInt           @id @default(autoincrement()) @db.UnsignedBigInt
-  name              String
-  enabled           Boolean          @default(true)
+  id               BigInt            @id @default(autoincrement()) @db.UnsignedBigInt
+  name             String
+  enabled          Boolean           @default(true)
   // 广告素材
-  adMaterialId      BigInt           @map("ad_material_id")
-  adMaterial        AdMaterial       @relation(fields: [adMaterialId], references: [id])
+  adMaterialId     BigInt            @map("ad_material_id")
+  adMaterial       AdMaterial        @relation(fields: [adMaterialId], references: [id])
   // 预算金额上限
-  budget            BigInt           @default(0) @db.UnsignedBigInt
+  budget           BigInt            @default(0) @db.UnsignedBigInt
   // 媒体类型
-  mediaType         Int              @default(1)
+  mediaType        Int               @default(1)
   // 开始日期
-  startedAt         DateTime         @default(now()) @map("started_at")
+  startedAt        DateTime          @default(now()) @map("started_at")
   // 结束日期
-  endedAt           DateTime?        @default(now()) @map("ended_at")
+  endedAt          DateTime?         @default(now()) @map("ended_at")
   // 已消耗预算
-  usedBudget        BigInt           @default(0) @map("used_budget") @db.UnsignedBigInt
+  usedBudget       BigInt            @default(0) @map("used_budget") @db.UnsignedBigInt
   // 展现次数
-  displayCount      BigInt           @default(0) @map("display_count") @db.UnsignedBigInt
+  displayCount     BigInt            @default(0) @map("display_count") @db.UnsignedBigInt
   // 点击次数
-  clickCount        BigInt           @default(0) @map("click_count") @db.UnsignedBigInt
-  advertiserId      BigInt           @map("advertiser_id")
-  advertiser        Advertiser       @relation(fields: [advertiserId], references: [id])
-  createdAt         DateTime         @default(now()) @map("created_at")
-  updatedAt         DateTime         @updatedAt @map("updated_at")
-  deletedAt         DateTime?        @map("deleted_at")
+  clickCount       BigInt            @default(0) @map("click_count") @db.UnsignedBigInt
+  advertiserId     BigInt            @map("advertiser_id")
+  advertiser       Advertiser        @relation(fields: [advertiserId], references: [id])
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+  deletedAt        DateTime?         @map("deleted_at")
   adMediaRelations AdMediaRelation[]
 
   @@index([adMaterialId], name: "ad_material_id")
@@ -189,3 +190,28 @@ model AdPlacement {
   @@index([advertiserId], name: "advertiser_id")
   @@map("ad_placements")
 }
+
+//日报report_daily
+model ReportDaily {
+  id             BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  date           String   @default("1999-01-01")
+  agentId        BigInt   @map("agent_id")
+  agentName      String   @map("agent_name")
+  advertiserId   BigInt   @map("advertiser_id")
+  advertiserName String   @map("advertiser_name")
+  adMaterialId   BigInt   @map("ad_material_id")
+  adMaterialName String   @map("ad_material_name")
+  displayCount   BigInt   @default(0) @map("display_count") @db.UnsignedBigInt
+  clickCount     BigInt   @default(0) @map("click_count") @db.UnsignedBigInt
+  usedBudget     BigInt   @default(0) @map("used_budget") @db.UnsignedBigInt
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@index([date], name: "date")
+  @@index([agentId], name: "agent_id")
+  @@index([advertiserId], name: "advertiser_id")
+  @@index([adMaterialId], name: "ad_material_id")
+  @@map("report_daily")
+}
+
+

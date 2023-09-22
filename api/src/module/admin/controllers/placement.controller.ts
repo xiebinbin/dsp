@@ -140,6 +140,7 @@ export class PlacementController {
     }
   }
   @Put(':id')
+  @UseInterceptors(ApiResInterceptor)
   async updatePlacement(
     @Param('id') id: bigint,
     @Body()

@@ -2,19 +2,16 @@ import createRequestInstance from "@/api/lib/create-request-instance.ts";
 import axios from "axios";
 import mime from "mime";
 // 假设 FileApi.getToken 返回的数据结构
-interface FileApiTokenResponse {
-  data: {
-    Credentials: {
-      accessKeyId: string;
-      secretAccessKey: string;
-      sessionToken: string;
-    };
-    Buckets: {
-      s3Bucket: string;
-      s3Endpoint: string;
-    }[];
-    s3_url: string;
-  };
+
+interface filelocalres {
+  filename: string;
+  fileurl: string;
+  filemimetype: string;
+}
+export interface GetTokenParam {
+  filename: string;
+  fileurl: string;
+  filemimetype: string;
 }
 const getPutObjectUrl = (
   ext: string
@@ -49,13 +46,27 @@ const upload = async (file: File): Promise<string> => {
       .catch((e) => reject(e));
   });
 };
-const getToken = async (fileName: string): Promise<FileApiTokenResponse> => {
-   return  createRequestInstance().get(`/api/admin/material/files/gettoken/${fileName}`);
+const uploadcloud = async (file: File): Promise<filelocalres> => {
+  const ext = mime.getExtension(file.type);
+  const contentType = mime.getType(file.name) || "application/octet-stream";
+  // 创建一个FormData对象，用于将文件包装成可上传的形式
+  const formData = new FormData();
+  formData.append("file", file);
+  return createRequestInstance().post(
+    `/api/admin/upload/${file.name}`,
+    formData,
+    {
+      headers: {
+        "Content-Type": contentType,
+      },
+    }
+  );
 };
 
- 
+
 export default {
   getPutObjectUrl,
   upload,
-  getToken,
+  // getToken,
+  uploadcloud,
 };

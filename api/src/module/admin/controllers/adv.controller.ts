@@ -11,12 +11,10 @@ import {
   Res,
   Param,
   Put,
-  ValidationPipe,
   Delete,
 } from '@nestjs/common';
 import { ApiResInterceptor } from '../interceptors/api-res.interceptor';
 import { AdvService } from '../services/adv.service';
-import { UserDto } from '../dto/user.dto';
 import { AuthError } from 'src/utils/err_types';
 import { Request } from 'express';
 import { AdvDto } from '../dto/adv.dto';

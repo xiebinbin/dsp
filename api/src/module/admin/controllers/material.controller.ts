@@ -23,13 +23,13 @@ import { AdvDto } from '../dto/adv.dto';
 import { MaterialDto } from '../dto/material.dto';
 import { AdvService } from '../services/adv.service';
 import { FileService } from '../services/file.service';
+import { FileDto } from '../dto/file.dto';
 
 @Controller('/api/admin/material')
 export class MaterialController {
   constructor(
     private readonly MaterialService: MaterialService,
     private readonly AdvService: AdvService,
-    private readonly fileService: FileService,
   ) {}
   private readonly logger = new Logger(MaterialController.name);
 
@@ -115,11 +115,6 @@ export class MaterialController {
     }
   }
 
-  @Get('files/gettoken/:fileName')
-  async getToken(@Param('fileName') fileName: string): Promise<any> {
-    return true;
-    return this.fileService.getToken(fileName);
-  }
   @Get(':id')
   @UseInterceptors(ApiResInterceptor)
   async getMaterial(@Param('id') id: number) {
@@ -181,6 +176,7 @@ export class MaterialController {
     }
   }
   @Put(':id')
+  @UseInterceptors(ApiResInterceptor)
   async updateMaterial(
     @Param('id') id: bigint,
     @Body()
@@ -191,6 +187,7 @@ export class MaterialController {
     const result = this.MaterialService.updateMaterial(id, materialDto);
 
     return response.send(result);
+    return result;
   }
   @Delete(':id')
   @UseInterceptors(ApiResInterceptor)
@@ -198,6 +195,7 @@ export class MaterialController {
     console.log('id', id);
     return this.MaterialService.removeUser(id);
   }
+
   convertAdvInfo(material: any): any {
     // Make a shallow copy of the user object
 
