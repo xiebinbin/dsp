@@ -1,8 +1,9 @@
 import {
-  BarChartOutlined,
-  DashboardOutlined,
-  ShareAltOutlined,
-  UserOutlined,
+  DashboardTwoTone,
+  FundTwoTone,
+  IdcardTwoTone,
+  ScheduleTwoTone,
+  VideoCameraTwoTone,
 } from "@ant-design/icons";
 interface Route {
   name: string;
@@ -41,13 +42,28 @@ const GetRouter = (userRole:string): Route => {
       {
         path: "/admin/dashboard",
         name: "控制台",
-        icon: <DashboardOutlined />,
+        icon: <DashboardTwoTone />,
+        access: ["Root","Operator","Agent"]
+
+      },
+      // {
+      //   path: "/admin/dashboard/agent",
+      //   name: "控制台",
+      //   icon: <DashboardTwoTone />,
+      //   access: ["Agent"]
+
+      // },
+      {
+        path: "/admin/dashboard/advertiser",
+        name: "控制台",
+        icon: <DashboardTwoTone />,
+        access: ["Advertiser"]
 
       },
       {
         name: "用户管理",
         path: "/admin/user",
-        icon: <UserOutlined />,
+        icon: <IdcardTwoTone />,
 
         routes: [
           {
@@ -83,7 +99,7 @@ const GetRouter = (userRole:string): Route => {
       {
         path: "/admin/materials",
         name: "广告管理",
-        icon: <div className="i-ri-sticky-note-line text-1rem" />,
+        icon: <ScheduleTwoTone />,
         component: "./Admin",
         routes: [
           {
@@ -99,6 +115,7 @@ const GetRouter = (userRole:string): Route => {
           {
             path: "/admin/materials/advertiser",
             name: "广告主-广告素材列表",
+            access: ["Advertiser"]
           },
  
           {
@@ -114,14 +131,17 @@ const GetRouter = (userRole:string): Route => {
           {
             path: "/admin/placements/advertiser",
             name: "广告主-广告计划列表",
+            access: ["Advertiser"]
+
           },
         ],
       },
 
       {
         name: "媒体管理",
-        icon: <ShareAltOutlined />,
+        icon: <VideoCameraTwoTone />,
         path: "/admin/media",
+        access: ["Root","Operator"],
         routes: [
           {
             path: "/admin/media/manage",
@@ -132,7 +152,7 @@ const GetRouter = (userRole:string): Route => {
       },
       {
         name: "数据报表",
-        icon: <BarChartOutlined />,
+        icon: <FundTwoTone />,
         path: "/admin/report",
         routes: [
           {
@@ -143,7 +163,7 @@ const GetRouter = (userRole:string): Route => {
           {
             path: "/admin/report/agent",
             name: "代理商数据报表",
-            access: ["Agent","Root"]
+            access: ["Agent"]
           },
         ],
       },

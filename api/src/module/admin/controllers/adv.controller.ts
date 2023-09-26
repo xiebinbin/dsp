@@ -12,12 +12,18 @@ import {
   Param,
   Put,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiResInterceptor } from '../interceptors/api-res.interceptor';
 import { AdvService } from '../services/adv.service';
 import { AuthError } from 'src/utils/err_types';
 import { Request } from 'express';
 import { AdvDto } from '../dto/adv.dto';
+import {
+  GuardMiddlewareAgent,
+  GuardMiddlewareAll,
+  GuardMiddlewareRoot,
+} from '../middlewares/guard.middleware';
 
 @Controller('/api/admin/advertiser')
 export class AdvController {
@@ -30,6 +36,9 @@ export class AdvController {
     console.log('getOptList req', req.user);
     const { page, limit, q, filters, orderBy, extra } = queryParams;
     try {
+      // if (req.user.role == 'Root' || req.user.role == 'Operator') {
+      //   req.user.role = 'Root';
+      // }
       const result = await this.AdvService.findAdvertisers({
         page,
         limit,
@@ -48,6 +57,7 @@ export class AdvController {
     }
   }
   @Post('list')
+  @UseGuards(GuardMiddlewareAll) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async getList(@Req() req: Request, @Body() queryParams: any) {
     console.log('queryParams', queryParams);
@@ -90,6 +100,7 @@ export class AdvController {
     }
   }
   @Post('store')
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async userstore(@Body() data: AdvDto) {
     console.log('data,data', data);
@@ -119,6 +130,7 @@ export class AdvController {
     }
   }
   @Put(':id')
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   async updateUser(
     @Param('id') id: bigint,
     @Body()

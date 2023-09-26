@@ -13,18 +13,28 @@ import {
   Put,
   ValidationPipe,
   Delete,
+  UseGuards,
+  HttpStatus,
 } from '@nestjs/common';
 import { ApiResInterceptor } from '../interceptors/api-res.interceptor';
 import { UserService } from '../services/user.service';
 import { UserDto } from '../dto/user.dto';
 import { AuthError } from 'src/utils/err_types';
 import { Request } from 'express';
+import { GuardMiddlewareRoot } from '../middlewares/guard.middleware';
 
 @Controller('/api/admin/users')
 export class UserController {
   constructor(private readonly UserService: UserService) {}
   private readonly logger = new Logger(UserController.name);
+  // restrictedRoute() {
+  //   throw new HttpException(
+  //     AuthError.USERNAME_IS_SAME.message,
+  //     AuthError.USERNAME_IS_SAME.code,
+  //   );
+  // }
   @Get('agentslist')
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async getAgent() {
     try {
@@ -39,6 +49,7 @@ export class UserController {
   }
   @Post('list')
   @UseInterceptors(ApiResInterceptor)
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   async getList(@Req() req: Request, @Body() queryParams: any) {
     // console.log('req', req.user);
     const { page, limit, q, filters, orderBy, extra } = queryParams;
@@ -64,6 +75,7 @@ export class UserController {
   }
   @Get(':id')
   @UseInterceptors(ApiResInterceptor)
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   async getUser(@Param('id') id: number) {
     try {
       const userinfo = await this.UserService.findById(BigInt(id));
@@ -75,6 +87,7 @@ export class UserController {
     }
   }
   @Put(':id')
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   async updateUser(
     @Param('id') id: bigint,
     @Body()
@@ -88,6 +101,7 @@ export class UserController {
   }
 
   @Post('store')
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async userstore(@Req() req: Request, @Body() data: UserDto) {
     console.log('data,data', data);
@@ -134,6 +148,7 @@ export class UserController {
   }
   @Delete(':id')
   @UseInterceptors(ApiResInterceptor)
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   async removeUser(
     @Req() req: Request,
     @Param('id') id: bigint,

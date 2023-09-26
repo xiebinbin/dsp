@@ -278,21 +278,13 @@ const EditForm = (props: {
 
                 />  
             </ProForm.Group>
-            <ProForm.Group>
-                {/* <ProFormSelect
-                    name="role"
-                    label="角色"
-                    // initialValue="Agent" 
-                    initialValue={role === 'Root' ? 'Root' : role}
+            <ProForm.Group style={{ display: "none" }}>
+                <ProFormText
+                  name="role"
+                   disabled
+                   style={{ display: "none" }}
 
-                    valueEnum={{
-                        Root: 'Root',
-                        Agent: 'Agent',
-                        Operator: 'Operator',
-                    }}
-                    style={{ display: role === 'Root' ? 'block' : 'none' }}
-                    formItemProps={{ label: role === 'Root' ? '角色' : undefined }}
-                /> */}
+                />
             </ProForm.Group>
             <ProForm.Group>
                 <ProFormRadio.Group

@@ -1,7 +1,6 @@
 import type {
   ActionType,
   ProColumns,
-  ProFormInstance,
   ProSchemaValueEnumType,
 } from "@ant-design/pro-components";
 import {
@@ -12,19 +11,17 @@ import {
 import { Button, Popconfirm } from "antd";
 import { ReactNode, useCallback, useEffect, useRef } from "react";
 import EditForm, { $emit } from "./edit-form.tsx";
-import { AdMaterial, AdPlacement, Admedia } from "@/shims";
 import { useMount, useSafeState, useUnmount } from "ahooks";
 import MediaApi, { MediaEditDto } from "@/api/media.ts";
-import PlacementApi from "@/api/placement.ts";
-
-// import { boolMap } from "@/utils/list-tool.ts";
-import AdvAPI from "@/api/advertiser.ts";
-import AgentApi from "@/api/agent.ts";
 import { PlusOutlined } from "@ant-design/icons";
 export interface MediaPageProps {
   role: "Root" | "Operator";
   roleName: string;
 }
+import { AuthInfo } from "@/stores/auth-info.ts";
+import { useRecoilState } from "recoil";
+import { useNavigate } from "react-router-dom";
+
 const maps = new Map<
   string | number | boolean,
   ProSchemaValueEnumType | ReactNode
@@ -49,7 +46,8 @@ types.set(2, {
 });
 const MediaIndexPage = (props: MediaPageProps) => {
   const { role, roleName } = props;
-  
+  const [authUser] = useRecoilState(AuthInfo);
+
   const actionRef = useRef<ActionType>();
   const [pageSize, setPageSize] = useSafeState(100);
   const reload = useCallback(() => {
@@ -174,9 +172,15 @@ const MediaIndexPage = (props: MediaPageProps) => {
       ],
     },
   ];
+  const navigate = useNavigate();
 
   const renderContent = () => {
+   
     if (role === "Root") {
+      if (authUser.role !== "Root" && authUser.role !== "Operator") {
+        navigate("/unauthorized");
+        return null;
+      }
       return (
         <div>
           <ProTable<MediaEditDto>

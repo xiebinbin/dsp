@@ -16,12 +16,15 @@ import { AdMaterial, AdPlacement } from "@/shims";
 import { useMount, useSafeState, useUnmount } from "ahooks";
 import MaterialApi from "@/api/material.ts";
 import PlacementApi from "@/api/placement.ts";
+import { AuthInfo } from "@/stores/auth-info.ts";
+import { useRecoilState } from "recoil";
+import { useNavigate } from 'react-router-dom';
 
 // import { boolMap } from "@/utils/list-tool.ts";
 import AdvAPI from "@/api/advertiser.ts";
 import AgentApi from "@/api/agent.ts";
 import { PlusOutlined } from "@ant-design/icons";
-export interface PlacementsPageProps {
+ export interface PlacementsPageProps {
   role: "Root" | "Agent" | "Advertiser";
   roleName: string;
 }
@@ -39,6 +42,7 @@ maps.set(false, {
 });
 const PlacementsIndexPage = (props: PlacementsPageProps) => {
   const { role, roleName } = props;
+  const [authUser] = useRecoilState(AuthInfo);
   const [advertisers, setAdvertisers] = useSafeState<
     { id: number; name: string; agentId: number }[]
   >([]);
@@ -68,7 +72,7 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
           };
         })
       );
-     } catch (error) {
+    } catch (error) {
       console.error("Error fetching agent options:", error);
     }
   }, [setAgents]);
@@ -106,6 +110,7 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
 
   useEffect(() => {
     // 在组件加载时触发 loadAdvertisers 并设置值给 advertiserSearch
+
     loadAgents();
     loadAdvertisers("");
     if (selectedAgent) {
@@ -302,22 +307,24 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
           编辑
         </a>,
         <a key="pending">
-        <Popconfirm
-          title={`是否${record.enabled ? "暂停" : "启动"}计划？`}
-          onConfirm={() => {
-            PlacementApi.pending(record.id, !record.enabled)
-              .then(() => {
-                action?.reload();
-                window.Message.success(`${record.enabled ? "暂停" : "启动"}成功`);
-              })
-              .catch(() => {
-                window.Message.error("修改失败");
-              });
-          }}
-        >
-          <span>{record.enabled ? "暂停" : "启动"}</span>
-        </Popconfirm>
-      </a>,
+          <Popconfirm
+            title={`是否${record.enabled ? "暂停" : "启动"}计划？`}
+            onConfirm={() => {
+              PlacementApi.pending(record.id, !record.enabled)
+                .then(() => {
+                  action?.reload();
+                  window.Message.success(
+                    `${record.enabled ? "暂停" : "启动"}成功`
+                  );
+                })
+                .catch(() => {
+                  window.Message.error("修改失败");
+                });
+            }}
+          >
+            <span>{record.enabled ? "暂停" : "启动"}</span>
+          </Popconfirm>
+        </a>,
         <TableDropdown
           key="actionGroup"
           menus={[
@@ -347,9 +354,16 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
       ],
     },
   ];
+  const navigate = useNavigate();
 
   const renderContent = () => {
+    console.log("authUser.role", authUser.role);
+    if (authUser.role !== "Root" && authUser.role !== "Operator") {
+      navigate("/unauthorized");
+      return null;
+    }
     if (role === "Root") {
+  
       return (
         <div>
           <ProTable<AdPlacement>
@@ -384,7 +398,6 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
                 orderBy,
                 extra,
               });
-              
 
               return {
                 ...result,

@@ -17,6 +17,7 @@ import { MaterialsPageProps } from "@/pages/materials";
 import { PlacementsPageProps } from "./pages/placements";
 import { MediaPageProps } from "@/pages/media/index";
 import { ReportPageProps } from "@/pages/report";
+import { DashbordPageProps } from "@/pages/dashboard";
 dayjs.extend(utc);
 const HelpIndexPage: React.LazyExoticComponent<React.FC> = lazy(
   () => import("@/pages/help")
@@ -31,37 +32,18 @@ const UserIndexPage: React.LazyExoticComponent<React.FC<UserIndexPageProps>> =
 const FeaturedCardIndexPage: React.LazyExoticComponent<React.FC> = lazy(
   () => import("@/pages/featured-card")
 );
-// const TagIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/tag"));
-const PopularIndexPage: React.LazyExoticComponent<React.FC> = lazy(
-  () => import("@/pages/popular")
-);
+ 
 const LoginPage: React.LazyExoticComponent<React.FC> = lazy(
   () => import("@/pages/login")
 );
-const DashboardPage: React.LazyExoticComponent<React.FC> = lazy(
+const DashboardPage: React.LazyExoticComponent<React.FC<DashbordPageProps>> = lazy(
   () => import("@/pages/dashboard")
 );
-const PaymentSettingPage: React.LazyExoticComponent<React.FC> = lazy(
-  () => import("@/pages/setting/payment")
-);
-const SystemSettingPage: React.LazyExoticComponent<React.FC> = lazy(
-  () => import("@/pages/setting/system")
-);
-const PromotionSettingPage: React.LazyExoticComponent<React.FC> = lazy(
-  () => import("@/pages/setting/promotion")
-);
-const PaymentChannelIndexPage: React.LazyExoticComponent<React.FC> = lazy(
-  () => import("@/pages/payment-channel")
-);
-const PlacementChannelIndexPage: React.LazyExoticComponent<React.FC> = lazy(
-  () => import("@/pages/placement-channel")
-);
+ 
 const AgentIndexPage: React.LazyExoticComponent<React.FC> = lazy(
   () => import("@/pages/agent")
 );
-const RechargeOrderIndexPage: React.LazyExoticComponent<React.FC> = lazy(
-  () => import("@/pages/recharge-order")
-);
+
 const AdvertiserIndexPage: React.LazyExoticComponent<
   React.FC<AdvIndexPageProps>
 > = lazy(() => import("@/pages/advertiser"));
@@ -114,18 +96,20 @@ const router = createBrowserRouter([
             element: (
               <Suspense>
                 {" "}
-                <DashboardPage />
+                <DashboardPage  role="Root" roleName="管理员看板"/>
               </Suspense>
             ),
           },
-          {
-            path: "content/populars",
-            element: (
-              <Suspense>
-                <PopularIndexPage />
-              </Suspense>
-            ),
-          },
+          // {
+          //   path: "dashboard/agent",
+          //   element: (
+          //     <Suspense>
+          //       {" "}
+          //       <DashboardPage  role="Agent" roleName="代理商看板"/>
+          //     </Suspense>
+          //   ),
+          // },
+     
           // {
           //     path: "content/tags",
           //     element: <Suspense><TagIndexPage/></Suspense>,
@@ -250,46 +234,9 @@ const router = createBrowserRouter([
               </Suspense>
             ),
           },
-          {
-            path: "setting/system",
-            element: (
-              <Suspense>
-                <SystemSettingPage />
-              </Suspense>
-            ),
-          },
-          {
-            path: "setting/payment",
-            element: (
-              <Suspense>
-                <PaymentSettingPage />
-              </Suspense>
-            ),
-          },
-          {
-            path: "setting/promotion",
-            element: (
-              <Suspense>
-                <PromotionSettingPage />
-              </Suspense>
-            ),
-          },
-          {
-            path: "payment/channels",
-            element: (
-              <Suspense>
-                <PaymentChannelIndexPage />
-              </Suspense>
-            ),
-          },
-          {
-            path: "placement/channels",
-            element: (
-              <Suspense>
-                <PlacementChannelIndexPage />
-              </Suspense>
-            ),
-          },
+        
+        
+       
           {
             path: "placement/agents",
             element: (
@@ -298,14 +245,7 @@ const router = createBrowserRouter([
               </Suspense>
             ),
           },
-          {
-            path: "order/recharge-orders",
-            element: (
-              <Suspense>
-                <RechargeOrderIndexPage />
-              </Suspense>
-            ),
-          },
+         
           {
             path: "report/index",
             element: (

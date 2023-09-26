@@ -60,7 +60,7 @@ const RechargeForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
     setTimeout(() => {
       formRef.current?.setFieldsValue({
         id: user.id,
-        currentBalance: user.wallet?.balance+'(元)',
+        currentBalance: user.wallet?.balance + "(元)",
         companyName: user.companyName,
       });
     }, 500);
@@ -150,7 +150,6 @@ const RechargeForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
             type: "money",
             precision: 2, // 小数点位数，根据需求设置
           }}
-
         />
       </ProForm.Group>
       <ProForm.Group>
@@ -167,7 +166,7 @@ const RechargeForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
           rules={[
             {
               validator: async (_, value) => {
-                if (value < 1) {
+                if (value < 1 || value == null) {
                   throw new Error("预存数量必须大于等于1元");
                 }
               },
@@ -180,14 +179,19 @@ const RechargeForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
         onClick={() => {
           if (formRef.current) {
             formRef.current.validateFields().then((values) => {
-              const { amount,companyName } = values;
+              const { amount, companyName } = values;
               const formattedAmount = parseFloat(amount).toFixed(2);
               Modal.confirm({
                 title: "确认提交",
                 content: (
                   <div>
-                    您确定给 <span style={{ fontWeight: 'bold', color: 'black' }}>{companyName}</span> 预存{" "}
-                    <span style={{ color: 'red' }}>{formattedAmount}(元)</span> 吗？
+                    您确定给{" "}
+                    <span style={{ fontWeight: "bold", color: "black" }}>
+                      {companyName}
+                    </span>{" "}
+                    预存{" "}
+                    <span style={{ color: "red" }}>{formattedAmount}(元)</span>{" "}
+                    吗？
                   </div>
                 ),
                 onOk: () => {

@@ -13,17 +13,15 @@ import {
   Put,
   ValidationPipe,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiResInterceptor } from '../interceptors/api-res.interceptor';
 import { MaterialService } from '../services/material.service';
-import { UserDto } from '../dto/user.dto';
 import { AuthError } from 'src/utils/err_types';
 import { Request } from 'express';
-import { AdvDto } from '../dto/adv.dto';
 import { MaterialDto } from '../dto/material.dto';
 import { AdvService } from '../services/adv.service';
-import { FileService } from '../services/file.service';
-import { FileDto } from '../dto/file.dto';
+import { GuardMiddlewareRoot } from '../middlewares/guard.middleware';
 
 @Controller('/api/admin/material')
 export class MaterialController {
@@ -32,6 +30,7 @@ export class MaterialController {
     private readonly AdvService: AdvService,
   ) {}
   private readonly logger = new Logger(MaterialController.name);
+  defaultUrl = 'http://static-edu-test.leleshuju.com/';
 
   @Post('list')
   @UseInterceptors(ApiResInterceptor)
@@ -39,7 +38,7 @@ export class MaterialController {
     const { page, limit, q, filters, orderBy, extra } = queryParams;
     try {
       if (req.user.role != 'Root' && req.user.role != 'Operator') {
-        extra.agentid = req.user.id;
+        extra.userId = req.user.id;
       }
       const result = await this.MaterialService.getList({
         page,
@@ -48,6 +47,7 @@ export class MaterialController {
         name: queryParams.q || '',
         role: extra.role,
         advertiserId: extra.advid,
+        userId: extra.userId,
       });
       return result;
     } catch (e) {
@@ -63,11 +63,14 @@ export class MaterialController {
       if (req.user.role != 'Root' && req.user.role != 'Operator') {
         extra.agentid = req.user.id;
       }
+      extra.role = req.user.role;
+
       const result = await this.MaterialService.getList({
         page,
         limit,
         orderBy,
         advertiserId: queryParams.q || '',
+        role: extra.role,
       });
       const resultopt = result.data.map((res) => ({
         id: res.id,
@@ -144,6 +147,7 @@ export class MaterialController {
     }
   }
   @Post('store')
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async materialstore(@Body() data: MaterialDto) {
     const name = data.name;
@@ -177,6 +181,7 @@ export class MaterialController {
   }
   @Put(':id')
   @UseInterceptors(ApiResInterceptor)
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   async updateMaterial(
     @Param('id') id: bigint,
     @Body()
@@ -191,6 +196,7 @@ export class MaterialController {
   }
   @Delete(':id')
   @UseInterceptors(ApiResInterceptor)
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   async removeUser(@Param('id') id: bigint): Promise<boolean> {
     console.log('id', id);
     return this.MaterialService.removeUser(id);
@@ -207,7 +213,7 @@ export class MaterialController {
       enabled: material.enabled,
       position: material.position,
       content: material.content,
-      url: material.url,
+      url: this.defaultUrl + material.url,
       advertiserId: Number(material.advertiserId),
 
       advertiser: {
@@ -235,7 +241,7 @@ export class MaterialController {
       enabled: null,
       position: material.position,
       content: material.content,
-      url: material.url,
+      url: this.defaultUrl + material.url,
       advertiserId: null,
       advertiser: {
         id: Number(material.advertiser.id), // 将 bigint 转换为 number
@@ -248,7 +254,6 @@ export class MaterialController {
         }, // 使用对象字面量设置 user 属性的值
       },
     };
-    // Convert the 'id' property to BigInt
 
     return materialDto;
   }

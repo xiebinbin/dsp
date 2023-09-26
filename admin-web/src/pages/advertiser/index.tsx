@@ -15,11 +15,13 @@ import { Advertiser } from "@/shims";
 import AdvAPI from "@/api/advertiser.ts";
 import { useMount, useUnmount } from "ahooks";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import RechargeForm, { $rechargeemit } from "./recharge-form.tsx";
 import RechargeHist, { $histemit } from "./recharge-hist.tsx";
+import { AuthInfo } from "@/stores/auth-info.ts";
 
 import AdvertiserDetail, { $detailemit } from "./advertiser-detail.tsx";
+import { useRecoilState } from "recoil";
 
 const maps = new Map<
   string | number | boolean,
@@ -240,6 +242,8 @@ export interface AdvIndexPageProps {
 }
 const AdvertiserIndexPage = (props: AdvIndexPageProps) => {
   const { role, roleName } = props;
+  const [authUser] = useRecoilState(AuthInfo);
+
   const actionRef = useRef<ActionType>();
   const reload = useCallback(() => {
     actionRef.current?.reload();
@@ -264,8 +268,15 @@ const AdvertiserIndexPage = (props: AdvIndexPageProps) => {
   useEffect(() => {
     reload();
   }, [location, reload]);
+  const navigate = useNavigate();
+
   const renderContent = () => {
+
     if (role === "Root") {
+      if (authUser.role !== "Root" && authUser.role !== "Operator") {
+        navigate("/unauthorized");
+        return null;
+      }
       return (
         <div>
           <ProTable<Advertiser>
@@ -350,6 +361,10 @@ const AdvertiserIndexPage = (props: AdvIndexPageProps) => {
         </div>
       );
     } else if (role == "Agent") {
+      if (authUser.role !== "Agent" ) {
+        navigate("/unauthorized");
+        return null;
+      }
       return (
         <div>
           <ProTable<Advertiser>

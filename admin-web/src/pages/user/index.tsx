@@ -8,7 +8,9 @@ import EditForm, {$emit} from "./edit-form.tsx";
 import {SuperUser} from "@/shims";
 import UserApi from "@/api/user.ts";
 import {useMount, useUnmount} from "ahooks";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { AuthInfo } from "@/stores/auth-info.ts";
 
 const maps = new Map<string | number | boolean, ProSchemaValueEnumType | ReactNode>()
 maps.set(true, {
@@ -247,6 +249,8 @@ export interface UserIndexPageProps {
 
 const UserIndexPage = (props: UserIndexPageProps) => {
     const {role, roleName} = props;
+    const [authUser] = useRecoilState(AuthInfo);
+
     const actionRef = useRef<ActionType>();
     const reload = useCallback(() => {
         actionRef.current?.reload()
@@ -266,8 +270,15 @@ const UserIndexPage = (props: UserIndexPageProps) => {
         reload();
     }, [location, reload])
     console.log("UserIndexPage role: ",role)
+    const navigate = useNavigate();
+
     const renderContent = () => {
+ 
         if (role === 'Root'||role==='Operator') {
+            if (authUser.role !== "Root" && authUser.role !== "Operator") {
+                navigate("/unauthorized");
+                return null;
+              }
             // SUPER 角色的内容
                 return   <div>
                 <ProTable<SuperUser> 

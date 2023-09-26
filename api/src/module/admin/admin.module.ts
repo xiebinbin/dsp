@@ -27,6 +27,7 @@ import { MediaRelationService } from './services/mediarelation.service';
 import { ReportController } from './controllers/report.controller';
 import { ReportService } from './services/report.service';
 import { UploadController } from './controllers/upload.controller';
+import { DashboardController } from './controllers/dashboard.controller';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { UploadController } from './controllers/upload.controller';
     MediaController,
     ReportController,
     UploadController,
+    DashboardController,
   ],
   providers: [
     AuthService,

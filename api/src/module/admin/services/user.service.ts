@@ -105,9 +105,8 @@ export class UserService {
     };
     const where: any = {};
 
-    if (role !== 'Root') {
-      where.role = this.mapStringToRole(role);
-    }
+    where.role = this.mapStringToRole(role);
+
     // if (choserole != 'all' && choserole != '') {
     //   console.log('choserole', choserole);
     //   where.role = this.mapStringToRole(choserole);
@@ -116,7 +115,7 @@ export class UserService {
     if (username) {
       where.username = username;
     }
-    console.log('where ', where);
+    // console.log('where ', where);
     const total = await this.prisma.user.count({ where });
 
     const users = await this.prisma.user.findMany({
@@ -171,6 +170,14 @@ export class UserService {
     await this.prisma.user.delete({ where: { id } });
 
     return true;
+  }
+  async countByAgent(): Promise<number> {
+    const where: any = {};
+    where.role = Role.Agent;
+    const agenttotal = await this.prisma.user.count({
+      where,
+    });
+    return agenttotal;
   }
   mapStringToRole(roleString: string): Role | undefined {
     switch (roleString) {

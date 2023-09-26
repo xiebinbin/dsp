@@ -13,6 +13,7 @@ import {
   Put,
   ValidationPipe,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiResInterceptor } from '../interceptors/api-res.interceptor';
 import { MaterialService } from '../services/material.service';
@@ -24,6 +25,7 @@ import { MaterialDto } from '../dto/material.dto';
 import { AdvService } from '../services/adv.service';
 import { MediaService } from '../services/media.service';
 import { mediaDto } from '../dto/media.dto';
+import { GuardMiddlewareRoot } from '../middlewares/guard.middleware';
 
 @Controller('/api/admin/media')
 export class MediaController {
@@ -34,6 +36,7 @@ export class MediaController {
   ) {}
   private readonly logger = new Logger(MediaController.name);
   @Get('mediaslist')
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async getMedias() {
     try {
@@ -47,6 +50,7 @@ export class MediaController {
     }
   }
   @Post('list')
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async getList(@Req() req: Request, @Body() queryParams: any) {
     const { page, limit, q, filters, orderBy, extra } = queryParams;
@@ -80,6 +84,7 @@ export class MediaController {
   }
 
   @Post('store')
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async materialstore(@Body() data: mediaDto) {
     const name = data.name;
@@ -105,6 +110,7 @@ export class MediaController {
     }
   }
   @Put(':id')
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   async updateMaterial(
     @Param('id') id: bigint,
     @Body()
@@ -117,6 +123,7 @@ export class MediaController {
     return response.send(result);
   }
   @Delete(':id')
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async removeUser(@Param('id') id: bigint): Promise<boolean> {
     console.log('id', id);

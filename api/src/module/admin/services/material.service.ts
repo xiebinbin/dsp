@@ -56,12 +56,14 @@ export class MaterialService {
     const { page, limit, name, orderBy, role, advertiserId, userId } =
       queryParams;
     const where: any = {};
-    if (role != 'Root' && userId) {
+    if (role != 'Root' && role != 'Operator') {
       if (userId) {
         console.log('material getlis userId', userId);
         where.advertiser = {
           userId: userId, // 过滤特定用户的广告素材
         };
+      } else {
+        throw AuthError.USER_NOT_Permission;
       }
     }
     if (name) {
@@ -104,6 +106,15 @@ export class MaterialService {
       data: adMaterialsWithNumberID,
       total,
     };
+  }
+  async countByAgent(userId: bigint): Promise<number> {
+    const where: any = {};
+    if (userId) {
+      where.advertiser = { userId: userId };
+    }
+    // where.enabled = true;
+    const total = await this.prisma.adMaterial.count({ where });
+    return total;
   }
 
   async createMaterial(materialDto: MaterialDto): Promise<AdMaterial> {

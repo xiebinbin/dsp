@@ -17,7 +17,7 @@ export class AdvService {
     console.log('userId', userId, 'role', role);
     const where: any = {};
 
-    if (role != 'Root' && userId) {
+    if (role != 'Root' && role != 'Operator' && userId) {
       where.userId = userId;
     }
     console.log('where ', where);
@@ -147,87 +147,14 @@ export class AdvService {
       total,
     };
   }
-
-  // async getList(queryParams: any) {
-  //   const { page, limit, username, orderBy, role, userId } = queryParams;
-
-  //   if (role == 'Root') {
-  //     const selectFields = {
-  //       id: true,
-  //       companyName: true,
-  //       username: true,
-  //       taxNumber: true,
-  //       cpmPrice: true,
-  //       createdAt: true,
-  //       updatedAt: true,
-  //       enabled: true,
-  //       userId: true,
-  //       wallet: {
-  //         select: {
-  //           balance: true,
-  //         },
-  //       },
-  //     };
-  //     const where: any = {};
-
-  //     if (username) {
-  //       where.username = username;
-  //     }
-  //     const total = await this.prisma.advertiser.count({ where });
-
-  //     const advertiser = await this.prisma.advertiser.findMany({
-  //       where,
-  //       select: selectFields,
-
-  //       skip: (page - 1) * limit,
-  //       take: limit,
-  //       orderBy: orderBy,
-  //     });
-
-  //     const advertiserWithNumberID = advertiser.map((advertiser) => ({
-  //       ...advertiser,
-  //       id: Number(advertiser.id),
-  //       userId: Number(advertiser.userId),
-  //     }));
-  //   } else if (role == 'Agent') {
-  //     const selectFields = {
-  //       id: true,
-  //       companyName: true,
-  //       username: true,
-  //       taxNumber: true,
-  //       cpmPrice: true,
-  //       createdAt: true,
-  //       enabled: true,
-  //     };
-  //     const where: any = {};
-
-  //     if (username) {
-  //       where.username = username;
-  //     }
-  //     where.userId = userId;
-  //     const total = await this.prisma.advertiser.count({ where });
-
-  //     const advertiser = await this.prisma.advertiser.findMany({
-  //       where,
-  //       select: selectFields,
-
-  //       skip: (page - 1) * limit,
-  //       take: limit,
-  //       orderBy: orderBy,
-  //     });
-
-  //     const advertiserWithNumberID = advertiser.map((advertiser) => ({
-  //       ...advertiser,
-  //       id: Number(advertiser.id),
-  //     }));
-  //   } else {
-  //     const advertiserWithNumberID = null;
-  //   }
-  //   return {
-  //     data: advertiserWithNumberID,
-  //     total,
-  //   };
-  // }
+  async countByAdv(userId: bigint): Promise<number> {
+    const where: any = {};
+    if (userId) {
+      where.userId = userId;
+    }
+    const res = await this.prisma.advertiser.count({ where });
+    return res;
+  }
   async createUser(advDto: AdvDto): Promise<Advertiser> {
     try {
       advDto.password = await passwordHash(advDto.password);

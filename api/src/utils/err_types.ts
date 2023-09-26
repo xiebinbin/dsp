@@ -1,4 +1,4 @@
-import { HttpException } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 export class AuthError extends HttpException {
   static INVALID_CAPTCHA = new AuthError('验证码错误', 10001);
@@ -21,4 +21,14 @@ export class AuthError extends HttpException {
   constructor(public message: string, public code: number) {
     super(message, code);
   }
+  // constructor(message: string, code: number) {
+  //   super(
+  //     {
+  //       data: null,
+  //       code,
+  //       message,
+  //     },
+  //     HttpStatus.FORBIDDEN, // 此处可以根据需要设置不同的状态码
+  //   );
+  // }
 }

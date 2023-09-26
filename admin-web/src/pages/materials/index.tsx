@@ -19,12 +19,18 @@ import MaterialApi from "@/api/material.ts";
 import AdvAPI from "@/api/advertiser.ts";
 import AgentApi from "@/api/agent.ts";
 import { PlusOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import { AuthInfo } from "@/stores/auth-info.ts";
+import { useRecoilState } from "recoil";
+
 export interface MaterialsPageProps {
   role: "Root" | "Agent" | "Advertiser";
   roleName: string;
 }
 const MaterialsIndexPage = (props: MaterialsPageProps) => {
   const { role, roleName } = props;
+  const [authUser] = useRecoilState(AuthInfo);
+
   const [advertisers, setAdvertisers] = useSafeState<
     { id: number; name: string; agentId: number }[]
   >([]);
@@ -256,9 +262,14 @@ const MaterialsIndexPage = (props: MaterialsPageProps) => {
       ],
     },
   ];
- 
+  const navigate = useNavigate();
+
   const renderContent = () => {
     if (role === "Root") {
+      if (authUser.role !== "Root" && authUser.role !== "Operator") {
+        navigate("/unauthorized");
+        return null;
+      }
       return (
         <div>
           <ProTable<AdMaterial>
@@ -277,7 +288,7 @@ const MaterialsIndexPage = (props: MaterialsPageProps) => {
                 );
                 orderBy[field] = sort[sortKey] === "ascend" ? "asc" : "desc";
               }
-              const extra: Record<string, boolean> = {};
+              const extra: Record<string, boolean | number | string> = {};
               console.log("request params", params);
               if (params.advid) {
                 extra.advid = params.advid;
@@ -285,6 +296,7 @@ const MaterialsIndexPage = (props: MaterialsPageProps) => {
               if (params.agentid) {
                 extra.agentid = params.agentid;
               }
+              extra.role = role;
               console.log("extra", extra);
               const result = await MaterialApi.getList({
                 page: (params?.current ?? 1) as number,
@@ -335,7 +347,7 @@ const MaterialsIndexPage = (props: MaterialsPageProps) => {
           <EditForm />
         </div>
       );
-    }  else {
+    } else {
       <div>none</div>;
     }
   };

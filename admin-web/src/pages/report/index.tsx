@@ -13,6 +13,9 @@ import { useMount, useSafeState } from "ahooks";
 import MaterialApi from "@/api/material.ts";
 import AgentApi from "@/api/agent.ts";
 import AdvAPI from "@/api/advertiser.ts";
+import { useRecoilState } from "recoil";
+import { AuthInfo } from "@/stores/auth-info";
+import { useNavigate } from "react-router-dom";
 export interface ReportPageProps {
   role: "Root" | "Agent" | "Advertiser";
   roleName: string;
@@ -20,6 +23,8 @@ export interface ReportPageProps {
 
 const ReportIndexPage = (props: ReportPageProps) => {
   const { role, roleName } = props;
+  const [authUser] = useRecoilState(AuthInfo);
+
   const plotRef = useRef<Line | null>(null); // 用于引用 G2Plot 的实例
   const formRef = useRef<ProFormInstance>();
   const [materials, setMaterials] = useSafeState<
@@ -271,9 +276,15 @@ const ReportIndexPage = (props: ReportPageProps) => {
       });
     }, 500);
   });
+  const navigate = useNavigate();
 
   const renderContent = () => {
+    if (authUser.role !== "Root" && authUser.role !== "Operator") {
+      navigate("/unauthorized");
+      return null;
+    }
     if (role === "Root") {
+     
       return (
         <div>
           <ProCard>

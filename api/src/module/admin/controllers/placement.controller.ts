@@ -11,6 +11,7 @@ import {
   Delete,
   UseInterceptors,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiResInterceptor } from '../interceptors/api-res.interceptor';
 import { PlacementService } from '../services/placement.service';
@@ -19,6 +20,7 @@ import { PlacementDto } from '../dto/placement.dto';
 import { AuthError } from 'src/utils/err_types';
 import { Request } from 'express';
 import { AdvService } from '../services/adv.service';
+import { GuardMiddlewareRoot } from '../middlewares/guard.middleware';
 
 @Controller('/api/admin/placement/')
 @UseInterceptors(ApiResInterceptor)
@@ -102,6 +104,7 @@ export class PlacementController {
     }
   }
   @Post('store')
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async userstore(@Body() data: PlacementDto) {
     console.log('data,data', data);
@@ -140,6 +143,7 @@ export class PlacementController {
     }
   }
   @Put(':id')
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async updatePlacement(
     @Param('id') id: bigint,
@@ -160,6 +164,7 @@ export class PlacementController {
     return response.send(result);
   }
   @Put('pending/:id')
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   async updateEnabled(
     @Param('id') id: bigint,
     @Body()
@@ -172,6 +177,7 @@ export class PlacementController {
     return response.send(result);
   }
   @Delete(':id')
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async removeUser(@Param('id') id: bigint): Promise<boolean> {
     console.log('id', id);

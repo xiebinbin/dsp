@@ -2,8 +2,7 @@ import TagApi from "@/api/tag.ts";
 import FileApi from "@/api/file.ts";
 import { v4 } from "uuid";
 import * as mimeTypes from "mime-types";
-import * as AWS from 'aws-sdk';
-import { GetTokenParam } from "@/api/file"; //  import S3 from 'aws-sdk/clients/s3';
+ import { GetTokenParam } from "@/api/file"; //  import S3 from 'aws-sdk/clients/s3';
 export const uploads3 = (file: File): Promise<any> => {
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
