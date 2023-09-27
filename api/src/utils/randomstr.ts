@@ -10,6 +10,15 @@ export class randomstr {
     }
     return str;
   }
+  getrandnum(num: number) {
+    const chars = '123456789';
+    let str = '';
+    for (let i = 0; i < num; i++) {
+      const randomIndex = Math.floor(Math.random() * chars.length);
+      str += chars[randomIndex];
+    }
+    return str;
+  }
   getrandid() {
     const timestamp = Date.now();
     // 随机数

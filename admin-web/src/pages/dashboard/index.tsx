@@ -1,5 +1,5 @@
 import { CardDataResponse } from "@/api/dashboard";
-import { FireFilled, ProjectFilled, TeamOutlined } from "@ant-design/icons";
+import { FireFilled, ProjectFilled, TeamOutlined, ToolFilled } from "@ant-design/icons";
 import { PageContainer, ProCard, ProForm } from "@ant-design/pro-components";
 import { useSafeState } from "ahooks";
 import { Col, Row } from "antd";
@@ -79,7 +79,7 @@ const DashboardPage = (props: DashbordPageProps) => {
                   <ProCard
                     title={
                       <span>
-                        <ProjectFilled style={{ marginRight: 8 }} />
+                        <ToolFilled style={{ marginRight: 8 }} />
                         PV
                       </span>
                     }

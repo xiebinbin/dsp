@@ -9,7 +9,7 @@ import {
 import { message} from 'antd';
 import {useMount, useSafeState, useUnmount} from "ahooks";
 import Emittery from 'emittery';
-import { useCallback, useRef, useState} from "react";
+import { useCallback, useRef} from "react";
 import UserApi, {UserEditDto} from "@/api/user.ts";
 // import {RcFile} from "antd/es/upload";
 // import {CloudUploadOutlined} from "@ant-design/icons";
@@ -25,13 +25,8 @@ const EditForm = (props: {
     const [mode, setMode] = useSafeState('add');
     const [id, setId] = useSafeState<bigint>(BigInt(0));
     const formRef = useRef<ProFormInstance>();
-    const [nickname, setNickname] = useSafeState('');
     const [username, setUsername] = useSafeState('');
-    const [password, setPassword] = useSafeState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [taxnumber, setTaxnumber] = useState('');
 
-    const [enabled, setEnabled] = useSafeState(true);
  
     
     // const [fileList, setFileList] = useSafeState<UploadFile[]>([]);

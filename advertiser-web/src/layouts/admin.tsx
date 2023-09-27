@@ -1,36 +1,36 @@
 import type {ProSettings} from '@ant-design/pro-components';
-import {
-    ProConfigProvider,
-    ProLayout,
-    SettingDrawer,
-} from '@ant-design/pro-components';
-import {
-    ConfigProvider,
-} from 'antd';
-import {useEffect, useState} from 'react';
+import {ProConfigProvider, ProLayout, SettingDrawer,} from '@ant-design/pro-components';
+import {Button, ConfigProvider, Dropdown,} from 'antd';
+import {useState} from 'react';
 import {useNavigate, useOutlet} from "react-router-dom";
-import {Web3Button} from "@web3modal/react";
-import {useAccount} from "wagmi";
-import localforage from "localforage";
 import setting from "@/layouts/setting.ts";
 import GetRouter from "@/routers";
+import {useRecoilState} from "recoil";
+import {AuthInfo} from "@/stores/auth-info.ts";
+import {LockTwoTone, LogoutOutlined} from "@ant-design/icons";
+import localforage from "localforage";
+import ChangepwdComp from './changepwdComp';
 
 const AdminLayout = () => {
     const [settings, setSetting] = useState<Partial<ProSettings>>(setting);
     const outlet = useOutlet();
     const navigate = useNavigate();
-    const {isConnected} = useAccount()
-
+    const [changepwdVisible, setChangepwdVisible] = useState(false);
+    const [authUser,] = useRecoilState(AuthInfo)
+    console.log(authUser,'authUser');
     const [pathname, setPathname] = useState('/admin/dashboard');
-    useEffect(() => {
-        if (!isConnected) {
-            localforage.removeItem('login-key').then(() => {
-                navigate("/login");
-            }).catch(() => {
-                window.Message.error('退出登录失败');
-            });
-        }
-    }, [isConnected, navigate, outlet]);
+ 
+
+    const showChangepwdModal = () => {
+        setChangepwdVisible(true);
+      };
+    
+      const handleChangepwdCancel = () => {
+        setChangepwdVisible(false);
+      };
+    
+    
+      
     if (typeof document === 'undefined') {
         return <div/>;
     }
@@ -50,7 +50,7 @@ const AdminLayout = () => {
                 >
                     <ProLayout
                         prefixCls="my-prefix"
-                        route={GetRouter()}
+                        route={GetRouter(authUser.role)}
                         location={{
                             pathname,
                         }}
@@ -64,10 +64,46 @@ const AdminLayout = () => {
                             collapsedShowGroupTitle: true,
                         }}
                         avatarProps={{
+                            size: 'small',
+                            title: authUser.name+(authUser.role ? `(${authUser.role})` : ''),
                             render: () => (<div className="flex pt-.5rem">
-                                <Web3Button/>
+                                <Dropdown
+                                    menu={{
+                                        items: [
+                                            {
+                                                onClick: () => {
+                                                    console.log("点击退出登录按钮");
+                                                    localforage.removeItem("token")
+                                                        .then(() => {
+                                                        console.log("token 已移除");
+                                                        location.reload();
+                                                        })
+                                                        .catch((error) => {
+                                                        console.error("移除 token 时出错", error);
+                                                        });
+                                                },
+                                                key: 'logout',
+                                                icon: <LogoutOutlined />,
+                                                label: '退出登录',
+                                            },{
+                                                
+                                                onClick:showChangepwdModal,
+                                                key: 'changepwd',
+                                                icon: <LockTwoTone />,
+                                                label: '修改密码',
+                                            },
+                                        ],
+                                    
+                                    }}
+                                >
+                                    <Button size="small" type="primary">{authUser.username}({authUser.role})</Button>
+                                </Dropdown>
+                               
                             </div>),
-                        }}
+                        }
+                    
+                    }
+                      
                         headerTitleRender={(logo, title, _) => {
                             const defaultDom = (
                                 <a>
@@ -117,6 +153,8 @@ const AdminLayout = () => {
                             disableUrlParams={false}
                         />
                     </ProLayout>
+                    <ChangepwdComp visible={changepwdVisible} onCancel={handleChangepwdCancel} />
+
                 </ConfigProvider>
             </ProConfigProvider>
         </div>

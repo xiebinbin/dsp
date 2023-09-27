@@ -1,24 +1,41 @@
 import createRequestInstance from '@/api/lib/create-request-instance.ts';
-import {LoginUser} from "@/shims";
 
-export interface LoginParams {
-    sign: string;
-    timestamp: number;
+const login = (params: {
+    username: string;
     password: string;
-    dataHash: string;
+    inputCode : string;
+    codeid : string;
+}): Promise<{
+    token: string;
+}> => {
+    return createRequestInstance().post('/api/advertiser/auth/login', params)
 }
 
-export interface LoginResponse {
-    key: string;
+const getInfo = (): Promise<{
+    role: string;
+    username: string;
+}> => {
+    return createRequestInstance().post('/api/advertiser/auth/info')
+}
+const getCode=(): Promise<{
+    url: string;
+    codeid : string;
+    getCode: string;
+}> => {
+    return createRequestInstance().get('/api/advertiser/auth/getcode')
 }
 
-const login = (params: LoginParams): Promise<LoginResponse> => {
-    return createRequestInstance().post('/api/admin/auth/login', params)
+const changePWD = (params: {    
+    username: string;
+    oldPassword : string;
+    confirmPassword: string;
+}): Promise<{res: boolean}> => {
+    return createRequestInstance().post('/api/advertiser/auth/changepwd',params)
 }
-const getInfo = (): Promise<LoginUser> => {
-    return createRequestInstance().get('/api/admin/auth/info')
-}
+
 export default {
     login,
-    getInfo
+    getInfo,
+    getCode,
+    changePWD
 }

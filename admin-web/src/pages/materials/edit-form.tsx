@@ -8,7 +8,6 @@ import {
 } from "@ant-design/pro-components";
 import {
   Button,
-  Image,
   message,
   RadioChangeEvent,
   Upload,
@@ -26,7 +25,6 @@ import AdvAPI from "@/api/advertiser.ts";
 import { CloudUploadOutlined } from "@ant-design/icons";
 import { getImgUrl, removeImgUrl } from "@/utils/file";
 import { RcFile } from "antd/es/upload";
-import { upload, uploads3 } from "@/utils/form-tool";
 import FileApi from "@/api/file.ts";
 // eslint-disable-next-line react-refresh/only-export-components
 export const $emit = new Emittery();

@@ -1,7 +1,6 @@
 import type {
   ActionType,
   ProColumns,
-  ProFormInstance,
   ProSchemaValueEnumType,
 } from "@ant-design/pro-components";
 import {
@@ -12,9 +11,8 @@ import {
 import { Button, Popconfirm } from "antd";
 import { ReactNode, useCallback, useEffect, useRef } from "react";
 import EditForm, { $emit } from "./edit-form.tsx";
-import { AdMaterial, AdPlacement } from "@/shims";
+import {  AdPlacement } from "@/shims";
 import { useMount, useSafeState, useUnmount } from "ahooks";
-import MaterialApi from "@/api/material.ts";
 import PlacementApi from "@/api/placement.ts";
 import { AuthInfo } from "@/stores/auth-info.ts";
 import { useRecoilState } from "recoil";

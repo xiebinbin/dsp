@@ -1,7 +1,6 @@
 import type {
   ActionType,
   ProColumns,
-  ProFormInstance,
 } from "@ant-design/pro-components";
 import {
   PageContainer,
@@ -12,7 +11,6 @@ import { Button, Popconfirm } from "antd";
 import { useCallback, useEffect, useRef } from "react";
 import EditForm, { $emit } from "./edit-form.tsx";
 import { AdMaterial } from "@/shims";
-import VideoApi from "@/api/video.ts";
 import { useMount, useSafeState, useUnmount } from "ahooks";
 import MaterialApi from "@/api/material.ts";
 // import { boolMap } from "@/utils/list-tool.ts";

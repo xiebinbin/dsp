@@ -10,6 +10,8 @@ import { redisStore } from 'cache-manager-redis-yet';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthController } from '../admin/controllers/auth.controller';
 import { UserController } from '../admin/controllers/user.controller';
+// import { AdvAuthController } from '../advertiser/controllers/auth.controller';
+// import { AdvCodeService } from '../advertiser/services/code.service';
 
 @Module({
   imports: [

@@ -5,4 +5,8 @@ export class LoginDto {
   username: string;
   @IsNotEmpty()
   password: string;
+  @IsNotEmpty()
+  inputCode: string;
+  @IsNotEmpty()
+  codeid: string;
 }

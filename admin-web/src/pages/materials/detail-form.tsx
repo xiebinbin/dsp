@@ -19,6 +19,7 @@ const MaterialDetail = (props: {
   roleName: string;
 }) => {
   const { role, roleName } = props;
+  const [materialurl, setMaterialurl] = useSafeState(""); //http://static-edu-test.leleshuju.com/
 
   const [show, setShow] = useSafeState(false);
   const [mode, setMode] = useSafeState("detail");
@@ -36,7 +37,7 @@ const MaterialDetail = (props: {
       loadInfo(val)
         .then(() => {
           // setTimeout(() => {
-            setShow(true);
+          setShow(true);
           // }, 500);
         })
         .catch(() => {
@@ -62,6 +63,7 @@ const MaterialDetail = (props: {
           url: data.url,
         });
       }, 500);
+      setMaterialurl(data.url)
       if (data.mediaType === 2) {
         setPositionOptions([
           { label: "列表页", value: 1 },
@@ -144,6 +146,15 @@ const MaterialDetail = (props: {
             initialValue={true}
             options={positionOptions}
           />
+          <ProForm.Item label="上传素材">
+            {materialurl != "" ? (
+              <img
+                className="w-200px h-200px mr-1rem"
+                src={getImgUrl(materialurl)}
+                alt=""
+              />
+            ) : null}{" "}
+          </ProForm.Item>
         </>
       )}
       {mode === "detail" && role === "Advertiser" && (
@@ -160,16 +171,15 @@ const MaterialDetail = (props: {
             ]}
           />
           <div className="custom-radio-group">
-
-          <ProFormRadio.Group
-            name="position"
-            label="广告位置"
-            required
-            disabled
-            initialValue={true}
-            options={positionOptions}
-          /></div>
-
+            <ProFormRadio.Group
+              name="position"
+              label="广告位置"
+              required
+              disabled
+              initialValue={true}
+              options={positionOptions}
+            />
+          </div>
         </>
       )}
     </ModalForm>

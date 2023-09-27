@@ -9,7 +9,7 @@ import { AdvertiserService } from '../services/advertiser.service';
 export class AuthMiddleware implements NestMiddleware {
   constructor(
     private readonly config: ConfigService,
-    private readonly advertiserService: AdvertiserService,
+    private readonly AdvertiserService: AdvertiserService,
   ) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
@@ -26,7 +26,11 @@ export class AuthMiddleware implements NestMiddleware {
       | string
       | undefined
       | null;
-    if (!authorization && req.path != '/api/admin/auth/login') {
+    if (
+      !authorization &&
+      req.path != '/api/advertiser/auth/login' &&
+      req.path != '/api/advertiser/auth/getcode'
+    ) {
       res.status(400).json({
         code: 400,
         message: '请先登录',
@@ -51,7 +55,7 @@ export class AuthMiddleware implements NestMiddleware {
         });
         return;
       }
-      const advertiser = await this.advertiserService.findById(
+      const advertiser = await this.AdvertiserService.findById(
         BigInt(loginData.advertiserId),
       );
       if (!advertiser) {
