@@ -11,6 +11,7 @@ import Emittery from "emittery";
 import { useCallback, useRef } from "react";
 import { message } from "antd";
 import MaterialApi from "@/api/material.ts";
+import { getImgUrl } from "@/utils/file";
 
 export const $detailemit = new Emittery();
 
@@ -63,7 +64,7 @@ const MaterialDetail = (props: {
           url: data.url,
         });
       }, 500);
-      setMaterialurl(data.url)
+      setMaterialurl(data.url);
       if (data.mediaType === 2) {
         setPositionOptions([
           { label: "列表页", value: 1 },

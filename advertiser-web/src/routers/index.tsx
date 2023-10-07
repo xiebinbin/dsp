@@ -75,7 +75,7 @@ import {
           routes: [
             {
               path: "/admin/report/advertiser",
-              name: "数据报表",
+              name: "广告主日报",
               access: ["Advertiser"]
             },
           ],

@@ -11,7 +11,8 @@ import { Line } from "@antv/g2plot";
 import ReportApi, { ChartDataRequest } from "@/api/report";
 import { useMount, useSafeState } from "ahooks";
 import MaterialApi from "@/api/material.ts";
-// import AgentApi from "@/api/agent.ts";
+import App from "@/App.tsx";
+
 export interface ReportAdvPageProps {
   role: "Advertiser";
   roleName: string;
@@ -273,6 +274,7 @@ const ReportAdvertiserIndexPage = (props: ReportAdvPageProps) => {
       }}
     >
       {renderContent()}
+      <><App/></>
     </PageContainer>
   );
 };

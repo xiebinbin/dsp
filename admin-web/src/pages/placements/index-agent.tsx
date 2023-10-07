@@ -12,6 +12,7 @@ import PlacementDetail, { $detailemit } from "./detail-form.tsx";
 import { AdPlacement } from "@/shims";
 import { useMount, useSafeState, useUnmount } from "ahooks";
 import PlacementApi from "@/api/placement.ts";
+import App from "@/App.tsx";
 
 // import { boolMap } from "@/utils/list-tool.ts";
 import AdvAPI from "@/api/advertiser.ts";
@@ -347,6 +348,7 @@ const PlacementsAgentIndexPage = (props: PlacementsPageProps) => {
       }}
     >
       {renderContent()}
+      <><App/></>
     </PageContainer>
   );
 };

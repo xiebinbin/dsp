@@ -21,6 +21,7 @@ export interface MediaPageProps {
 import { AuthInfo } from "@/stores/auth-info.ts";
 import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
+import App from "@/App.tsx";
 
 const maps = new Map<
   string | number | boolean,
@@ -261,6 +262,7 @@ const MediaIndexPage = (props: MediaPageProps) => {
       }}
     >
       {renderContent()}
+      <><App/></>
     </PageContainer>
   );
 };

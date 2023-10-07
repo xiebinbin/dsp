@@ -16,6 +16,8 @@ import AdvAPI from "@/api/advertiser.ts";
 import { useRecoilState } from "recoil";
 import { AuthInfo } from "@/stores/auth-info";
 import { useNavigate } from "react-router-dom";
+import App from "@/App.tsx";
+
 export interface ReportPageProps {
   role: "Root" | "Agent" | "Advertiser";
   roleName: string;
@@ -223,6 +225,8 @@ const ReportIndexPage = (props: ReportPageProps) => {
   }, []);
   console.log("roleName", roleName);
   useEffect(() => {
+    console.log("useEffect");
+
     loadAgentsRelation();
     loadAdvertisers("");
     if (selectedAgent) {
@@ -293,7 +297,6 @@ const ReportIndexPage = (props: ReportPageProps) => {
               formRef={formRef}
               onFinish={async (values) => {
                 try {
-                  console.log("report values", values);
                   const requestData: ChartDataRequest = {
                     startDate: values.startDate,
                     endDate: values.endDate,
@@ -301,15 +304,14 @@ const ReportIndexPage = (props: ReportPageProps) => {
                     advertiserId: values.advertiserId,
                     adMaterialId: values.adMaterialId,
                   };
-                  console.log("report requestData", requestData);
-
                   // 处理表单提交，例如向后端发送请求
                   const result = await loadInfo(requestData);
 
                   // 根据请求结果返回相应的值，例如：
                   if (result) {
                     return true; // 表示提交成功
-                  } else {
+                  } 
+                  else {
                     return false; // 表示提交失败
                   }
                 } catch (error) {
@@ -392,6 +394,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
       }}
     >
       {renderContent()}
+      <><App/></>
     </PageContainer>
   );
 };

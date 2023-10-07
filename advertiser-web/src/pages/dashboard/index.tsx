@@ -8,6 +8,7 @@ import DashboardAPI from "@/api/dashboard.ts";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { AuthInfo } from "@/stores/auth-info";
+import App from "@/App.tsx";
 
 
 
@@ -185,6 +186,7 @@ const DashboardPage = () => {
       subTitle="实时数据"
     >
       {renderContent()}
+      <><App/></>
     </PageContainer>
   );
 };

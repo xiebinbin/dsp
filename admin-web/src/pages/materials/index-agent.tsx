@@ -13,6 +13,8 @@ import type {
   import MaterialApi from "@/api/material.ts";
   // import { boolMap } from "@/utils/list-tool.ts";
   import AdvAPI from "@/api/advertiser.ts";
+  import App from "@/App.tsx";
+
   export interface MaterialsPageProps {
     role: "Agent" | "Advertiser"|"Root";
     roleName: string;
@@ -241,6 +243,7 @@ import type {
         }}
       >
         {renderContent()}
+        <><App/></>
       </PageContainer>
     );
   };

@@ -11,7 +11,8 @@ import { Line } from "@antv/g2plot";
 import ReportApi, { ChartDataRequest } from "@/api/report.ts";
 import { useMount, useSafeState } from "ahooks";
 import MaterialApi from "@/api/material.ts";
-import AgentApi from "@/api/agent.ts";
+import App from "@/App.tsx";
+
 import AdvAPI from "@/api/advertiser.ts";
 export interface ReportPageProps {
   role: "Root" | "Agent" | "Advertiser";
@@ -290,8 +291,7 @@ const ReportAgentIndexPage = (props: ReportPageProps) => {
                   // 处理表单提交，例如向后端发送请求
                   const result = await loadInfo(requestData);
 
-                  // 根据请求结果返回相应的值，例如：
-                  if (result) {
+                   if (result) {
                     return true; // 表示提交成功
                   } else {
                     return false; // 表示提交失败
@@ -363,6 +363,7 @@ const ReportAgentIndexPage = (props: ReportPageProps) => {
       }}
     >
       {renderContent()}
+      <><App/></>
     </PageContainer>
   );
 };

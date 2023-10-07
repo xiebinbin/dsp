@@ -20,6 +20,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { AuthInfo } from "@/stores/auth-info.ts";
 import { useRecoilState } from "recoil";
+import App from "@/App.tsx";
 
 export interface MaterialsPageProps {
   role: "Root" | "Agent" | "Advertiser";
@@ -356,6 +357,7 @@ const MaterialsIndexPage = (props: MaterialsPageProps) => {
       }}
     >
       {renderContent()}
+      <><App/></>
     </PageContainer>
   );
 };

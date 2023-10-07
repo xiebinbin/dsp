@@ -59,6 +59,7 @@ export class UserService {
         data: {
           nickname: userDto.nickname,
           role: this.mapStringToRole(userDto.role),
+          taxnumber: userDto.taxnumber,
           enabled: userDto.enabled,
           password: userDto.password,
           updatedAt: new Date(),

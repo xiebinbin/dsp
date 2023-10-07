@@ -5,7 +5,7 @@ import MaterialDetail, { $detailemit } from "./detail-form.tsx";
 import { AdMaterial } from "@/shims";
 import { useMount, useSafeState, useUnmount } from "ahooks";
 import MaterialApi from "@/api/material.ts";
-// import { boolMap } from "@/utils/list-tool.ts";
+import App from "@/App.tsx";
 export interface MaterialsPageProps {
   role: "Advertiser";
   roleName: string;
@@ -149,6 +149,7 @@ const MaterialsAdvertiserIndexPage = (props: MaterialsPageProps) => {
       }}
     >
       {renderContent()}
+      <><App/></>
     </PageContainer>
   );
 };

@@ -8,6 +8,7 @@ import DashboardAPI from "@/api/dashboard.ts";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { AuthInfo } from "@/stores/auth-info";
+import App from "@/App.tsx";
 
 export interface DashbordPageProps {
   role: "Root" | "Agent" | "Advertiser";
@@ -18,13 +19,14 @@ const DashboardPage = (props: DashbordPageProps) => {
   const { role, roleName } = props;
   const [infoData, setInfoData] = useSafeState<CardDataResponse | null>(null);
   const [authUser] = useRecoilState(AuthInfo);
-
+  const navigate = useNavigate();
   const loadInfo = useCallback(async () => {
     // 在此处发起数据请求，并将数据存储在 infoData 中
     try {
       const response = await DashboardAPI.getChartData();
       setInfoData(response);
     } catch (error) {
+   
       console.error("Error loading data:", error);
     }
   }, [setInfoData]);
@@ -32,7 +34,7 @@ const DashboardPage = (props: DashbordPageProps) => {
   useEffect(() => {
     loadInfo();
   }, [loadInfo]);
-  const navigate = useNavigate();
+
 
   const renderContent = () => {
 
@@ -334,6 +336,7 @@ const DashboardPage = (props: DashbordPageProps) => {
       subTitle="实时数据"
     >
       {renderContent()}
+      <><App/></>
     </PageContainer>
   );
 };

@@ -17,6 +17,7 @@ import PlacementApi from "@/api/placement.ts";
 import { AuthInfo } from "@/stores/auth-info.ts";
 import { useRecoilState } from "recoil";
 import { useNavigate } from 'react-router-dom';
+import App from "@/App.tsx";
 
 // import { boolMap } from "@/utils/list-tool.ts";
 import AdvAPI from "@/api/advertiser.ts";
@@ -447,6 +448,7 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
       }}
     >
       {renderContent()}
+      <><App/></>
     </PageContainer>
   );
 };

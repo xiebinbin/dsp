@@ -3,7 +3,7 @@
 import { MessageInstance } from "antd/es/message/interface";
 
 interface AxiosErrorResponse {
-  statusCode: number;
+  code: number;
   message: string;
 }
 

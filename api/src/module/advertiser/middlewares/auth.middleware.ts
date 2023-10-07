@@ -47,7 +47,7 @@ export class AuthMiddleware implements NestMiddleware {
         advertiserId: number;
         time: number;
       } = JSON.parse(aes.De(token, sharedSecret));
-      if (Date.now() - loginData.time > 24 * 3600000) {
+      if (Date.now() - loginData.time > 24 * 60 * 60000) {
         res.status(400).json({
           code: 400,
           message: '登录信息已过期',

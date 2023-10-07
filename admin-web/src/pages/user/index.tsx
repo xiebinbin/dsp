@@ -2,7 +2,7 @@ import {PageContainer, ProSchemaValueEnumType} from "@ant-design/pro-components"
 import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
 import type {ActionType, ProColumns} from '@ant-design/pro-components';
 import {ProTable, TableDropdown} from '@ant-design/pro-components';
-import {Button, Popconfirm} from 'antd';
+import { Button, Popconfirm} from 'antd';
 import {ReactNode, useCallback, useEffect, useRef} from 'react';
 import EditForm, {$emit} from "./edit-form.tsx";
 import {SuperUser} from "@/shims";
@@ -11,7 +11,7 @@ import {useMount, useUnmount} from "ahooks";
 import {useLocation, useNavigate} from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { AuthInfo } from "@/stores/auth-info.ts";
-
+import App from "@/App.tsx";
 const maps = new Map<string | number | boolean, ProSchemaValueEnumType | ReactNode>()
 maps.set(true, {
     text: '启用',
@@ -435,7 +435,8 @@ const UserIndexPage = (props: UserIndexPageProps) => {
             }}
         >
             {renderContent()}
-            
+            <><App/></>
+
         </PageContainer>
     );
          

@@ -20,12 +20,7 @@ const LoginPage: React.LazyExoticComponent<React.FC> = lazy(
 const DashboardPage: React.LazyExoticComponent<React.FC> = lazy(
   () => import("@/pages/dashboard")
 );
-const AgentIndexPage: React.LazyExoticComponent<React.FC> = lazy(
-  () => import("@/pages/agent")
-);
-const RechargeOrderIndexPage: React.LazyExoticComponent<React.FC> = lazy(
-  () => import("@/pages/recharge-order")
-);
+
 const MaterialsAdvertiserIndexPage: React.LazyExoticComponent<
   React.FC<MaterialsPageProps>
 > = lazy(() => import("@/pages/materials/index-advertiser"));
@@ -58,22 +53,6 @@ const router = createBrowserRouter([
             ),
           },
 
-          {
-            path: "placement/agents",
-            element: (
-              <Suspense>
-                <AgentIndexPage />
-              </Suspense>
-            ),
-          },
-          {
-            path: "order/recharge-orders",
-            element: (
-              <Suspense>
-                <RechargeOrderIndexPage />
-              </Suspense>
-            ),
-          },
           {
             path: "materials/advertiser",
             element: (

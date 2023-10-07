@@ -12,11 +12,11 @@ import type {
   import { AdPlacement } from "@/shims";
   import { useMount, useSafeState, useUnmount } from "ahooks";
   import PlacementApi from "@/api/placement.ts";
-  
+  import App from "@/App.tsx";
+
   // import { boolMap } from "@/utils/list-tool.ts";
-  import AdvAPI from "@/api/advertiser.ts";
-  export interface PlacementsPageProps {
-    role: "Root" | "Agent" | "Advertiser";
+   export interface PlacementsPageProps {
+    role:  "Advertiser";
     roleName: string;
   }
   const maps = new Map<
@@ -241,6 +241,7 @@ import type {
         }}
       >
         {renderContent()}
+        <><App/></>
       </PageContainer>
     );
   };

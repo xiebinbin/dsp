@@ -65,7 +65,7 @@ const AdminLayout = () => {
                         }}
                         avatarProps={{
                             size: 'small',
-                            title: authUser.name+(authUser.role ? `(${authUser.role})` : ''),
+                            title: authUser.username+(authUser.role ? `(${authUser.role})` : ''),
                             render: () => (<div className="flex pt-.5rem">
                                 <Dropdown
                                     menu={{

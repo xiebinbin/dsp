@@ -84,13 +84,13 @@ const GetRouter = (userRole:string): Route => {
 
           },
           {
-            name: "管理员-广告主管理",
+            name: "广告主管理",
             path: "/admin/advertiser/root",
             access: ["Root","Operator"]
 
           },
           {
-            name: "代理商-广告主列表",
+            name: "广告主列表",
             path: "/admin/advertiser/agent",
             access: ["Agent"]
           },
@@ -109,31 +109,31 @@ const GetRouter = (userRole:string): Route => {
           },
           {
             path: "/admin/materials/agent",
-            name: "代理商-广告创意列表",
+            name: "广告创意列表",
             access: ["Agent"]
           },
-          {
-            path: "/admin/materials/advertiser",
-            name: "广告主-广告素材列表",
-            access: ["Advertiser"]
-          },
+          // {
+          //   path: "/admin/materials/advertiser",
+          //   name: "广告主-广告素材列表",
+          //   access: ["Advertiser"]
+          // },
  
           {
             path: "/admin/placements/root",
-            name: "管理员-广告投放计划",
+            name: "广告投放计划",
             access: ["Root","Operator"]
           },
           {
             path: "/admin/placements/agent",
-            name: "代理商-广告计划列表",
+            name: "广告计划列表",
             access: ["Agent"]
           },
-          {
-            path: "/admin/placements/advertiser",
-            name: "广告主-广告计划列表",
-            access: ["Advertiser"]
+          // {
+          //   path: "/admin/placements/advertiser",
+          //   name: "广告主-广告计划列表",
+          //   access: ["Advertiser"]
 
-          },
+          // },
         ],
       },
 
@@ -157,12 +157,12 @@ const GetRouter = (userRole:string): Route => {
         routes: [
           {
             path: "/admin/report/index",
-            name: "数据报表",
+            name: "运营日报",
             access: ["Root","Operator"]
           },
           {
             path: "/admin/report/agent",
-            name: "代理商数据报表",
+            name: "代理商日报",
             access: ["Agent"]
           },
         ],
