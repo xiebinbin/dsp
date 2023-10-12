@@ -16,7 +16,6 @@ import App from "@/App.tsx";
 
 // import { boolMap } from "@/utils/list-tool.ts";
 import AdvAPI from "@/api/advertiser.ts";
-import { PlusOutlined } from "@ant-design/icons";
 export interface PlacementsPageProps {
   role: "Root" | "Agent" | "Advertiser";
   roleName: string;
@@ -38,9 +37,7 @@ const PlacementsAgentIndexPage = (props: PlacementsPageProps) => {
   const [advertisers, setAdvertisers] = useSafeState<
     { id: number; name: string;  }[]
   >([]);
-  const [agents, setAgents] = useSafeState<{ label: string; value: number }[]>(
-    []
-  );
+
 
   const actionRef = useRef<ActionType>();
   const [pageSize, setPageSize] = useSafeState(100);

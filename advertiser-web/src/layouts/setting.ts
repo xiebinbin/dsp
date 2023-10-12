@@ -2,12 +2,12 @@ import {ProSettings} from "@ant-design/pro-components";
 
 const settings: ProSettings = {
     "fixSiderbar": true,
-    "layout": "side",
+    "layout": "mix",
     "splitMenus": false,
     "navTheme": "light",
     "contentWidth": "Fluid",
     "colorPrimary": "#1677FF",
     "siderMenuType": "sub",
-    title: 'Acg.Fans',
+    title: 'DSP.Fans',
 }
 export default settings;

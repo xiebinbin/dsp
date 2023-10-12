@@ -32,10 +32,8 @@ const PlacementDetail = (props: {
       setMode("detail");
       loadInfo(val)
         .then(() => {
-          // setTimeout(() => {
-          setShow(true);
-          // }, 500);
-        })
+           setShow(true);
+         })
         .catch(() => {
           message.error("加载失败");
         });
@@ -199,22 +197,7 @@ const PlacementDetail = (props: {
             </ProForm.Group>
         </>
       )}
-      {/* {mode === "detail" && role === "Advertiser" && (
-        <>
-          <ProFormRadio.Group
-            name="mediaType"
-            label="媒体类型"
-            required
-            disabled
-            initialValue={true}
-            options={[
-              { label: "网站", value: 1 },
-              { label: "pc软件", value: 2 },
-            ]}
-          />
-   
-        </>
-      )} */}
+
     </ModalForm>
   );
 };

@@ -63,6 +63,7 @@ const AdminLayout = () => {
                         menu={{
                             collapsedShowGroupTitle: true,
                         }}
+                        title='管理平台'
                         avatarProps={{
                             size: 'small',
                             title: authUser.username+(authUser.role ? `(${authUser.role})` : ''),

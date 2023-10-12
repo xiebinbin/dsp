@@ -59,6 +59,8 @@ const AdminLayout = () => {
                                 colorBgMenuItemSelected: 'rgba(0,0,0,0.04)',
                             },
                         }}
+                        title='广告主平台'
+
                         siderMenuType="group"
                         menu={{
                             collapsedShowGroupTitle: true,

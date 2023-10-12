@@ -33,9 +33,6 @@ import type {
   });
   const PlacementsAdvertiserIndexPage = (props: PlacementsPageProps) => {
     const { role, roleName } = props;
-    // const [advertisers, setAdvertisers] = useSafeState<
-    //   { id: number; name: string;  }[]
-    // >([]);
   
     const actionRef = useRef<ActionType>();
     const [pageSize, setPageSize] = useSafeState(100);

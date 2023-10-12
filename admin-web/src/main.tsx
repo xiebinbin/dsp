@@ -74,7 +74,15 @@ const MediaIndexPage: React.LazyExoticComponent<React.FC<MediaPageProps>> =
   const ReportAgentIndexPage: React.LazyExoticComponent<React.FC<ReportPageProps>> = lazy(
     () => import("@/pages/report/index-agent")
   );
+  const UserAgreementPage: React.LazyExoticComponent<React.FC> = lazy(
+    () => import("@/pages/policy/user")
+  );
+  const PrivacyPolicyPage: React.LazyExoticComponent<React.FC> = lazy(
+    () => import("@/pages/policy/privacy")
+  );
+  
 const router = createBrowserRouter([
+
   {
     path: "/",
     element: <App />,
@@ -87,6 +95,7 @@ const router = createBrowserRouter([
         path: "unauthorized",
         element: <UnauthorizedPage />,
       },
+    
       {
         path: "admin",
         element: <AdminLayout />,
@@ -100,20 +109,7 @@ const router = createBrowserRouter([
               </Suspense>
             ),
           },
-          // {
-          //   path: "dashboard/agent",
-          //   element: (
-          //     <Suspense>
-          //       {" "}
-          //       <DashboardPage  role="Agent" roleName="代理商看板"/>
-          //     </Suspense>
-          //   ),
-          // },
-     
-          // {
-          //     path: "content/tags",
-          //     element: <Suspense><TagIndexPage/></Suspense>,
-          // },
+      
           {
             path: "content/featured-cards",
             element: (
@@ -267,6 +263,14 @@ const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: "user-agreement",
+    element: <UserAgreementPage />,
+  },
+  {
+    path: "privacy",
+    element: <PrivacyPolicyPage />,
   },
 ]);
 ReactDOM.createRoot(document.getElementById("root")!).render(

@@ -11,8 +11,11 @@ import Icon, {
   LockOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { Form, Checkbox, Typography } from "antd";
 
 const LoginPage = () => {
+  const { Link } = Typography;
+
   const navigate = useNavigate();
   const [password, setPassword] = useSafeState("");
   const [username, setUsername] = useSafeState("");
@@ -22,6 +25,7 @@ const LoginPage = () => {
   const loadingRef = useRef(false);
   const [inputCode, setInputCode] = useSafeState(""); // 初始化验证码
   const [imgSrc, setImgSrc] = useSafeState("");
+  const [agreedToTerms, setAgreedToTerms] = useSafeState(false);
 
   const refreshCaptcha = useCallback(() => {
     // 在此处处理刷新验证码的逻辑，可以生成新的验证码并更新到页面
@@ -68,7 +72,12 @@ const LoginPage = () => {
 
       try {
         //  codeid= localStorage.getItem('codeid')?.toString;
-        const res = await AuthApi.login({ username, password, inputCode, codeid });
+        const res = await AuthApi.login({
+          username,
+          password,
+          inputCode,
+          codeid,
+        });
 
         console.log("res", res);
 
@@ -81,9 +90,7 @@ const LoginPage = () => {
           const info = await AuthApi.getInfo();
           setAuthInfo(info);
 
-          setTimeout(() => {
             navigate("/admin/dashboard");
-          }, 1000);
         }
       } catch (error) {
         console.error("登录失败", error);
@@ -96,65 +103,126 @@ const LoginPage = () => {
   );
 
   return (
-    <div className="w-screen h-screen   bg-gray-100 flex items-center justify-center">
-      <Card className="mx-4" style={{ width: "380px" }} title="DSP管理系统">
-        <Input
-          className="w-full mt-1rem"
-          addonBefore={<UserOutlined />}
-          placeholder="用户名："
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
+    <div className="w-screen h-screen  bg-gray-100 flex items-center justify-center">
+      <div
+        className="flex-1 bg-cover "
+        style={{ backgroundImage: "url(your-background-image-url)" }}
+      >
+        {/* 可以添加其他内容到左侧，如果需要的话 */}
+      </div>
+      <div className="flex-1 flex justify-center">
+        <Card
+          className="mx-4 h-full"
+          style={{ width: "380px" }}
+          title="欢迎登录"
+        >
+          <h1 className="text-center text-2xl">DSP管理平台</h1>
 
-        <Input
-          className="w-full mt-1rem"
-          addonBefore={<LockOutlined />}
-          placeholder="密码："
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Input
-          className="w-full mt-1rem"
-          addonBefore={<KeyOutlined />}
-          placeholder="验证码："
-          value={inputCode}
-          onChange={(e) => setInputCode(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              // 按下回车键触发登录
-              login(password, inputCode);
-            }
-          }}
-        />
-        <div className="w-full mt-4"></div>
-
-        <Space className="w-full" direction="horizontal">
-          <img
-            src={imgSrc}
-            className="w-auto h-auto max-w-full max-h-full"
-            onClick={refreshCaptcha}
-          />
-          <Tag color="lime">不清楚？点击图片换一张</Tag>
-        </Space>
-
-        <div className="w-full mt-4">
-          <Button
-            type="primary"
-            className="w-full mt-1rem"
-            loading={loading}
-            onClick={() => {
-              // 防止重复点击登录按钮
-              if (!loading) {
-                login(password, inputCode);
+          {/* Slogan */}
+          <h2 className="text-center text-sm text-gray-500">
+            <img
+              style={{
+                width: "100px", // 调整宽度，根据需要修改
+                height: "100px", // 调整高度，根据需要修改
+              }}
+              src={
+                "  https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ"
               }
-            }}
-          >
-            登录
-          </Button>
-          <Icon name="arrow-right" />
-        </div>
-      </Card>
+              className="w-auto h-auto max-w-full max-h-full"
+            />
+          </h2>
+          <Input
+            className="w-full mt-1rem"
+            addonBefore={<UserOutlined />}
+            placeholder="用户名："
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+
+          <Input
+            className="w-full mt-1rem"
+            addonBefore={<LockOutlined />}
+            placeholder="密码："
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Input
+            className="w-full mt-1rem"
+            addonBefore={<KeyOutlined />}
+            placeholder="验证码："
+            value={inputCode}
+            onChange={(e) => setInputCode(e.target.value)}
+            // onKeyDown={(e) => {
+            //   if (e.key === "Enter") {
+            //     // 按下回车键触发登录
+            //     login(password, inputCode);
+            //   }
+            // }}
+          />
+          <div className="w-full mt-4"></div>
+
+          <Space className="w-full" direction="horizontal">
+            <img
+              src={imgSrc}
+              className="w-auto h-auto max-w-full max-h-full "
+              onClick={refreshCaptcha}
+            />
+            <Tag color="lime">不清楚？点击图片换一张</Tag>
+          </Space>
+          <div style={{ height: "10px" }}></div>
+
+          {/* 用户协议和隐私协议链接 */}
+          <Form>
+            <Form.Item>
+              <Checkbox
+                checked={agreedToTerms}
+                onChange={(e) => setAgreedToTerms(e.target.checked)}
+              >
+                我已阅读并同意
+                <Link href="/user-agreement" target="_blank">
+                  《用户协议》
+                </Link>
+                和
+                <Link href="/privacy" target="_blank">
+                  《隐私协议》
+                </Link>
+              </Checkbox>
+            </Form.Item>
+          </Form>
+          <div className="w-full mt-4">
+            <Button
+              type="primary"
+              className="w-full mt-1rem"
+              loading={loading}
+              onClick={() => {
+                if (agreedToTerms && !loading) {
+                  setLoading(true); // 开始加载
+            
+                  setTimeout(() => {
+                    login(password, inputCode);
+                    setLoading(false); // 结束加载
+                  }, 1500); // 2秒的延迟
+                }  else {
+                  message.error("请先同意用户协议");
+                }
+              }}
+            >
+              登录
+            </Button>
+            <Icon name="arrow-right" />
+          </div>
+          <div style={{ height: "20px" }}></div>
+
+          <Form>
+            <Form.Item>
+              <Typography.Text type="secondary" style={{ textAlign: "center" }}>
+                @2023 All Rights Reserved
+              </Typography.Text>
+            </Form.Item>
+          </Form>
+        </Card>
+      </div>
     </div>
   );
 };

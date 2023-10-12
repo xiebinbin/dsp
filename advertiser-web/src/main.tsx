@@ -30,6 +30,13 @@ const PlacementsAdvertiserIndexPage: React.LazyExoticComponent<
 const ReportAdvertiserIndexPage: React.LazyExoticComponent<
   React.FC<ReportAdvPageProps>
 > = lazy(() => import("@/pages/report/index-advertiser"));
+const UserAgreementPage: React.LazyExoticComponent<React.FC> = lazy(
+  () => import("@/pages/policy/user")
+);
+const PrivacyPolicyPage: React.LazyExoticComponent<React.FC> = lazy(
+  () => import("@/pages/policy/privacy")
+);
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -90,9 +97,17 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: "user-agreement",
+    element: <UserAgreementPage />,
+  },
+  {
+    path: "privacy",
+    element: <PrivacyPolicyPage />,
+  },
 ]);
 ReactDOM.createRoot(document.getElementById("root")!).render(
-    <RecoilRoot>
-      <RouterProvider router={router} />
-    </RecoilRoot>
+  <RecoilRoot>
+    <RouterProvider router={router} />
+  </RecoilRoot>
 );
