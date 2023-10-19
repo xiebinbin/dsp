@@ -15,7 +15,7 @@ import App from "@/App.tsx";
 const maps = new Map<string | number | boolean, ProSchemaValueEnumType | ReactNode>()
 maps.set(true, {
     text: '启用',
-    status: '0',
+    status: 'Success',
 });
 maps.set(false, {
     text: '禁用',

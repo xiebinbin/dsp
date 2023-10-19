@@ -33,7 +33,7 @@ maps.set(false, {
   status: "error",
 });
 const PlacementsAgentIndexPage = (props: PlacementsPageProps) => {
-  const { role, roleName } = props;
+  const { role,  } = props;
   const [advertisers, setAdvertisers] = useSafeState<
     { id: number; name: string;  }[]
   >([]);

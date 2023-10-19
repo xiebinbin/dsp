@@ -34,7 +34,8 @@ const ReportAgentIndexPage = (props: ReportPageProps) => {
   const [advertisersList, setadvertisersList] = useSafeState<
     { id: number; name: string; agentId: number }[]
   >([]);
-  const handleAdvertiserChange = (e) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleAdvertiserChange = (e: string | null) => {
     setSelectedAgent;
     console.log("hand adverchange e,", e);
     if (e != null) {

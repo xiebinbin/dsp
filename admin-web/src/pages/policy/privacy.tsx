@@ -1,8 +1,7 @@
 import React from "react";
-import { Layout, Typography } from "antd";
+import {  Typography } from "antd";
 import { PageContainer, ProCard } from "@ant-design/pro-components";
 
-const { Content } = Layout;
 const PrivacyPolicyPage: React.FC = () => {
   // 用户服务协议文本
   const termsOfServiceText = `

@@ -1,26 +1,19 @@
 import {
   ModalForm,
-  ProFormDateTimePicker,
-  ProFormDigit,
-  ProFormInstance,
+   ProFormInstance,
   ProFormRadio,
-  ProFormSelect,
-  ProFormText,
+   ProFormText,
 } from "@ant-design/pro-components";
-import { Button, Image, message, RadioChangeEvent, UploadFile } from "antd";
+import { message, } from "antd";
 import { useMount, useSafeState, useUnmount } from "ahooks";
 import Emittery from "emittery";
 import { useCallback, useEffect, useRef, useState } from "react";
 import "xgplayer/dist/index.min.css";
 import { getCountryList } from "@/utils/country.ts";
-import { MaterialEditDto } from "@/api/material";
-import MaterialApi from "@/api/material.ts";
 import AgentApi from "@/api/agent.ts";
 import AdvAPI from "@/api/advertiser.ts";
-import error from "xgplayer/es/error";
 import MedialApi, { MediaEditDto } from "@/api/media.ts";
-import PlacementApi, { PlacementEditDto } from "@/api/placement.ts";
-
+ 
 // eslint-disable-next-line react-refresh/only-export-components
 export const $emit = new Emittery();
 
@@ -33,19 +26,17 @@ const EditForm = () => {
   const [id, setId] = useSafeState<bigint>(BigInt(0));
   const formRef = useRef<ProFormInstance>();
   const [mode, setMode] = useSafeState("add");
-  const [agents, setAgents] = useSafeState<{ name: string; id: number }[]>([]);
-  const [advertisers, setAdvertisers] = useState<
+  const [, setAgents] = useSafeState<{ name: string; id: number }[]>([]);
+  const [, setAdvertisers] = useState<
     { id: number; name: string; agentId: number }[]
   >([]);
   const [advertisersList, setadvertisersList] = useState<
     { id: number; name: string; agentId: number }[]
   >([]);
-  const [selectedAgent, setSelectedAgent] = useState<number | string>("");
+  const [selectedAgent, ] = useState<number | string>("");
   //   const [selectedMaterial, setselectedMaterial] = useSafeState<{ name: string; id: number }[]>([]);
-  const [materials, setMaterials] = useSafeState<
-    { name: string; id: number }[]
-  >([]); // 使用 useState 初始化为空数组
-  const [mediaslist, setMediaslist] = useSafeState<
+  
+  const [, setMediaslist] = useSafeState<
     { name: string; id: number }[]
   >([]); // 使用 useState 初始化为空数组
 
@@ -67,16 +58,6 @@ const EditForm = () => {
     }
   }, [selectedAgent]);
 
-  const handleAdvertiserChange = (e) => {
-    setSelectedAgent;
-    console.log("hand adverchange e,", e);
-    if (e != null) {
-      loadMaterials(e);
-    }
-  };
-  const handleMaterialChange = (e) => {
-    console.log("hand adverchange e,", e);
-  };
   const loadAgentsRelation = useCallback(async () => {
     const agentList = await AgentApi.getAgentsList();
     setAgents(agentList);
@@ -118,36 +99,7 @@ const EditForm = () => {
       })
     );
   }, [setMediaslist]);
-  const loadMaterials = useCallback(
-    async (q: string) => {
-      try {
-        const filters: Record<string, (number | string | boolean)[] | null> =
-          {};
-        const orderBy: { [key: string]: "asc" | "desc" } = {};
-        console.log("materials load q", q);
-        const res = await MaterialApi.getOptList({
-          page: 1,
-          limit: 1000,
-          q: q ?? "",
-          filters,
-          orderBy,
-          extra: {},
-        });
-
-        setMaterials(
-          res.data.map((item) => {
-            return {
-              name: item.name,
-              id: Number(item.id),
-            };
-          }) || []
-        );
-      } catch {
-        console.error("An error occurred:", error);
-      }
-    },
-    [setMaterials]
-  );
+ 
   useMount(async () => {
     $emit.on("add", (val: bigint) => {
       setId(val);

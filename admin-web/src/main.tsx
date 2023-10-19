@@ -29,9 +29,9 @@ const UnauthorizedPage: React.LazyExoticComponent<React.FC> = lazy(
 const UserIndexPage: React.LazyExoticComponent<React.FC<UserIndexPageProps>> =
   lazy(() => import("@/pages/user"));
 // const VideoIndexPage: React.LazyExoticComponent<React.FC> = lazy(() => import("@/pages/video"));
-const FeaturedCardIndexPage: React.LazyExoticComponent<React.FC> = lazy(
-  () => import("@/pages/featured-card")
-);
+// const FeaturedCardIndexPage: React.LazyExoticComponent<React.FC> = lazy(
+//   () => import("@/pages/featured-card")
+// );
  
 const LoginPage: React.LazyExoticComponent<React.FC> = lazy(
   () => import("@/pages/login")
@@ -40,9 +40,6 @@ const DashboardPage: React.LazyExoticComponent<React.FC<DashbordPageProps>> = la
   () => import("@/pages/dashboard")
 );
  
-const AgentIndexPage: React.LazyExoticComponent<React.FC> = lazy(
-  () => import("@/pages/agent")
-);
 
 const AdvertiserIndexPage: React.LazyExoticComponent<
   React.FC<AdvIndexPageProps>
@@ -110,14 +107,7 @@ const router = createBrowserRouter([
             ),
           },
       
-          {
-            path: "content/featured-cards",
-            element: (
-              <Suspense>
-                <FeaturedCardIndexPage />
-              </Suspense>
-            ),
-          },
+   
           {
             path: "advertiser/root",
             element: (
@@ -233,14 +223,14 @@ const router = createBrowserRouter([
         
         
        
-          {
-            path: "placement/agents",
-            element: (
-              <Suspense>
-                <AgentIndexPage />
-              </Suspense>
-            ),
-          },
+          // {
+          //   path: "placement/agents",
+          //   element: (
+          //     <Suspense>
+          //       <AgentIndexPage />
+          //     </Suspense>
+          //   ),
+          // },
          
           {
             path: "report/index",

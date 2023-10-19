@@ -15,7 +15,7 @@ import { useLocation } from "react-router-dom";
 export const $histemit = new Emittery();
 
 const RechargeHist = (props: { role: "Root" | "Agent"; roleName: string }) => {
-  const { role, roleName } = props;
+  const { role,  } = props;
 
   const [show, setShow] = useSafeState(false);
   const [mode, setMode] = useSafeState("add");

@@ -24,6 +24,7 @@ const DashboardPage = (props: DashbordPageProps) => {
     // 在此处发起数据请求，并将数据存储在 infoData 中
     try {
       const response = await DashboardAPI.getChartData();
+      console.log(role,roleName)
       setInfoData(response);
     } catch (error) {
    

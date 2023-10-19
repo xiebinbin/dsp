@@ -4,7 +4,6 @@ import {
   ProFormDateTimePicker,
   ProFormDigit,
   ProFormInstance,
-  ProFormRadio,
   ProFormText,
 } from "@ant-design/pro-components";
 import { useMount, useSafeState, useUnmount } from "ahooks";
@@ -27,10 +26,11 @@ const PlacementDetail = (props: {
   const [show, setShow] = useSafeState(false);
   const [mode, setMode] = useSafeState("detail");
   const formRef = useRef<ProFormInstance>();
-  const [id, setId] = useSafeState<bigint>(BigInt(0));
+  const [, setId] = useSafeState<bigint>(BigInt(0));
   useMount(() => {
     $detailemit.on("detail", (val) => {
       setMode("detail");
+      console.log(role, roleName )
       setId(val);
       loadInfo(val)
         .then(() => {

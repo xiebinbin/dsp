@@ -47,7 +47,6 @@ const upload = async (file: File): Promise<string> => {
   });
 };
 const uploadcloud = async (file: File): Promise<filelocalres> => {
-  const ext = mime.getExtension(file.type);
   const contentType = mime.getType(file.name) || "application/octet-stream";
   // 创建一个FormData对象，用于将文件包装成可上传的形式
   const formData = new FormData();

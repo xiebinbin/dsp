@@ -2,7 +2,7 @@ import "./App.css";
 import { useLocation, useNavigate, useOutlet } from "react-router-dom";
 import { useMount, useSafeState } from "ahooks";
 import localforage from "localforage";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { Button, Modal, message } from "antd";
 import AuthApi from "@/api/auth.ts";
 import { AuthInfo } from "@/stores/auth-info.ts";

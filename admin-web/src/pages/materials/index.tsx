@@ -27,7 +27,7 @@ export interface MaterialsPageProps {
   roleName: string;
 }
 const MaterialsIndexPage = (props: MaterialsPageProps) => {
-  const { role, roleName } = props;
+  const { role,  } = props;
   const [authUser] = useRecoilState(AuthInfo);
 
   const [advertisers, setAdvertisers] = useSafeState<

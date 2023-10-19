@@ -19,13 +19,12 @@ const MaterialDetail = (props: {
   role: "Advertiser" | "Agent" | "Root";
   roleName: string;
 }) => {
-  const { role, roleName } = props;
+  const { role } = props;
   const [materialurl, setMaterialurl] = useSafeState(""); //http://static-edu-test.leleshuju.com/
 
   const [show, setShow] = useSafeState(false);
   const [mode, setMode] = useSafeState("detail");
   const formRef = useRef<ProFormInstance>();
-  const [id, setId] = useSafeState<bigint>(BigInt(0));
   const [positionOptions, setPositionOptions] = useSafeState([
     { label: "列表页", value: 1 },
     { label: "详情页", value: 2 },
@@ -34,7 +33,6 @@ const MaterialDetail = (props: {
   useMount(() => {
     $detailemit.on("detail", (val) => {
       setMode("detail");
-      setId(val);
       loadInfo(val)
         .then(() => {
           // setTimeout(() => {

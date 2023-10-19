@@ -27,7 +27,7 @@ const RechargeForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
     $rechargeemit.on("recharge", (val: bigint) => {
       setMode("recharge");
       setId(val);
-
+      console.log(role,roleName)
       loadInfo(val)
         .then(() => {
           setShow(true);

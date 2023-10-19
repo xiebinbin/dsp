@@ -40,7 +40,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
   const [advertisersList, setadvertisersList] = useSafeState<
     { id: number; name: string; agentId: number }[]
   >([]);
-  const handleAdvertiserChange = (e) => {
+  const handleAdvertiserChange = (e: string | null) => {
     setSelectedAgent;
     console.log("hand adverchange e,", e);
     if (e != null) {

@@ -20,7 +20,7 @@ import type {
     roleName: string;
   }
   const MaterialsAgentIndexPage = (props: MaterialsPageProps) => {
-    const { role, roleName } = props;
+    const { role,  } = props;
     const [advertisers, setAdvertisers] = useSafeState<
       { id: number; name: string; agentId: number }[]
     >([]);

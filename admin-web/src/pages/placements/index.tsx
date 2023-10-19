@@ -40,7 +40,7 @@ maps.set(false, {
   status: "error",
 });
 const PlacementsIndexPage = (props: PlacementsPageProps) => {
-  const { role, roleName } = props;
+  const { role,  } = props;
   const [authUser] = useRecoilState(AuthInfo);
   const [advertisers, setAdvertisers] = useSafeState<
     { id: number; name: string; agentId: number }[]

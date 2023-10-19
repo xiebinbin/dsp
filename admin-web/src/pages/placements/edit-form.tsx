@@ -65,7 +65,7 @@ const EditForm = () => {
     }
   }, [selectedAgent]);
 
-  const handleAdvertiserChange = (e) => {
+  const handleAdvertiserChange = (e: string | null) => {
     setSelectedAgent;
     console.log("hand adverchange e,", e);
     if (e != null) {

@@ -32,14 +32,10 @@ import type {
     status: "error",
   });
   const PlacementsAdvertiserIndexPage = (props: PlacementsPageProps) => {
-    const { role, roleName } = props;
+    const { role,  } = props;
     const [advertisers, setAdvertisers] = useSafeState<
       { id: number; name: string;  }[]
     >([]);
-    const [agents, setAgents] = useSafeState<{ label: string; value: number }[]>(
-      []
-    );
-  
     const actionRef = useRef<ActionType>();
     const [pageSize, setPageSize] = useSafeState(100);
     const reload = useCallback(() => {

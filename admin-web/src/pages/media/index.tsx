@@ -46,7 +46,7 @@ types.set(2, {
   text: "PC软件",
 });
 const MediaIndexPage = (props: MediaPageProps) => {
-  const { role, roleName } = props;
+  const { role,  } = props;
   const [authUser] = useRecoilState(AuthInfo);
 
   const actionRef = useRef<ActionType>();

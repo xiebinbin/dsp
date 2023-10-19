@@ -1,5 +1,4 @@
 import {
-  ActionType,
   ModalForm,
   ProForm,
   ProFormInstance,
@@ -34,6 +33,7 @@ const AdvertiserDetail = (props: {
     // setCompanyName(companyName);
     // settaxNumber(taxNumber);
     // setcpmPrice(cpmPrice);
+    console.log(role,roleName)
       console.log('val',val,'taxNumber',taxNumber,'cpmPrice',cpmPrice)
       companyNameRef.current = companyName;
       taxNumberRef.current = taxNumber;

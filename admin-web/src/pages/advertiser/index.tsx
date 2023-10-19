@@ -29,7 +29,7 @@ const maps = new Map<
 >();
 maps.set(true, {
   text: "启用",
-  status: "0",
+  status: "Success",
 });
 maps.set(false, {
   text: "禁用",
