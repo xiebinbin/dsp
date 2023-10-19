@@ -19,47 +19,46 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const [password, setPassword] = useSafeState("");
   const [username, setUsername] = useSafeState("");
-  const [codeid, setCodeid] = useSafeState("");
+  // const [codeid, setCodeid] = useSafeState("");
   const [loading, setLoading] = useSafeState(false);
   const [, setAuthInfo] = useRecoilState(AuthInfo);
   const loadingRef = useRef(false);
-  const [inputCode, setInputCode] = useSafeState(""); // 初始化验证码
-  const [imgSrc, setImgSrc] = useSafeState("");
+  const [inputCode, setInputCode] = useSafeState(""); // 
+  // const [imgSrc, setImgSrc] = useSafeState("");
   const [agreedToTerms, setAgreedToTerms] = useSafeState(false);
 
-  const refreshCaptcha = useCallback(() => {
-    // 在此处处理刷新验证码的逻辑，可以生成新的验证码并更新到页面
-    AuthApi.getCode()
-      .then((res) => {
-        localStorage.setItem("codeid", res.codeid);
-        setCodeid(res.codeid); // 使用 useCallback 后不再需要 localStorage
-        setImgSrc(res.url);
-      })
-      .catch((error) => {
-        console.error("刷新验证码失败", error);
-      });
-  }, [setCodeid, setImgSrc]);
+  // const refreshCaptcha = useCallback(() => {
+  //   // 在此处处理刷新验证码的逻辑，可以生成新的验证码并更新到页面
+  //   AuthApi.getCode()
+  //     .then((res) => {
+  //       localStorage.setItem("codeid", res.codeid);
+  //       setCodeid(res.codeid); // 使用 useCallback 后不再需要 localStorage
+  //       setImgSrc(res.url);
+  //     })
+  //     .catch((error) => {
+  //       console.error("刷新验证码失败", error);
+  //     });
+  // }, [setCodeid, setImgSrc]);
 
   useEffect(() => {
     // 在组件加载后调用 refreshCaptcha
-    refreshCaptcha();
-    (async () => {
-      const codeIdFromLocalStorage = localStorage.getItem("codeid");
-      setCodeid(codeIdFromLocalStorage || "");
-    })();
-  }, [setCodeid, refreshCaptcha]);
+    // refreshCaptcha();
+    // (async () => {
+    //   const codeIdFromLocalStorage = localStorage.getItem("codeid");
+    //   setCodeid(codeIdFromLocalStorage || "");
+    // })();
+  }, []);
 
   const checkUser = useCallback(() => {
-    console.log("inputCode", inputCode);
-    if (username === "" || password === "" || inputCode === "") {
+    if (username === "" || password === "") {
       window.Message.error("用户名、密码或验证码不能为空！");
       return true;
     }
     return false;
-  }, [username, password, inputCode]);
+  }, [username, password]);
 
   const login = useCallback(
-    async (password: string, inputCode: string) => {
+    async (password: string) => {
       if (loadingRef.current) return;
       setLoading(true);
       loadingRef.current = true;
@@ -75,8 +74,8 @@ const LoginPage = () => {
         const res = await AuthApi.login({
           username,
           password,
-          inputCode,
-          codeid,
+          inputCode:'inputCode',
+         codeid: 'codeid',
         });
 
         console.log("res", res);
@@ -99,7 +98,7 @@ const LoginPage = () => {
         loadingRef.current = false;
       }
     },
-    [navigate, setLoading, checkUser, setAuthInfo, username, codeid]
+    [navigate, setLoading, checkUser, setAuthInfo, username,]
   );
 
   return (
@@ -147,7 +146,7 @@ const LoginPage = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Input
+          {/* <Input
             className="w-full mt-1rem"
             addonBefore={<KeyOutlined />}
             placeholder="验证码："
@@ -159,16 +158,16 @@ const LoginPage = () => {
             //     login(password, inputCode);
             //   }
             // }}
-          />
+          /> */}
           <div className="w-full mt-4"></div>
 
           <Space className="w-full" direction="horizontal">
-            <img
+            {/* <img
               src={imgSrc}
               className="w-auto h-auto max-w-full max-h-full "
               onClick={refreshCaptcha}
             />
-            <Tag color="lime">不清楚？点击图片换一张</Tag>
+            <Tag color="lime">不清楚？点击图片换一张</Tag> */}
           </Space>
           <div style={{ height: "10px" }}></div>
 
@@ -200,7 +199,7 @@ const LoginPage = () => {
                   setLoading(true); // 开始加载
             
                   setTimeout(() => {
-                    login(password, inputCode);
+                    login(password);
                     setLoading(false); // 结束加载
                   }, 1500); // 2秒的延迟
                 }  else {
