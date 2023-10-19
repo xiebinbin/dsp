@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import { createCanvas } from 'canvas';
+// import { createCanvas } from 'canvas';
 export class randomstr {
   getrandstr(num: number) {
     const chars = 'ABDEFGHJKLMNPRSTUVWXYZabdefghjkmnpqrsuvwxy23456789';
