@@ -3,11 +3,11 @@ import { useCallback, useRef, useEffect } from "react";
 import AuthApi from "@/api/auth.ts";
 import localforage from "localforage";
 import { useNavigate } from "react-router-dom";
-import { Button, Input, Card, Space, Tag, message } from "antd";
+import { Button, Input, Card, Space, message } from "antd";
 import { useRecoilState } from "recoil";
 import { AuthInfo } from "@/stores/auth-info.ts";
 import Icon, {
-  KeyOutlined,
+  // KeyOutlined,
   LockOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -23,7 +23,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useSafeState(false);
   const [, setAuthInfo] = useRecoilState(AuthInfo);
   const loadingRef = useRef(false);
-  const [inputCode, setInputCode] = useSafeState(""); // 
+  // const [inputCode, setInputCode] = useSafeState(""); //
   // const [imgSrc, setImgSrc] = useSafeState("");
   const [agreedToTerms, setAgreedToTerms] = useSafeState(false);
 
