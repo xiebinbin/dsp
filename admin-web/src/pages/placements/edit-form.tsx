@@ -6,7 +6,7 @@ import {
   ProFormSelect,
   ProFormText,
 } from "@ant-design/pro-components";
-import { message} from "antd";
+import { Checkbox, message } from "antd";
 import { useMount, useSafeState, useUnmount } from "ahooks";
 import Emittery from "emittery";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -46,6 +46,9 @@ const EditForm = () => {
   const [mediaslist, setMediaslist] = useSafeState<
     { name: string; id: number }[]
   >([]); // 使用 useState 初始化为空数组
+  const [mediasAlllist, setMediasAlllist] = useSafeState<
+    { name: string; id: number }[]
+  >([]); // 使用 useState 初始化为空数组
 
   useEffect(() => {
     loadAgentsRelation();
@@ -72,7 +75,7 @@ const EditForm = () => {
       loadMaterials(e);
     }
   };
- 
+
   const loadAgentsRelation = useCallback(async () => {
     const agentList = await AgentApi.getAgentsList();
     setAgents(agentList);
@@ -105,6 +108,15 @@ const EditForm = () => {
   );
   const loadMedias = useCallback(async () => {
     const res = await MedialApi.getMediasList();
+    console.log("res", res);
+    setMediasAlllist(
+      res.map((item) => {
+        return {
+          name: item.name,
+          id: Number(item.id),
+        };
+      })
+    );
     setMediaslist(
       res.map((item) => {
         return {
@@ -153,10 +165,10 @@ const EditForm = () => {
       loadMedias();
       formRef.current?.resetFields();
       formRef.current?.setFieldsValue({
-        name:"",
+        name: "",
         enabled: "",
         adMaterialId: "",
-        budget:"",
+        budget: "",
         mediaType: "",
         usedBudget: "",
         displayCount: "",
@@ -188,7 +200,7 @@ const EditForm = () => {
     $emit.clearListeners();
   });
   const close = useCallback(() => {
-    setMediaslist([])
+    setMediaslist([]);
     setShow(false);
   }, [setShow]);
   const loadInfo = useCallback(
@@ -274,8 +286,11 @@ const EditForm = () => {
         if (formRef.current) {
           const data = await formRef.current.validateFields();
           // data.avatar = avatar;
+          console.log("validateFields data", data);
 
-          // console.log("validateFields data", data);
+          data.medias = data.medias.map(Number); // 将媒体 id 转换为数字
+          console.log("validateFields medias data", data);
+
           if (mode === "add") {
             // data.role = role;
 
@@ -371,17 +386,10 @@ const EditForm = () => {
             },
           ]}
         />
-        <ProFormSelect
+        <ProFormText
           name="medias"
           label="选择投放媒体(多选)"
-          options={mediaslist.map((val) => ({
-            label: val.name,
-            value: val.id,
-          }))}
-          fieldProps={{
-            mode: "multiple",
-          }}
-          placeholder="选择投放媒体"
+          initialValue={mediaslist.map((val) => val.id)} // 设置初始选中的媒体的 id 组成的数组
           rules={[
             {
               required: true,
@@ -389,7 +397,15 @@ const EditForm = () => {
               type: "array",
             },
           ]}
-        />
+        >
+          <Checkbox.Group
+            options={mediasAlllist.map((val) => ({
+              label: val.name,
+              value: val.id,
+            }))}
+          />
+        </ProFormText>
+
         <div style={{ display: "flex", alignItems: "center" }}>
           <ProFormDateTimePicker
             name="startedAt"

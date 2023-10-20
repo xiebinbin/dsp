@@ -116,15 +116,31 @@ export class MediaRelationService {
       throw new HttpException(error.message, error.code);
     }
   }
-  async updateMaterial(id: bigint, mediarelationDto: mediarelationDto) {
+  async updateMediaRelation(
+    placementId: bigint,
+    mediarelationDto: mediarelationDto[],
+  ) {
     try {
-      const res = await this.prisma.adMediaRelation.update({
-        where: { id },
-        data: {
-          enabled: mediarelationDto.enabled,
+      const createData = mediarelationDto.map((mediarelationDto) => {
+        const { mediaId, placementId } = mediarelationDto;
+        return {
+          mediaId,
+          placementId,
+          enabled: true,
+        };
+      });
+      console.log('create  mediarelationDto', mediarelationDto);
+
+      const redel = await this.prisma.adMediaRelation.deleteMany({
+        where: {
+          placementId: placementId,
         },
       });
-      console.log('res', res);
+
+      const createdRelations = await this.prisma.adMediaRelation.createMany({
+        data: createData,
+      });
+      console.log('createdRelations', createdRelations);
       return true;
     } catch (e) {
       throw new HttpException(e.message, e.status);

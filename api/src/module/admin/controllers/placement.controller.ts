@@ -151,7 +151,7 @@ export class PlacementController {
     data: PlacementDto,
     @Res() response,
   ) {
-    console.log('data', data);
+    console.log('placement Putdata', data);
     const advres = await this.AdvService.findById(data.advertiserId);
     if (advres.wallet == null || advres.wallet.balance < data.budget) {
       throw new HttpException(
@@ -160,6 +160,16 @@ export class PlacementController {
       );
     }
     const result = this.PlacementService.updatePlacement(id, data);
+    const mediarelation = data.medias.map((mediaId) => ({
+      mediaId: mediaId,
+      placementId: id, // 这里需要修改为正确的获取 AdPlacement 的方式
+      enabled: true,
+    }));
+    const res = await this.MediaRelationService.updateMediaRelation(
+      id,
+      mediarelation,
+    );
+    // console.log('res', res);
 
     return response.send(result);
   }
