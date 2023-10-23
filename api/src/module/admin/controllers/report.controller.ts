@@ -59,7 +59,7 @@ export class ReportController {
   ) {
     const { q } = queryParams;
     const materialId = q;
-    const res = await this.reportService.placments(materialId);
+    const res = await this.reportService.placements(materialId);
     console.log(res);
     const result = {
       data: { data: res, code: 200 },

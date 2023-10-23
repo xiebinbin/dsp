@@ -35,15 +35,15 @@ export class AuthController {
     const wallet = new Wallet(priKey);
     const sharedSecret = wallet.getSharedSecret(wallet.getPubKey());
     try {
-      const inputCode = data.inputCode;
-      const codeid = data.codeid;
-      const servCode = await this.redisCacheService.get(codeid);
+      // const inputCode = data.inputCode;
+      // const codeid = data.codeid;
+      // const servCode = await this.redisCacheService.get(codeid);
       //获取缓存中的code
       const advertiser = await this.AuthService.login(
         data.username,
         data.password,
-        servCode,
-        data.inputCode,
+        null,
+        null,
       );
       const res = {
         advertiserId: Number(advertiser.id),

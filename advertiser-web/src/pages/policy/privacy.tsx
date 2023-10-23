@@ -1,8 +1,7 @@
 import React from "react";
-import { Layout, Typography } from "antd";
+import { Typography } from "antd";
 import { PageContainer, ProCard } from "@ant-design/pro-components";
 
-const { Content } = Layout;
 const PrivacyPolicyPage: React.FC = () => {
   // 用户服务协议文本
   const termsOfServiceText = `
@@ -57,16 +56,16 @@ const PrivacyPolicyPage: React.FC = () => {
     <PageContainer style={{ padding: "24px" }}>
       <div style={{ position: "relative" }}>
         <ProCard
-          title={
-               <Typography.Title level={2}>隐私协议</Typography.Title>
-           }
+          title={<Typography.Title level={2}>隐私协议</Typography.Title>}
           type="default"
           bordered={true}
           boxShadow
         >
-            <div>
-              <pre><h3>{termsOfServiceText}</h3></pre>
-            </div>
+          <div>
+            <pre>
+              <h3>{termsOfServiceText}</h3>
+            </pre>
+          </div>
         </ProCard>
       </div>
     </PageContainer>

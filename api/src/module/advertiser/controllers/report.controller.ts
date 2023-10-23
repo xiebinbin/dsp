@@ -33,11 +33,29 @@ export class ReportController {
       advertiserId: data.advertiserId || null,
       startDate: data.startDate,
       endDate: data.endDate,
+      adPlacementId: data.adPlacementId,
     };
     const res = await this.reportService.getReportsByDateRange(reportparam);
     const result = {
       data: this.convertReportInfo(res),
       code: 200,
+    };
+    console.log('report res', result);
+    return response.send(result);
+  }
+  @UseInterceptors(ApiResInterceptor)
+  @Post('/placementOptlist')
+  async getPlacementOptList(
+    @Req() req: Request,
+    @Body() queryParams: any,
+    @Res() response,
+  ) {
+    const { q } = queryParams;
+    const materialId = q;
+    const res = await this.reportService.placements(materialId);
+    console.log(res);
+    const result = {
+      data: { data: res, code: 200 },
     };
     console.log('report res', result);
     return response.send(result);

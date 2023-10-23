@@ -25,7 +25,9 @@ const ReportAdvertiserIndexPage = (props: ReportAdvPageProps) => {
   const [materials, setMaterials] = useSafeState<
     { name: string; id: number }[]
   >([]); // 使用 useState 初始化为空数组
-
+  const [placements, setPlacements] = useSafeState<
+    { name: string; id: number }[]
+  >([]); // 使用 useState 初始化为空数组
   const loadMaterials = useCallback(async () => {
     try {
       const optlistres = await MaterialApi.getOptList();
@@ -42,6 +44,36 @@ const ReportAdvertiserIndexPage = (props: ReportAdvPageProps) => {
       console.error("An error occurred:");
     }
   }, [setMaterials]);
+  const handleMaterialChange = (e: string | null) => {
+    console.log("handleMaterialChange e,", e);
+    if (e != null) {
+      loadPlacements(e);
+    }
+  };
+  const loadPlacements = useCallback(
+    async (q: string) => {
+      try {
+        console.log("loadPlacements load q", q);
+        const res = await ReportApi.getPlacementOptlist({
+          q: q ?? "",
+          extra: {},
+        });
+        console.log("placement", res)
+
+        setPlacements(
+          res.data.map((item) => {
+            return {
+              name: item.name,
+              id: Number(item.id),
+            };
+          }) || []
+        );
+      } catch {
+        console.error("An error occurred:");
+      }
+    },
+    [setPlacements]
+  );
   const loadInfo = useCallback(async (data: ChartDataRequest) => {
     try {
       const chartContainer = document.getElementById("chart-container");
@@ -254,6 +286,20 @@ const ReportAdvertiserIndexPage = (props: ReportAdvPageProps) => {
                   options={materials.map((material) => ({
                     label: material.name,
                     value: material.id,
+                  }))}
+                  fieldProps={{
+                    onChange: handleMaterialChange, // 直接传递选中的值
+                  }}
+                />
+                   <ProFormSelect
+                  initialValue={""}
+                  //   width="xl"
+                  name="adPlacementId"
+                  label="选择广告计划"
+                  placeholder="选择广告计划"
+                  options={placements.map((placement) => ({
+                    label: placement.name,
+                    value: placement.id,
                   }))}
                 />
               </ProForm.Group>

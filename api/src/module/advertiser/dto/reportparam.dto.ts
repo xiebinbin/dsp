@@ -3,4 +3,5 @@ export class reportParam {
   startDate: string;
   endDate: string;
   advertiserId: bigint;
+  adPlacementId: bigint;
 }

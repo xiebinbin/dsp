@@ -32,7 +32,7 @@ import type {
     status: "error",
   });
   const PlacementsAdvertiserIndexPage = (props: PlacementsPageProps) => {
-    const { role, roleName } = props;
+    const { role,  } = props;
   
     const actionRef = useRef<ActionType>();
     const [pageSize, setPageSize] = useSafeState(100);

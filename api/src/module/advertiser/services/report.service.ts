@@ -11,7 +11,7 @@ export class ReportService {
   constructor(private prisma: PrismaClient) {}
 
   async getReportsByDateRange(param: reportParam) {
-    const { startDate, endDate, advertiserId } = param;
+    const { startDate, endDate, advertiserId, adPlacementId } = param;
     const where: any = {};
     where.date = {
       gte: startDate, // 大于或等于 startDate
@@ -19,7 +19,9 @@ export class ReportService {
     };
 
     where.advertiserId = advertiserId;
-
+    if (adPlacementId != null) {
+      where.adPlacementId = adPlacementId;
+    }
     const reports = await this.prisma.reportDaily.groupBy({
       by: ['date'],
       where,
@@ -39,5 +41,23 @@ export class ReportService {
       usedBudget: Number(report._sum.usedBudget),
     }));
     return reportSummary;
+  }
+  async placements(
+    materialId: bigint,
+  ): Promise<{ id: number; name: string }[]> {
+    const where: any = {};
+    if (materialId !== null) {
+      where.adMaterialId = materialId;
+    }
+    const placements = await this.prisma.reportDaily.findMany({
+      select: { adPlacementId: true, adPlacementName: true },
+      where,
+      distinct: ['adPlacementId', 'adPlacementName'],
+    });
+    const placementarray = placements.map((placement) => ({
+      id: Number(placement.adPlacementId),
+      name: placement.adPlacementName,
+    }));
+    return placementarray;
   }
 }

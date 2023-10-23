@@ -14,10 +14,10 @@ export class AuthService {
     servCode: string,
     inputCode: string,
   ): Promise<Advertiser> {
-    if (servCode == null || servCode.toLowerCase() != inputCode.toLowerCase()) {
-      // throw new Error('10001','验证码错误');
-      throw AuthError.INVALID_CAPTCHA;
-    }
+    // if (servCode == null || servCode.toLowerCase() != inputCode.toLowerCase()) {
+    //   // throw new Error('10001','验证码错误');
+    //   throw AuthError.INVALID_CAPTCHA;
+    // }
     const advertiser = await this.AdvertiserService.findByUsername(username);
     if (!advertiser) {
       throw AuthError.ADV_NOT_FOUND;

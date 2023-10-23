@@ -11,7 +11,7 @@ export interface MaterialsPageProps {
   roleName: string;
 }
 const MaterialsAdvertiserIndexPage = (props: MaterialsPageProps) => {
-  const { role, roleName } = props;
+  const { role,  } = props;
   const actionRef = useRef<ActionType>();
   const [pageSize, setPageSize] = useSafeState(100);
   const reload = useCallback(() => {

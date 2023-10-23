@@ -15,7 +15,11 @@ export interface ChartDataResponse {
   clickCount: number; // 点击次数
   usedBudget: number; // 使用预算
 }
-
+// 请求参数类型
+export interface placementOptRequest {
+  q?: string;
+  extra?: { [key: string]: string | number | boolean };
+}
 // 创建 POST 请求函数
 // const getChartData = (
 //     params: ChartDataRequest
@@ -29,6 +33,17 @@ const getChartData = (
     `/api/advertiser/report/getReportsByDateRange`,req
   );
 };
+const getPlacementOptlist = (
+  req: placementOptRequest
+): Promise<{
+  data: { id: number; name: string }[]
+}> => {
+  return createRequestInstance().post(
+    `/api/advertiser/report/placementOptlist`,
+    req
+  );
+};
 export default {
   getChartData,
+  getPlacementOptlist,
 };

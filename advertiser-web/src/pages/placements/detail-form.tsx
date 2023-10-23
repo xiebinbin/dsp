@@ -4,7 +4,6 @@ import {
   ProFormDateTimePicker,
   ProFormDigit,
   ProFormInstance,
-  ProFormRadio,
   ProFormText,
 } from "@ant-design/pro-components";
 import { useMount, useSafeState, useUnmount } from "ahooks";
@@ -30,10 +29,11 @@ const PlacementDetail = (props: {
   useMount(() => {
     $detailemit.on("detail", (val) => {
       setMode("detail");
+      console.log(role, roleName);
       loadInfo(val)
         .then(() => {
-           setShow(true);
-         })
+          setShow(true);
+        })
         .catch(() => {
           message.error("加载失败");
         });
@@ -49,19 +49,18 @@ const PlacementDetail = (props: {
       formRef.current?.resetFields();
       setTimeout(() => {
         formRef.current?.setFieldsValue({
-            materialname: data.adMaterial.name,
-            mediaType: data.mediaType,
-            displayCount: data.displayCount,
-            clickCount: data.clickCount,
-            startedAt: data.startedAt,  
-            endedAt:data.endedAt, 
-            budget: data.budget,
-            usedBudget: data.usedBudget,
-            materialurl:data.adMaterial.url,
+          materialname: data.adMaterial.name,
+          mediaType: data.mediaType,
+          displayCount: data.displayCount,
+          clickCount: data.clickCount,
+          startedAt: data.startedAt,
+          endedAt: data.endedAt,
+          budget: data.budget,
+          usedBudget: data.usedBudget,
+          materialurl: data.adMaterial.url,
         });
       }, 500);
-      setMaterialurl(data.adMaterial.url)
-  
+      setMaterialurl(data.adMaterial.url);
     },
     [setMaterialurl]
   );
@@ -90,7 +89,7 @@ const PlacementDetail = (props: {
         },
       }} // 渲染一个空内容，相当于隐藏确定按钮
     >
-      {mode === "detail"  && (
+      {mode === "detail" && (
         <>
           <ProForm.Group>
             <ProFormText
@@ -122,9 +121,8 @@ const PlacementDetail = (props: {
               type: "number",
               precision: 2, // 小数点位数，根据需求设置
             }}
-           
           />
-            <ProFormDigit
+          <ProFormDigit
             name="clickCount"
             label="点击次数"
             disabled
@@ -135,29 +133,27 @@ const PlacementDetail = (props: {
               type: "number",
               precision: 2, // 小数点位数，根据需求设置
             }}
-         
           />
           <div style={{ display: "flex", alignItems: "center" }}>
-          <ProFormDateTimePicker
-            name="startedAt"
-            label="开始投放时间"
-            disabled
-            fieldProps={{
-              format: (value) => value.format("YYYY-MM-DD hh:mm:ss"),
-            }}
-          />
-          <span style={{ margin: "0 8px" }}>-</span>
-          <ProFormDateTimePicker
-            name="endedAt"
-            label="结束投放时间"
-            disabled
-            fieldProps={{
-              format: (value) => value.format("YYYY-MM-DD  hh:mm:ss"),
-            }}
-          />
-
-        </div>
-           <ProFormDigit
+            <ProFormDateTimePicker
+              name="startedAt"
+              label="开始投放时间"
+              disabled
+              fieldProps={{
+                format: (value) => value.format("YYYY-MM-DD hh:mm:ss"),
+              }}
+            />
+            <span style={{ margin: "0 8px" }}>-</span>
+            <ProFormDateTimePicker
+              name="endedAt"
+              label="结束投放时间"
+              disabled
+              fieldProps={{
+                format: (value) => value.format("YYYY-MM-DD  hh:mm:ss"),
+              }}
+            />
+          </div>
+          <ProFormDigit
             name="budget"
             label="预算"
             disabled
@@ -168,9 +164,8 @@ const PlacementDetail = (props: {
               type: "number",
               precision: 2, // 小数点位数，根据需求设置
             }}
-           
           />
-            <ProFormDigit
+          <ProFormDigit
             name="usedBudget"
             label="当前消耗"
             required
@@ -182,22 +177,20 @@ const PlacementDetail = (props: {
               precision: 2, // 小数点位数，根据需求设置
             }}
           />
-           <ProForm.Group>
+          <ProForm.Group>
             <ProForm.Item label="素材预览">
-                {materialurl !== "" && (
+              {materialurl !== "" && (
                 <img
-                    className="w-150px h-150px mr-1rem"
-                    // src={getImgUrl('https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png')}
-                    src={getImgUrl(materialurl)}
-
-                    alt="素材预览图"
+                  className="w-150px h-150px mr-1rem"
+                  // src={getImgUrl('https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png')}
+                  src={getImgUrl(materialurl)}
+                  alt="素材预览图"
                 />
-                )}
+              )}
             </ProForm.Item>
-            </ProForm.Group>
+          </ProForm.Group>
         </>
       )}
-
     </ModalForm>
   );
 };

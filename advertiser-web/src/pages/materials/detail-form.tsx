@@ -3,7 +3,6 @@ import {
   ProForm,
   ProFormInstance,
   ProFormRadio,
-  ProFormText,
 } from "@ant-design/pro-components";
 import { useMount, useSafeState, useUnmount } from "ahooks";
 
@@ -19,7 +18,7 @@ const MaterialDetail = (props: {
   role: "Advertiser" | "Agent" | "Root";
   roleName: string;
 }) => {
-  const { role, roleName } = props;
+  const { role,  } = props;
   const [materialurl, setMaterialurl] = useSafeState(""); //http://static-edu-test.leleshuju.com/
   const [show, setShow] = useSafeState(false);
   const [mode, setMode] = useSafeState("detail");

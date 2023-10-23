@@ -21,7 +21,9 @@ export class ReportService {
 
     return mediasArray;
   }
-  async placments(materialId: bigint): Promise<{ id: number; name: string }[]> {
+  async placements(
+    materialId: bigint,
+  ): Promise<{ id: number; name: string }[]> {
     const where: any = {};
     if (materialId !== null) {
       where.adMaterialId = materialId;
