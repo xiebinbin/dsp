@@ -201,6 +201,8 @@ model ReportDaily {
   advertiserName String   @map("advertiser_name")
   adMaterialId   BigInt   @map("ad_material_id")
   adMaterialName String   @map("ad_material_name")
+  adPlacementId  BigInt  @map("ad_placement_id") // 注意修正字段名大小写
+  adPlacementName String  @map("ad_placement_name") // 同样，修正字段名大小写
   displayCount   BigInt   @default(0) @map("display_count") @db.UnsignedBigInt
   clickCount     BigInt   @default(0) @map("click_count") @db.UnsignedBigInt
   usedBudget     BigInt   @default(0) @map("used_budget") @db.UnsignedBigInt
@@ -211,7 +213,6 @@ model ReportDaily {
   @@index([agentId], name: "agent_id")
   @@index([advertiserId], name: "advertiser_id")
   @@index([adMaterialId], name: "ad_material_id")
+  @@index([adPlacementId], name: "ad_placement_id")
   @@map("report_daily")
 }
-
-

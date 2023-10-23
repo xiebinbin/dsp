@@ -35,6 +35,8 @@ export class ReportController {
       agentId: data.agentId || null,
       advertiserId: data.advertiserId || null,
       adMaterialId: data.adMaterialId || null,
+      adPlacementId: data.adPlacementId || null,
+
       startDate: data.startDate,
       endDate: data.endDate,
     };
@@ -47,6 +49,23 @@ export class ReportController {
     console.log('report res', result);
     return response.send(result);
     return this.convertReportInfo(res);
+  }
+  @UseInterceptors(ApiResInterceptor)
+  @Post('/placementOptlist')
+  async getPlacementOptList(
+    @Req() req: Request,
+    @Body() queryParams: any,
+    @Res() response,
+  ) {
+    const { q } = queryParams;
+    const materialId = q;
+    const res = await this.reportService.placments(materialId);
+    console.log(res);
+    const result = {
+      data: { data: res, code: 200 },
+    };
+    console.log('report res', result);
+    return response.send(result);
   }
   convertReportInfo(report: any): any {
     const convertedData = report.map((item) => {

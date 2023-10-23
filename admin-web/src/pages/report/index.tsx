@@ -32,6 +32,9 @@ const ReportIndexPage = (props: ReportPageProps) => {
   const [materials, setMaterials] = useSafeState<
     { name: string; id: number }[]
   >([]); // 使用 useState 初始化为空数组
+  const [placements, setPlacements] = useSafeState<
+    { name: string; id: number }[]
+  >([]); // 使用 useState 初始化为空数组
   const [selectedAgent, setSelectedAgent] = useSafeState<number | string>("");
   const [agents, setAgents] = useSafeState<{ name: string; id: number }[]>([]);
   const [advertisers, setAdvertisers] = useSafeState<
@@ -45,6 +48,13 @@ const ReportIndexPage = (props: ReportPageProps) => {
     console.log("hand adverchange e,", e);
     if (e != null) {
       loadMaterials(e);
+    }
+  };
+
+  const handleMaterialChange = (e: string | null) => {
+    console.log("handleMaterialChange e,", e);
+    if (e != null) {
+      loadPlacements(e);
     }
   };
 
@@ -108,6 +118,32 @@ const ReportIndexPage = (props: ReportPageProps) => {
     },
     [setMaterials]
   );
+
+  const loadPlacements = useCallback(
+    async (q: string) => {
+      try {
+        console.log("loadPlacements load q", q);
+        const res = await ReportApi.getPlacementOptlist({
+          q: q ?? "",
+          extra: {},
+        });
+        console.log("placement", res)
+
+        setPlacements(
+          res.data.map((item) => {
+            return {
+              name: item.name,
+              id: Number(item.id),
+            };
+          }) || []
+        );
+      } catch {
+        console.error("An error occurred:");
+      }
+    },
+    [setPlacements]
+  );
+
   const loadInfo = useCallback(async (data: ChartDataRequest) => {
     try {
       const chartContainer = document.getElementById("chart-container");
@@ -155,7 +191,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
             // 文本标签
             label: {
               autoRotate: true,
-            rotate: Math.PI / 6,
+              rotate: Math.PI / 6,
               offset: 15,
               style: {
                 fontSize: 10,
@@ -176,7 +212,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
           // label
           label: {
             // layout: [{ type: "hide-overlap" }], // 隐藏重叠label
-            style: { color: "#d62728",   textAlign: "center" },
+            style: { color: "#d62728", textAlign: "center" },
             formatter: (item) => item.value,
           },
           padding: "auto",
@@ -237,6 +273,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
       formRef.current?.setFieldsValue({
         advertiserId: "",
         adMaterialId: "",
+        adPlacmentId: "",
       });
     } else {
       setAdvertisers([]);
@@ -273,6 +310,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
         agentId: 0,
         advertiserId: 0,
         adMaterialId: 0,
+        adPlacementId: 0,
       });
       formRef.current?.setFieldsValue({
         startDate: formattedStartDate,
@@ -288,7 +326,6 @@ const ReportIndexPage = (props: ReportPageProps) => {
       return null;
     }
     if (role === "Root") {
-     
       return (
         <div>
           <ProCard>
@@ -303,6 +340,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
                     agentId: values.agent,
                     advertiserId: values.advertiserId,
                     adMaterialId: values.adMaterialId,
+                    adPlacementId: values.adPlacementId,
                   };
                   // 处理表单提交，例如向后端发送请求
                   const result = await loadInfo(requestData);
@@ -310,8 +348,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
                   // 根据请求结果返回相应的值，例如：
                   if (result) {
                     return true; // 表示提交成功
-                  } 
-                  else {
+                  } else {
                     return false; // 表示提交失败
                   }
                 } catch (error) {
@@ -375,6 +412,20 @@ const ReportIndexPage = (props: ReportPageProps) => {
                     label: material.name,
                     value: material.id,
                   }))}
+                  fieldProps={{
+                    onChange: handleMaterialChange, // 直接传递选中的值
+                  }}
+                />
+                <ProFormSelect
+                  initialValue={""}
+                  //   width="xl"
+                  name="adPlacementId"
+                  label="选择广告计划"
+                  placeholder="选择广告计划"
+                  options={placements.map((placement) => ({
+                    label: placement.name,
+                    value: placement.id,
+                  }))}
                 />
               </ProForm.Group>
             </ProForm>
@@ -394,7 +445,9 @@ const ReportIndexPage = (props: ReportPageProps) => {
       }}
     >
       {renderContent()}
-      <><App/></>
+      <>
+        <App />
+      </>
     </PageContainer>
   );
 };

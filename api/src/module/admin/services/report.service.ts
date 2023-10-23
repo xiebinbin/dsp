@@ -1,10 +1,5 @@
 import { HttpException, Injectable, Res } from '@nestjs/common';
-
-import { AuthError } from 'src/utils/err_types';
 import { PrismaClient, AdMedia } from '@prisma/client';
-import { userInfo } from 'os';
-import { MaterialDto } from '../dto/material.dto';
-import { mediaDto } from '../dto/media.dto';
 import { ReportDto } from '../dto/report.dto';
 import { reportParam } from '../dto/reportparam.dto';
 
@@ -26,9 +21,31 @@ export class ReportService {
 
     return mediasArray;
   }
-
+  async placments(materialId: bigint): Promise<{ id: number; name: string }[]> {
+    const where: any = {};
+    if (materialId !== null) {
+      where.adMaterialId = materialId;
+    }
+    const placements = await this.prisma.reportDaily.findMany({
+      select: { adPlacementId: true, adPlacementName: true },
+      where,
+      distinct: ['adPlacementId', 'adPlacementName'],
+    });
+    const placementarray = placements.map((placement) => ({
+      id: Number(placement.adPlacementId),
+      name: placement.adPlacementName,
+    }));
+    return placementarray;
+  }
   async getReportsByDateRange(param: reportParam) {
-    const { agentId, advertiserId, adMaterialId, startDate, endDate } = param;
+    const {
+      agentId,
+      advertiserId,
+      adMaterialId,
+      startDate,
+      endDate,
+      adPlacementId,
+    } = param;
     const where: any = {};
     where.date = {
       gte: startDate, // 大于或等于 startDate
@@ -37,7 +54,9 @@ export class ReportService {
     if (agentId !== null) {
       where.agentId = agentId;
     }
-
+    if (adPlacementId !== null) {
+      where.adPlacementId = adPlacementId;
+    }
     if (advertiserId !== null) {
       where.advertiserId = advertiserId;
     }
