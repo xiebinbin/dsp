@@ -48,6 +48,7 @@ model Advertiser {
   cpmPrice    Int           @default(30000)
   user        User          @relation(fields: [userId], references: [id])
   userId      BigInt        @map("user_id")
+  field       Int?           @map("filed")
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
   deletedAt   DateTime?     @map("deleted_at")
@@ -110,6 +111,7 @@ model AdMaterial {
   updatedAt    DateTime      @updatedAt @map("updated_at")
   deletedAt    DateTime?     @map("deleted_at")
   AdPlacement  AdPlacement[]
+  adUsedCounts AdUsedCount[] // 添加与 adUsedCount 模型的关联字段
 
   @@index([position], name: "position")
   @@index([enabled], name: "enabled")
@@ -181,6 +183,7 @@ model AdPlacement {
   updatedAt        DateTime          @updatedAt @map("updated_at")
   deletedAt        DateTime?         @map("deleted_at")
   adMediaRelations AdMediaRelation[]
+  adUsedCounts     AdUsedCount[] // 添加与 adUsedCount 模型的关联字段
 
   @@index([adMaterialId], name: "ad_material_id")
   @@index([enabled], name: "enabled")
@@ -193,21 +196,21 @@ model AdPlacement {
 
 //日报report_daily
 model ReportDaily {
-  id             BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
-  date           String   @default("1999-01-01")
-  agentId        BigInt   @map("agent_id")
-  agentName      String   @map("agent_name")
-  advertiserId   BigInt   @map("advertiser_id")
-  advertiserName String   @map("advertiser_name")
-  adMaterialId   BigInt   @map("ad_material_id")
-  adMaterialName String   @map("ad_material_name")
-  adPlacementId  BigInt  @map("ad_placement_id") // 注意修正字段名大小写
-  adPlacementName String  @map("ad_placement_name") // 同样，修正字段名大小写
-  displayCount   BigInt   @default(0) @map("display_count") @db.UnsignedBigInt
-  clickCount     BigInt   @default(0) @map("click_count") @db.UnsignedBigInt
-  usedBudget     BigInt   @default(0) @map("used_budget") @db.UnsignedBigInt
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
+  id              BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  date            String   @default("1999-01-01")
+  agentId         BigInt   @map("agent_id")
+  agentName       String   @map("agent_name")
+  advertiserId    BigInt   @map("advertiser_id")
+  advertiserName  String   @map("advertiser_name")
+  adMaterialId    BigInt   @map("ad_material_id")
+  adMaterialName  String   @map("ad_material_name")
+  adPlacementId   BigInt   @map("ad_placement_id") // 注意修正字段名大小写
+  adPlacementName String   @map("ad_placement_name") // 同样，修正字段名大小写
+  displayCount    BigInt   @default(0) @map("display_count") @db.UnsignedBigInt
+  clickCount      BigInt   @default(0) @map("click_count") @db.UnsignedBigInt
+  usedBudget      BigInt   @default(0) @map("used_budget") @db.UnsignedBigInt
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
 
   @@index([date], name: "date")
   @@index([agentId], name: "agent_id")
@@ -215,4 +218,23 @@ model ReportDaily {
   @@index([adMaterialId], name: "ad_material_id")
   @@index([adPlacementId], name: "ad_placement_id")
   @@map("report_daily")
+}
+
+//点击展示明细 关联创意ID 计划ID
+model AdUsedCount {
+  id           BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  // 广告素材
+  adMaterialId BigInt      @map("ad_material_id")
+  adMaterial   AdMaterial  @relation(fields: [adMaterialId], references: [id])
+  placementId  BigInt      @map("placement_id")
+  adPlacement  AdPlacement @relation(fields: [placementId], references: [id])
+  adCount      BigInt      @default(0) @map("ad_count") @db.UnsignedBigInt
+  // 数量类型(1是展现量 2.点击量)
+  countType    Int         @default(1)  @map("count_type")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  @@index([adMaterialId], name: "ad_material_id")
+  @@index([placementId], name: "placement_id")
+  @@map("ad_used_count")
 }

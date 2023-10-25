@@ -3,10 +3,8 @@
 import {
   Body,
   Controller,
-  Get,
   Logger,
   Post,
-  Query,
   Req,
   Res,
   UseInterceptors,
