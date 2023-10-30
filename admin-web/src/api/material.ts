@@ -1,5 +1,10 @@
 import createRequestInstance from "@/api/lib/create-request-instance.ts";
-import { GetListDto, AdMaterial ,AdMaterialAgent,AdvertiserOpt} from "@/shims";
+import {
+  GetListDto,
+  AdMaterial,
+  AdMaterialAgent,
+  AdvertiserOpt,
+} from "@/shims";
 
 export interface MaterialEditDto {
   name: string;
@@ -15,6 +20,7 @@ export interface MaterialEditDto {
   url: string;
   enabled: boolean;
   advertiser: bigint;
+  jumpurl: string;
 }
 
 const remove = (id: bigint) => {
@@ -46,19 +52,22 @@ const create = (params: MaterialEditDto): Promise<AdMaterial> => {
 const update = (id: bigint, params: MaterialEditDto): Promise<AdMaterial> => {
   return createRequestInstance().put(`/api/admin/material/${id}`, params);
 };
-const getDetailInfo  = (id: bigint): Promise<AdMaterialAgent> => {
-    return createRequestInstance().get(`/api/admin/material/detail/${id}`);
-  };
-  
-  const getListByAdvertiser = (
-    params: GetListDto
-  ): Promise<{
-    total: number;
-    data: AdMaterial[];
-  }> => {
-    return createRequestInstance().post("/api/admin/material/listbyadvertiser", params);
-  };
-  
+const getDetailInfo = (id: bigint): Promise<AdMaterialAgent> => {
+  return createRequestInstance().get(`/api/admin/material/detail/${id}`);
+};
+
+const getListByAdvertiser = (
+  params: GetListDto
+): Promise<{
+  total: number;
+  data: AdMaterial[];
+}> => {
+  return createRequestInstance().post(
+    "/api/admin/material/listbyadvertiser",
+    params
+  );
+};
+
 export default {
   remove,
   getList,

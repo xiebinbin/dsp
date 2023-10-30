@@ -31,6 +31,7 @@ export class MaterialService {
         content: true,
         url: true,
         advertiserId: true,
+        jumpurl: true,
         advertiser: {
           select: {
             id: true,
@@ -127,6 +128,7 @@ export class MaterialService {
         position,
         content,
         url,
+        jumpurl,
         advertiserId,
       } = materialDto;
       console.log('createMaterial materialDto', materialDto);
@@ -139,6 +141,7 @@ export class MaterialService {
           position,
           content,
           url,
+          jumpurl,
           advertiserId,
         },
       });
@@ -158,6 +161,7 @@ export class MaterialService {
           position: materialDto.position,
           content: materialDto.content,
           url: materialDto.url,
+          jumpurl: materialDto.jumpurl,
           advertiserId: materialDto.advertiserId,
           updatedAt: new Date(),
         },

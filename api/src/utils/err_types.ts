@@ -23,6 +23,7 @@ export class AuthError extends HttpException {
   static ADV_IS_EXSIT = new AuthError('广告主已存在', 20003);
   static PLACEMENT_NOT_FOUND = new AuthError('广告计划不存在', 20004);
   static PLACEMENT_NOT_ENOUGH = new AuthError('广告计划余额不足', 20005);
+  static Material_NOT_FOUND = new AuthError('广告创意不存在', 20004);
 
   constructor(public message: string, public code: number) {
     super(message, code);

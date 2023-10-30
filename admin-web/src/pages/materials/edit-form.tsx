@@ -6,13 +6,7 @@ import {
   ProFormSelect,
   ProFormText,
 } from "@ant-design/pro-components";
-import {
-  Button,
-  message,
-  RadioChangeEvent,
-  Upload,
-  UploadFile,
-} from "antd";
+import { Button, message, RadioChangeEvent, Upload, UploadFile } from "antd";
 import { useMount, useSafeState, useUnmount } from "ahooks";
 import Emittery from "emittery";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -136,6 +130,7 @@ const EditForm = () => {
         advertiser: "",
         position: "",
         url: "",
+        jumpurl: "",
       });
       // setId(BigInt(0));
       setShow(true);
@@ -175,6 +170,7 @@ const EditForm = () => {
           advertiserId: data.advertiser.id,
           position: data.position,
           materialurl: data.url,
+          jumpurl: data.jumpurl,
         });
       }, 500);
       setMaterialurl(data.url);
@@ -249,7 +245,7 @@ const EditForm = () => {
   );
   const create = useCallback(
     async (data: MaterialEditDto) => {
-      // console.log("create data", data);
+      console.log("create data", data);
       try {
         const res = await MaterialApi.create(data);
         if (!res) {
@@ -391,6 +387,15 @@ const EditForm = () => {
               value: false,
             },
           ]}
+        />
+        <ProFormText
+          required
+          rules={[{ required: true, message: "请输入素材跳转地址" }]}
+          initialValue={""}
+          width="xl"
+          name="jumpurl"
+          label="素材跳转地址"
+          placeholder="请输入素材跳转地址"
         />
         <ProForm.Group>
           <ProForm.Item label="上传素材">

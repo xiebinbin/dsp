@@ -47,6 +47,7 @@ interface User {
   avatar: string | null;
 }
 interface AdMaterial {
+  jumpurl: string;
   id: bigint;
   name: string;
   // 媒体类型 1网站 2pc软件
@@ -81,6 +82,7 @@ interface AdMaterialAgent {
   // 广告链接
   url: string;
   updatedAt: DateTime;
+  jumpurl:string;
   advertiser: {
     id: number;
     companyName: string;

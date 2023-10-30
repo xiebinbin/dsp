@@ -17,8 +17,10 @@ export class MaterialDto {
   // 广告内容
   @IsNotEmpty()
   content: string;
-  // 广告链接
+  // 图片链接
   url: string;
+  // 跳转链接
+  jumpurl: string;
   enabled: boolean;
   @IsNotEmpty()
   advertiserId: number;

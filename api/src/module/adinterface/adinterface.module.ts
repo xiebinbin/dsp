@@ -28,7 +28,7 @@ import { AuthMiddleware } from './middlewares/auth.middleware';
 export class AdinterfaceModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthMiddleware).forRoutes({
-      path: '/api/adapi/*',
+      path: '/api/ad/*',
       method: RequestMethod.ALL,
     });
   }

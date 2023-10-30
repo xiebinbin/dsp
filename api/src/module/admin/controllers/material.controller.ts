@@ -215,7 +215,7 @@ export class MaterialController {
       content: material.content,
       url: this.defaultUrl + material.url,
       advertiserId: Number(material.advertiserId),
-
+      jumpurl: material.jumpurl,
       advertiser: {
         taxNumber: material.advertiser.taxNumber,
         id: Number(material.advertiser.id), // 将 bigint 转换为 number
@@ -243,6 +243,7 @@ export class MaterialController {
       content: material.content,
       url: this.defaultUrl + material.url,
       advertiserId: null,
+      jumpurl: material.jumpurl,
       advertiser: {
         id: Number(material.advertiser.id), // 将 bigint 转换为 number
         companyName: material.advertiser.companyName,

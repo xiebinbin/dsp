@@ -48,7 +48,7 @@ model Advertiser {
   cpmPrice    Int           @default(30000)
   user        User          @relation(fields: [userId], references: [id])
   userId      BigInt        @map("user_id")
-  field       Int?           @map("filed")
+  field       Int?          @map("filed")
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
   deletedAt   DateTime?     @map("deleted_at")
@@ -101,8 +101,10 @@ model AdMaterial {
   position     Int           @default(1)
   // 广告内容
   content      String
-  // 广告链接
+  // 图片链接
   url          String?       @default("#")
+    // 广告跳转链接
+  jumpurl          String?       @default("#")
   enabled      Boolean       @default(true)
   // 广告主id
   advertiserId BigInt        @map("advertiser_id")
@@ -230,7 +232,7 @@ model AdUsedCount {
   adPlacement  AdPlacement @relation(fields: [placementId], references: [id])
   adCount      BigInt      @default(0) @map("ad_count") @db.UnsignedBigInt
   // 数量类型(1是展现量 2.点击量)
-  countType    Int         @default(1)  @map("count_type")
+  countType    Int         @default(1) @map("count_type")
   createdAt    DateTime    @default(now()) @map("created_at")
   updatedAt    DateTime    @updatedAt @map("updated_at")
 
