@@ -42,7 +42,7 @@ export class UserService {
   }
   async updateUser(id: bigint, userDto: UserDto) {
     console.log('id', id, 'updatid', userDto.id);
-    if (userDto.password && userDto.password != '......') {
+    if (userDto.password && userDto.password != '') {
       userDto.password = await passwordHash(userDto.password);
     } else {
       const user = await this.prisma.user.findUnique({
