@@ -252,7 +252,7 @@ const EditForm = (props: {
                      fieldProps={{
                         autoComplete: 'off' 
                     }}            
-                required 
+                  required={mode == "add"}
                     rules={[{required: mode == "add", message: '请输入登录密码'}]}
                     initialValue={""}
                     width="xl"

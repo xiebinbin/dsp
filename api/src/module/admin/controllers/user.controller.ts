@@ -169,7 +169,7 @@ export class UserController {
 
     // Convert the 'id' property to BigInt
     newUser.id = Number(user.id);
-    newUser.password = '......';
+    newUser.password = '';
     return newUser;
   }
 }

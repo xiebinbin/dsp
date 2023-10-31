@@ -156,7 +156,7 @@ export class AdvController {
       companyName: adv.companyName,
       taxNumber: adv.taxNumber,
       username: adv.username,
-      password: '......',
+      password: '',
       wallet: { balance: adv.wallet.balance },
       cpmPrice: Number(adv.cpmPrice),
       userId: Number(adv.userId),

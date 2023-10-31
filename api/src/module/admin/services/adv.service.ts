@@ -190,7 +190,7 @@ export class AdvService {
   }
   async updateUser(id: bigint, advDto: AdvDto) {
     console.log('id', id, 'updatid', advDto.id);
-    if (advDto.password && advDto.password != '......') {
+    if (advDto.password) {
       advDto.password = await passwordHash(advDto.password);
     } else {
       const adv = await this.prisma.advertiser.findUnique({

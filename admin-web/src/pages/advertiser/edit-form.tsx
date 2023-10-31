@@ -237,7 +237,7 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
 
       <ProForm.Group>
         <ProFormText.Password
-          required
+          required={mode == "add"}
           rules={[{ required: mode == "add", message: "请输入密码" }]}
           initialValue={""}
           width="xl"
