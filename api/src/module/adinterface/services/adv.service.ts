@@ -72,7 +72,7 @@ export class AdvService {
       },
     });
     //总金额
-    console.log('totalamount', totalamount);
+    // console.log('totalamount', totalamount);
     //总消耗
     const totalused = await this.prisma.adConsume.aggregate({
       where: {
@@ -82,12 +82,12 @@ export class AdvService {
         amount: true,
       },
     });
-    console.log('消耗', Number(totalused._sum.amount));
+    // console.log('消耗', Number(totalused._sum.amount));
 
-    console.log(
-      '余额',
-      totalamount._sum.amount - Number(totalused._sum.amount),
-    );
+    // console.log(
+    //   '余额',
+    //   totalamount._sum.amount - Number(totalused._sum.amount),
+    // );
     const bal = Number(totalamount._sum.amount) - Number(totalused._sum.amount);
     // 扣除余额
     await this.prisma.wallet.update({

@@ -163,11 +163,7 @@ export class PlacementController {
     const endedAtDate = new Date(data.endedAt);
     const currentDate = new Date();
     const timeDifference = Number(endedAtDate) - Number(currentDate);
-    const timeDifferenceB = Number(currentDate) - Number(endedAtDate);
-
     if (timeDifference > 0) {
-      console.log('  data.enabled = 1; ');
-
       data.enabled = 1;
     } else {
       data.enabled = 2;

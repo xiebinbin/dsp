@@ -18,15 +18,15 @@ export class AdUsedCountService {
     console.log('data', data);
     const increment = 1;
     if (!data) {
-      console.log('increaseAdCountCache', data);
+      // console.log('increaseAdCountCache', data);
       const databaseinfo = await this.findByIds(
         value.adMaterialId,
         value.placementId,
         value.countType,
       );
-      console.log('databaseinfo', databaseinfo);
+      // console.log('databaseinfo', databaseinfo);
       if (databaseinfo) {
-        console.log('increaseAdCountCache databaseinfo', databaseinfo);
+        // console.log('increaseAdCountCache databaseinfo', databaseinfo);
 
         value.adCount = Number(databaseinfo.adCount) + increment;
       }
@@ -36,7 +36,7 @@ export class AdUsedCountService {
       }
     } else {
       // 如果数据存在，增加 adCount 字段的值
-      console.log('increaseAdCountCache else', data);
+      // console.log('increaseAdCountCache else', data);
 
       value.adCount = data.adCount + value.adCount;
     }
@@ -46,7 +46,7 @@ export class AdUsedCountService {
       adCount: Number(value.adCount),
       countType: Number(value.countType),
     };
-    console.log('increaseAdCountCache', redisvalue);
+    // console.log('increaseAdCountCache', redisvalue);
 
     // 重新存入缓存
     await this.RedisCacheService.set(key, redisvalue, seconds);
@@ -65,7 +65,7 @@ export class AdUsedCountService {
         countType,
       },
     });
-    console.log('UpdateOrCreate data: ', data);
+    // console.log('UpdateOrCreate data: ', data);
     if (existingRecord) {
       // 如果记录已存在，执行更新操作
       return this.prisma.adUsedCount.update({

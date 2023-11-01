@@ -30,10 +30,10 @@ export class AdConsumeService {
         value.adMaterialId,
         value.placementId,
       );
-      console.log('increaseAdConsumeCache', databaseinfo);
+      // console.log('increaseAdConsumeCache', databaseinfo);
       if (databaseinfo) {
         //如果数据库有数值，用数据库
-        console.log('increaseAdConsumeCache', databaseinfo);
+        // console.log('increaseAdConsumeCache', databaseinfo);
 
         value.amount =
           (increment * value.cpmPrice) / 1000 + Number(databaseinfo.amount);
@@ -52,7 +52,7 @@ export class AdConsumeService {
       amount: Number(value.amount),
       cpmPrice: Number(value.cpmPrice),
     };
-    console.log('increaseAdConsumeCache value', redisvalue);
+    // console.log('increaseAdConsumeCache value', redisvalue);
 
     // 重新存入缓存
     await this.RedisCacheService.set(key, redisvalue, seconds);

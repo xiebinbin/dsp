@@ -49,7 +49,7 @@ export class PlacementService {
 
     // 遍历每个广告投放计划
     for (const placement of placements) {
-      console.log('placement.id', placement.id);
+      // console.log('placement.id', placement.id);
       if (placement.endedAt && placement.endedAt < currentTime) {
         // 如果 endedAt 早于当前时间，将 enabled 设置为 2
         await this.prisma.adPlacement.update({

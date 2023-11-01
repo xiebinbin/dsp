@@ -22,10 +22,10 @@ export class ApiAdTask {
     console.log('定时任务执行', new Date());
     //1更新点击逻辑
     const clickCacheKeys = await this.RedisCacheService.findClickCacheKeys();
-    console.log('clickCacheKeys', clickCacheKeys);
+    // console.log('clickCacheKeys', clickCacheKeys);
     for (const clickKey of clickCacheKeys) {
       const getRedis = await this.RedisCacheService.get(clickKey);
-      console.log('click adCount:' + getRedis.adCount);
+      // console.log('click adCount:' + getRedis.adCount);
 
       // 点击明细刷新到数据库
       const adUsedCountinfo = await this.AdUsedCountService.UpdateOrCreate(
@@ -40,10 +40,10 @@ export class ApiAdTask {
     //2更新展示逻辑
     const impressionCacheKeys =
       await this.RedisCacheService.findImpressionCacheKeys();
-    console.log('impressionCacheKeys', impressionCacheKeys);
+    // console.log('impressionCacheKeys', impressionCacheKeys);
     for (const impressionKey of impressionCacheKeys) {
       const getRedis = await this.RedisCacheService.get(impressionKey);
-      console.log('impression adCount:' + getRedis.adCount);
+      // console.log('impression adCount:' + getRedis.adCount);
 
       // 展示明细刷新到数据库
       const adUsedCountinfo = await this.AdUsedCountService.UpdateOrCreate(
@@ -58,12 +58,12 @@ export class ApiAdTask {
     //3消耗逻辑
     const rechargeCacheKeys =
       await this.RedisCacheService.findRechargeCacheKeys();
-    console.log('rechargeCacheKeys', rechargeCacheKeys);
+    // console.log('rechargeCacheKeys', rechargeCacheKeys);
     for (const rechargeCacheKey of rechargeCacheKeys) {
       const getRechargeRedis = await this.RedisCacheService.get(
         rechargeCacheKey,
       );
-      console.log('amount:' + getRechargeRedis.amount);
+      // console.log('amount:' + getRechargeRedis.amount);
 
       // 消耗明细刷新到数据库
       const adUsedAmountinfo = await this.AdConsumeService.UpdateOrCreate(
