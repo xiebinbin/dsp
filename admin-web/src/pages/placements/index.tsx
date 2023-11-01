@@ -11,19 +11,19 @@ import {
 import { Button, Popconfirm } from "antd";
 import { ReactNode, useCallback, useEffect, useRef } from "react";
 import EditForm, { $emit } from "./edit-form.tsx";
-import {  AdPlacement } from "@/shims";
+import { AdPlacement } from "@/shims";
 import { useMount, useSafeState, useUnmount } from "ahooks";
 import PlacementApi from "@/api/placement.ts";
 import { AuthInfo } from "@/stores/auth-info.ts";
 import { useRecoilState } from "recoil";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import App from "@/App.tsx";
 
 // import { boolMap } from "@/utils/list-tool.ts";
 import AdvAPI from "@/api/advertiser.ts";
 import AgentApi from "@/api/agent.ts";
 import { PlusOutlined } from "@ant-design/icons";
- export interface PlacementsPageProps {
+export interface PlacementsPageProps {
   role: "Root" | "Agent" | "Advertiser";
   roleName: string;
 }
@@ -31,16 +31,20 @@ const maps = new Map<
   string | number | boolean,
   ProSchemaValueEnumType | ReactNode
 >();
-maps.set(true, {
+maps.set(1, {
   text: "启动",
   status: "success",
 });
-maps.set(false, {
+maps.set(0, {
   text: "暂停",
   status: "error",
 });
+maps.set(2, {
+  text: "结束",
+  status: "warning",
+});
 const PlacementsIndexPage = (props: PlacementsPageProps) => {
-  const { role,  } = props;
+  const { role } = props;
   const [authUser] = useRecoilState(AuthInfo);
   const [advertisers, setAdvertisers] = useSafeState<
     { id: number; name: string; agentId: number }[]
@@ -236,6 +240,13 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
       valueType: "money",
 
       hideInSearch: true,
+      render: (_, entity) => {
+        // 假设 budget 字段以分为单位
+        const text = entity.usedBudget; // 获取实体对象中的 budget 属性
+
+        const usedBudgetYuan = Number(text) / 100; // 将分转换为元
+        return `¥ ${usedBudgetYuan.toFixed(2)}`; // 显示为元并保留两位小数
+      },
     },
     {
       title: "预算上限",
@@ -244,6 +255,13 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
       dataIndex: "budget",
       valueType: "money",
       hideInSearch: true,
+      render: (_, entity) => {
+        // 假设 budget 字段以分为单位
+        const text = entity.budget; // 获取实体对象中的 budget 属性
+
+        const budgetInYuan = Number(text) / 100; // 将分转换为元
+        return `¥ ${budgetInYuan.toFixed(2)}`; // 显示为元并保留两位小数
+      },
     },
     {
       title: "展现次数",
@@ -306,23 +324,27 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
           编辑
         </a>,
         <a key="pending">
-          <Popconfirm
-            title={`是否${record.enabled ? "暂停" : "启动"}计划？`}
-            onConfirm={() => {
-              PlacementApi.pending(record.id, !record.enabled)
-                .then(() => {
-                  action?.reload();
-                  window.Message.success(
-                    `${record.enabled ? "暂停" : "启动"}成功`
-                  );
-                })
-                .catch(() => {
-                  window.Message.error("修改失败");
-                });
-            }}
-          >
-            <span>{record.enabled ? "暂停" : "启动"}</span>
-          </Popconfirm>
+          {record.enabled !== 2 && (
+            <Popconfirm
+              title={`是否${record.enabled ? "暂停" : "启动"}计划？`}
+              onConfirm={() => {
+                const newValue = record.enabled === 0 ? 1 : 0;
+
+                PlacementApi.pending(record.id, newValue)
+                  .then(() => {
+                    action?.reload();
+                    window.Message.success(
+                      `${record.enabled ? "暂停" : "启动"}成功`
+                    );
+                  })
+                  .catch(() => {
+                    window.Message.error("修改失败");
+                  });
+              }}
+            >
+              <span>{record.enabled ? "暂停" : "启动"}</span>
+            </Popconfirm>
+          )}
         </a>,
         <TableDropdown
           key="actionGroup"
@@ -362,7 +384,6 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
       return null;
     }
     if (role === "Root") {
-  
       return (
         <div>
           <ProTable<AdPlacement>
@@ -448,7 +469,9 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
       }}
     >
       {renderContent()}
-      <><App/></>
+      <>
+        <App />
+      </>
     </PageContainer>
   );
 };

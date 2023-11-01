@@ -175,7 +175,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
             },
             {
               date: item.date,
-              value: item.usedBudget,
+              value: (Number(item.usedBudget / 100)),
               category: "消耗金额",
             }
           );
@@ -202,8 +202,10 @@ const ReportIndexPage = (props: ReportPageProps) => {
             nice: true,
             label: {
               offset: 25,
+              // formatter: (v) => Number(v).toFixed(2),
 
               // 数值格式化为千分位
+           
               formatter: (v) =>
                 `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
             },
@@ -213,7 +215,14 @@ const ReportIndexPage = (props: ReportPageProps) => {
           label: {
             // layout: [{ type: "hide-overlap" }], // 隐藏重叠label
             style: { color: "#d62728", textAlign: "center" },
-            formatter: (item) => item.value,
+            formatter: (item) => {
+              if (item.category === "消耗金额") {
+                console.log('消耗金额',(Number(item.value) / 100).toFixed(2))
+                return (Number(item.value)).toFixed(2);
+              } else {
+                return item.value.toString();
+              }
+            },
           },
           padding: "auto",
           point: {

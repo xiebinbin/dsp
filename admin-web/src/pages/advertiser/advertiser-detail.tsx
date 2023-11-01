@@ -37,7 +37,7 @@ const AdvertiserDetail = (props: {
       console.log('val',val,'taxNumber',taxNumber,'cpmPrice',cpmPrice)
       companyNameRef.current = companyName;
       taxNumberRef.current = taxNumber;
-      cpmPriceRef.current = cpmPrice;
+      cpmPriceRef.current = cpmPrice/100;
       loadInfo()
         .then(() => {
         //   setTimeout(() => {

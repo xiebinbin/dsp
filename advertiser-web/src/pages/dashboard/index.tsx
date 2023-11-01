@@ -158,7 +158,7 @@ const DashboardPage = () => {
                   >
                     {infoData ? (
                       <>
-                        <div>余额: {infoData.balance.toFixed(2)}元</div>
+                        <div>余额: {Number(infoData.balance.toFixed(2))/100}元</div>
                       </>
                     ) : (
                       <>

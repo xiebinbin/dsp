@@ -130,7 +130,7 @@ interface RootInfo {
 interface AdPlacement {
   id: bigint;
   name: string;
-  enabled: boolean;
+  enabled: Int;
   // 广告素材
   adMaterialId: bigint;
   adMaterial: {

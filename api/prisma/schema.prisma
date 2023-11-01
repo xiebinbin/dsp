@@ -45,7 +45,7 @@ model Advertiser {
   taxNumber   String?       @map("tax_number")
   address     String?
   enabled     Boolean       @default(true)
-  cpmPrice    Int           @default(30000)
+  cpmPrice    Int           @default(3000)
   user        User          @relation(fields: [userId], references: [id])
   userId      BigInt        @map("user_id")
   field       Int?          @map("filed")
@@ -54,6 +54,7 @@ model Advertiser {
   deletedAt   DateTime?     @map("deleted_at")
   AdMaterial  AdMaterial[]
   AdPlacement AdPlacement[]
+  adConsume   AdConsume[]
 
   @@index([enabled], name: "enabled")
   @@index([username], name: "username")
@@ -64,7 +65,9 @@ model Advertiser {
 // 钱包
 model Wallet {
   id           BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
-  balance      Int        @default(0)
+  totalAmount  Int        @default(0) @map("total_amount") //分
+  totalUsed    Int        @default(0) @map("total_used") //分
+  balance      Int        @default(0) //分
   advertiserId BigInt     @unique @map("advertiser_id")
   advertiser   Advertiser @relation(fields: [advertiserId], references: [id])
   createdAt    DateTime   @default(now()) @map("created_at")
@@ -78,7 +81,7 @@ model Wallet {
 // 钱包账单
 model Bill {
   id           BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
-  amount       Int        @default(0)
+  amount       Int        @default(0) //分
   advertiser   Advertiser @relation(fields: [advertiserId], references: [id])
   advertiserId BigInt     @db.UnsignedBigInt
   createdAt    DateTime   @default(now()) @map("created_at")
@@ -103,8 +106,8 @@ model AdMaterial {
   content      String
   // 图片链接
   url          String?       @default("#")
-    // 广告跳转链接
-  jumpurl          String?       @default("#")
+  // 广告跳转链接
+  jumpurl      String?       @default("#")
   enabled      Boolean       @default(true)
   // 广告主id
   advertiserId BigInt        @map("advertiser_id")
@@ -114,6 +117,7 @@ model AdMaterial {
   deletedAt    DateTime?     @map("deleted_at")
   AdPlacement  AdPlacement[]
   adUsedCounts AdUsedCount[] // 添加与 adUsedCount 模型的关联字段
+  adConsume    AdConsume[]
 
   @@index([position], name: "position")
   @@index([enabled], name: "enabled")
@@ -161,12 +165,12 @@ model AdMediaRelation {
 model AdPlacement {
   id               BigInt            @id @default(autoincrement()) @db.UnsignedBigInt
   name             String
-  enabled          Boolean           @default(true)
+  enabled           Int               @default(1)
   // 广告素材
   adMaterialId     BigInt            @map("ad_material_id")
   adMaterial       AdMaterial        @relation(fields: [adMaterialId], references: [id])
   // 预算金额上限
-  budget           BigInt            @default(0) @db.UnsignedBigInt
+  budget           BigInt            @default(0) @db.UnsignedBigInt //分
   // 媒体类型
   mediaType        Int               @default(1)
   // 开始日期
@@ -174,7 +178,7 @@ model AdPlacement {
   // 结束日期
   endedAt          DateTime?         @default(now()) @map("ended_at")
   // 已消耗预算
-  usedBudget       BigInt            @default(0) @map("used_budget") @db.UnsignedBigInt
+  usedBudget       BigInt            @default(0) @map("used_budget") @db.UnsignedBigInt //分
   // 展现次数
   displayCount     BigInt            @default(0) @map("display_count") @db.UnsignedBigInt
   // 点击次数
@@ -186,6 +190,7 @@ model AdPlacement {
   deletedAt        DateTime?         @map("deleted_at")
   adMediaRelations AdMediaRelation[]
   adUsedCounts     AdUsedCount[] // 添加与 adUsedCount 模型的关联字段
+  adConsume        AdConsume[]
 
   @@index([adMaterialId], name: "ad_material_id")
   @@index([enabled], name: "enabled")
@@ -210,7 +215,7 @@ model ReportDaily {
   adPlacementName String   @map("ad_placement_name") // 同样，修正字段名大小写
   displayCount    BigInt   @default(0) @map("display_count") @db.UnsignedBigInt
   clickCount      BigInt   @default(0) @map("click_count") @db.UnsignedBigInt
-  usedBudget      BigInt   @default(0) @map("used_budget") @db.UnsignedBigInt
+  usedBudget      BigInt   @default(0) @map("used_budget") @db.UnsignedBigInt //分
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
 
@@ -239,4 +244,26 @@ model AdUsedCount {
   @@index([adMaterialId], name: "ad_material_id")
   @@index([placementId], name: "placement_id")
   @@map("ad_used_count")
+}
+
+//广告主消耗表关联广告主id 创意ID 计划ID
+model AdConsume {
+  id           BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  // 广告主id
+  advertiserId BigInt      @map("advertiser_id")
+  advertiser   Advertiser  @relation(fields: [advertiserId], references: [id])
+  // 广告素材
+  adMaterialId BigInt      @map("ad_material_id")
+  adMaterial   AdMaterial  @relation(fields: [adMaterialId], references: [id])
+  placementId  BigInt      @map("placement_id")
+  adPlacement  AdPlacement @relation(fields: [placementId], references: [id])
+  amount       BigInt      @default(0) @map("amount") @db.UnsignedBigInt //分
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+  cpmPrice     Int         @default(3000)
+
+  @@index([adMaterialId], name: "ad_material_id")
+  @@index([placementId], name: "placement_id")
+  @@index([advertiserId], name: "advertiser_id")
+  @@map("ad_consume")
 }

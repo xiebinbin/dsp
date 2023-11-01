@@ -27,7 +27,7 @@ const RechargeForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
     $rechargeemit.on("recharge", (val: bigint) => {
       setMode("recharge");
       setId(val);
-      console.log(role,roleName)
+      console.log(role, roleName);
       loadInfo(val)
         .then(() => {
           setShow(true);
@@ -60,7 +60,7 @@ const RechargeForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
     setTimeout(() => {
       formRef.current?.setFieldsValue({
         id: user.id,
-        currentBalance: user.wallet?.balance + "(元)",
+        currentBalance: user.wallet?.balance / 100 + "(元)",
         companyName: user.companyName,
       });
     }, 500);
@@ -109,6 +109,7 @@ const RechargeForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
           console.log("validateFields data", data);
           if (mode === "recharge") {
             data.id = Number(id);
+            data.amount = data.amount * 100;
             await recharge(data);
           }
           if (mode === "record") {

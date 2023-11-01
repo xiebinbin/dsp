@@ -212,7 +212,7 @@ export class PlacementService {
       throw new HttpException(e.message, e.status);
     }
   }
-  async updateEnabled(id: bigint, enabled: boolean) {
+  async updateEnabled(id: bigint, enabled: number) {
     try {
       const res = await this.prisma.adPlacement.update({
         where: { id },
@@ -254,7 +254,7 @@ export class PlacementService {
     // 查询已完成计划数量
     const completedPlanCount = await this.prisma.adPlacement.count({
       where: {
-        enabled: true, // 仅考虑启用的计划
+        enabled: 1, // 仅考虑启用的计划
         endedAt: {
           lte: currentDate, // 结束日期在当前日期之前的计划
         },
@@ -264,7 +264,7 @@ export class PlacementService {
     // 查询进行中计划数量
     const ongoingPlanCount = await this.prisma.adPlacement.count({
       where: {
-        enabled: true, // 仅考虑启用的计划
+        enabled: 1, // 仅考虑启用的计划
         startedAt: {
           lte: currentDate, // 开始日期在当前日期之前的计划
         },

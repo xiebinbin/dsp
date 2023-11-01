@@ -22,6 +22,7 @@ async function bootstrap() {
   //对外接口
   const adapi = await NestFactory.create(AdapiModule);
   adapi.useGlobalFilters(new AdapiGlobalErrorFilter()); // 使用全局异常过滤器
+
   await adapi.listen(3003, '0.0.0.0');
 }
 bootstrap();

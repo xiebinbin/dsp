@@ -19,6 +19,23 @@ export class RedisCacheService {
       return null;
     }
   }
+  public async findCacheKeysWithPrefix(prefix: string): Promise<string[]> {
+    const allCacheKeys = await this.cacheManager.store.keys();
+    const filteredKeys = allCacheKeys.filter((key) => key.startsWith(prefix));
+    return filteredKeys;
+  }
+
+  public async findClickCacheKeys(): Promise<string[]> {
+    return this.findCacheKeysWithPrefix('click:');
+  }
+
+  public async findImpressionCacheKeys(): Promise<string[]> {
+    return this.findCacheKeysWithPrefix('impression:');
+  }
+
+  public async findRechargeCacheKeys(): Promise<string[]> {
+    return this.findCacheKeysWithPrefix('recharge:');
+  }
   async getHello(): Promise<string> {
     let value: string = await this.cacheManager.get<string>('hello');
     if (!value) {

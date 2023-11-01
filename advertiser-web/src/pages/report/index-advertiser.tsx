@@ -105,7 +105,7 @@ const ReportAdvertiserIndexPage = (props: ReportAdvPageProps) => {
             },
             {
               date: item.date,
-              value: item.usedBudget,
+              value: (Number(item.usedBudget / 100)),
               category: "消耗金额",
             }
           );
@@ -143,7 +143,14 @@ const ReportAdvertiserIndexPage = (props: ReportAdvPageProps) => {
           label: {
             // layout: [{ type: "hide-overlap" }], // 隐藏重叠label
             style: { color: "#d62728", textAlign: "center" },
-            formatter: (item) => item.value,
+            formatter: (item) => {
+              if (item.category === "消耗金额") {
+                console.log('消耗金额',(Number(item.value) / 100).toFixed(2))
+                return (Number(item.value)).toFixed(2);
+              } else {
+                return item.value.toString();
+              }
+            },
           },
           padding: "auto",
           point: {

@@ -34,7 +34,7 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
     } catch (error) {
       console.error("Error fetching agent options:", error);
     }
-  },[setUserId]);
+  }, [setUserId]);
   const handleSelectAgent = () => {
     // 在这里执行点击事件处理逻辑
     // 假设 agentOptList 是点击事件后要设置的值
@@ -100,7 +100,7 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
           confirmPassword: user.password,
           userId: user.userId,
           enabled: user.enabled,
-          cpmPrice: user.cpmPrice,
+          cpmPrice: user.cpmPrice / 100,
         });
       }, 500);
     },
@@ -154,7 +154,7 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
         if (formRef.current) {
           const data = await formRef.current.validateFields();
           // data.avatar = avatar;
-
+          data.cpmPrice = data.cpmPrice * 100;
           console.log("validateFields data", data);
           if (mode === "add") {
             data.role = role;

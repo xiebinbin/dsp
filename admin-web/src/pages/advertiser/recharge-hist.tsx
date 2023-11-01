@@ -60,6 +60,13 @@ const RechargeHist = (props: { role: "Root" | "Agent"; roleName: string }) => {
       dataIndex: "amount",
       valueType: "money",
       hideInSearch: true,
+      render: (_, entity) => {
+        // 假设 budget 字段以分为单位
+        const text = entity.amount ||0; // 获取实体对象中的 budget 属性
+  
+        const budgetYuan = Number(text) / 100; // 将分转换为元
+        return `¥ ${budgetYuan.toFixed(2)}`; // 显示为元并保留两位小数
+      },
     },
   ];
   const location = useLocation();

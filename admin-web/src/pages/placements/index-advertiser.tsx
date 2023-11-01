@@ -23,13 +23,17 @@ import type {
     string | number | boolean,
     ProSchemaValueEnumType | ReactNode
   >();
-  maps.set(true, {
+  maps.set(1, {
     text: "启动",
     status: "success",
   });
-  maps.set(false, {
+  maps.set(0, {
     text: "暂停",
     status: "error",
+  });
+  maps.set(2, {
+    text: "结束",
+    status: "warning",
   });
   const PlacementsAdvertiserIndexPage = (props: PlacementsPageProps) => {
     const { role,  } = props;
@@ -153,6 +157,13 @@ import type {
         valueType: "money",
   
         hideInSearch: true,
+        render: (_, entity) => {
+          // 假设 budget 字段以分为单位
+          const text = entity.usedBudget; // 获取实体对象中的 budget 属性
+    
+          const usedBudgetYuan = Number(text) / 100; // 将分转换为元
+          return `¥ ${usedBudgetYuan.toFixed(2)}`; // 显示为元并保留两位小数
+        },
       },
       {
         title: "预算上限",
@@ -161,6 +172,13 @@ import type {
         dataIndex: "budget",
         valueType: "money",
         hideInSearch: true,
+        render: (_, entity) => {
+          // 假设 budget 字段以分为单位
+          const text = entity.budget; // 获取实体对象中的 budget 属性
+    
+          const budgetYuan = Number(text) / 100; // 将分转换为元
+          return `¥ ${budgetYuan.toFixed(2)}`; // 显示为元并保留两位小数
+        },
       },
       {
         title: "展现次数",

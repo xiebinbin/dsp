@@ -86,6 +86,13 @@ const advcolumns: ProColumns<Advertiser>[] = [
     valueType: "money",
 
     hideInSearch: true,
+    render: (_, entity) => {
+      // 假设 budget 字段以分为单位
+      const text = entity.wallet?.balance || 0; // 获取实体对象中的 budget 属性
+
+      const balanceYuan = Number(text) / 100; // 将分转换为元
+      return `¥ ${balanceYuan.toFixed(2)}`; // 显示为元并保留两位小数
+    },
   },
   {
     title: "更新时间",
@@ -271,7 +278,6 @@ const AdvertiserIndexPage = (props: AdvIndexPageProps) => {
   const navigate = useNavigate();
 
   const renderContent = () => {
-
     if (role === "Root") {
       if (authUser.role !== "Root" && authUser.role !== "Operator") {
         navigate("/unauthorized");
@@ -361,7 +367,7 @@ const AdvertiserIndexPage = (props: AdvIndexPageProps) => {
         </div>
       );
     } else if (role == "Agent") {
-      if (authUser.role !== "Agent" ) {
+      if (authUser.role !== "Agent") {
         navigate("/unauthorized");
         return null;
       }

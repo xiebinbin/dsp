@@ -63,7 +63,7 @@ const getListByAdvertiser = (
     params
   );
 };
-const pending = (id: bigint,enabled: boolean) => {
+const pending = (id: bigint,enabled: number) => {
   return createRequestInstance().put(`/api/admin/placement/pending/${id}`, {enabled});
 };
 

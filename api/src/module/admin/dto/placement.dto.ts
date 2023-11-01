@@ -5,7 +5,7 @@ export class PlacementDto {
   @IsNotEmpty()
   id: bigint;
   name: string;
-  enabled: boolean;
+  enabled: number;
   @IsNotEmpty()
   adMaterialId: bigint;
   @IsNotEmpty()

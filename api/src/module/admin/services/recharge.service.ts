@@ -36,6 +36,24 @@ export class RechargeService {
           },
         },
       });
+      console.log('data.id,', data.id);
+      const amount = await this.prisma.bill.aggregate({
+        where: {
+          advertiserId: data.id,
+        },
+        _sum: {
+          amount: true,
+        },
+      });
+      console.log('totalAmount', amount._sum.amount);
+      const totalused = await this.prisma.adConsume.aggregate({
+        where: {
+          advertiserId: data.id,
+        },
+        _sum: {
+          amount: true,
+        },
+      });
       // 获取当前 Wallet 余额
       const wallet = await this.prisma.wallet.findUnique({
         where: {
@@ -45,12 +63,15 @@ export class RechargeService {
       // 更新 Wallet 余额
       if (wallet) {
         const newBalance = wallet.balance + data.amount;
+
         await this.prisma.wallet.update({
           where: {
             advertiserId: data.id,
           },
           data: {
             balance: newBalance,
+            totalAmount: Number(amount._sum.amount),
+            totalUsed: Number(totalused._sum.amount),
           },
         });
       }
