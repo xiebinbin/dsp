@@ -17,7 +17,9 @@ import { AdConsumeService } from '../services/adconsume.service';
 import { AdConsumeDto } from '../dto/adconsume.dto';
 import { AdvService } from '../services/adv.service';
 import { RedisCacheService } from '../../cache/services/redis-cache.service';
-
+import { AdReportByDayService } from '../services/adreportbyday.service';
+import { AdReportByDayDto } from '../dto/adreportbyday.dto';
+import { format } from 'date-fns';
 @Controller('/api/ad/')
 export class AdCountController {
   constructor(
@@ -27,6 +29,7 @@ export class AdCountController {
     private readonly AdConsumeService: AdConsumeService,
     private readonly AdvService: AdvService,
     private readonly RedisCacheService: RedisCacheService,
+    private readonly AdReportByDayService: AdReportByDayService,
   ) {}
   private readonly logger = new Logger(AdCountController.name);
   @Post('show')
@@ -143,7 +146,28 @@ export class AdCountController {
       // const adconsumeinfo = await this.AdConsumeService.UpdateOrCreate(
       //   getRechargeRedis,
       // );
+      //更新按天数据
+      const currentDate = new Date();
+      const formattedDate = format(currentDate, 'yyyy-MM-dd');
+      const ReportByDaycacheKey = `byday:${formattedDate}:${adUsedCountdata.placementId}`;
+      console.log('ReportByDaycacheKey', ReportByDaycacheKey);
 
+      const ReportByDay: AdReportByDayDto = {
+        date: formattedDate,
+        placementId: Number(adConsumeData.placementId),
+        usedBudget: prePrice,
+        displayCount: count,
+        clickCount: 0,
+      };
+      await this.AdReportByDayService.increaseAdReportByDayCache(
+        ReportByDaycacheKey,
+        ReportByDay,
+        30 * 60 * 60 * 1000, //保存30小时
+      );
+      const getReportRedis = await this.RedisCacheService.get(
+        ReportByDaycacheKey,
+      );
+      console.log('show by daygetReportRedis', getReportRedis);
       let responseData = null;
       if (getRechargeRedis) {
         responseData = {
@@ -183,12 +207,13 @@ export class AdCountController {
           AuthError.PLACEMENT_NOT_FOUND.code,
         );
       }
-      if (placementinfo.budget - placementinfo.usedBudget < 0) {
-        throw new HttpException(
-          AuthError.PLACEMENT_NOT_ENOUGH.message,
-          AuthError.PLACEMENT_NOT_ENOUGH.code,
-        );
-      }
+      //取消限制
+      // if (placementinfo.budget - placementinfo.usedBudget < 0) {
+      //   throw new HttpException(
+      //     AuthError.PLACEMENT_NOT_ENOUGH.message,
+      //     AuthError.PLACEMENT_NOT_ENOUGH.code,
+      //   );
+      // }
       const Materialinfo = await this.MaterialService.findById(
         BigInt(placementinfo.adMaterialId),
       );
@@ -233,6 +258,28 @@ export class AdCountController {
       // const adUsedCountinfo = await this.AdUsedCountService.UpdateOrCreate(
       //   getRedis,
       // );
+      //更新按天数据
+      const currentDate = new Date();
+      const formattedDate = format(currentDate, 'yyyy-MM-dd');
+      const ReportByDaycacheKey = `byday:${formattedDate}:${adUsedCountdata.placementId}`;
+      console.log('ReportByDaycacheKey', ReportByDaycacheKey);
+
+      const ReportByDay: AdReportByDayDto = {
+        date: formattedDate,
+        placementId: Number(adUsedCountdata.placementId),
+        usedBudget: 0,
+        displayCount: 0,
+        clickCount: count,
+      };
+      await this.AdReportByDayService.increaseAdReportByDayCache(
+        ReportByDaycacheKey,
+        ReportByDay,
+        30 * 60 * 60 * 1000, //保存30小时
+      );
+      const getReportRedis = await this.RedisCacheService.get(
+        ReportByDaycacheKey,
+      );
+      console.log('click by day getReportRedis', getReportRedis);
       //修改广告计划消耗
       let responseData = null;
       if (getRedis) {
@@ -299,8 +346,17 @@ export class AdCountController {
     }
   }
   calculateTimeDiffWithDefault(date: Date, defaultValue: number): number {
-    const currentTime = new Date().getTime();
-    const timeDiffInSeconds = (date.getTime() - currentTime) / 1000;
-    return timeDiffInSeconds < 0 ? defaultValue : timeDiffInSeconds;
+    const currentTime = new Date();
+
+    const endedAtDate = new Date(date);
+    const timeDiffInSeconds =
+      (Number(endedAtDate) - Number(currentTime)) / 1000;
+    const limitedTimeDiffInSeconds = Math.min(
+      timeDiffInSeconds,
+      2000000000 / 1000,
+    );
+    return limitedTimeDiffInSeconds < 0
+      ? defaultValue
+      : limitedTimeDiffInSeconds;
   }
 }

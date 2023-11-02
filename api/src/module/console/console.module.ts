@@ -11,6 +11,11 @@ import {
   UpdateRootUserPasswordQuestions,
   UpdateUserPasswordCommand,
 } from './commands/update-user-password';
+import {
+  CalculateReportDailyCommand,
+  // CalculateReportDailyQuestions,
+} from './commands/calculate-report-daily.command';
+import { ReportService } from './services/report.service';
 
 @Module({
   imports: [
@@ -27,6 +32,9 @@ import {
     GenerateKeyCommand,
     UpdateRootUserPasswordQuestions,
     UpdateUserPasswordCommand,
+    CalculateReportDailyCommand,
+    // CalculateReportDailyQuestions,
+    ReportService,
   ],
 })
 export class ConsoleModule {}

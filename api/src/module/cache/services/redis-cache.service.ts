@@ -36,6 +36,9 @@ export class RedisCacheService {
   public async findRechargeCacheKeys(): Promise<string[]> {
     return this.findCacheKeysWithPrefix('recharge:');
   }
+  public async findReportCacheKeys(date: string): Promise<string[]> {
+    return this.findCacheKeysWithPrefix(`byday:${date}:`);
+  }
   async getHello(): Promise<string> {
     let value: string = await this.cacheManager.get<string>('hello');
     if (!value) {

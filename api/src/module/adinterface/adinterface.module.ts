@@ -14,6 +14,7 @@ import { AdvService } from './services/adv.service';
 import { RedisCacheService } from '../cache/services/redis-cache.service';
 import { ApiAdTask } from './task/apiad.task';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AdReportByDayService } from './services/adreportbyday.service';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     RedisCacheService,
     ApiAdTask,
     AdvService,
+    AdReportByDayService,
   ],
 })
 export class AdinterfaceModule {

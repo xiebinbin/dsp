@@ -56,6 +56,5 @@ export class DashboardController {
       code: 200,
     };
     return response.send(responseData);
-    return dashboardres;
   }
 }

@@ -165,7 +165,7 @@ model AdMediaRelation {
 model AdPlacement {
   id               BigInt            @id @default(autoincrement()) @db.UnsignedBigInt
   name             String
-  enabled           Int               @default(1)
+  enabled          Int               @default(1)
   // 广告素材
   adMaterialId     BigInt            @map("ad_material_id")
   adMaterial       AdMaterial        @relation(fields: [adMaterialId], references: [id])
@@ -191,6 +191,7 @@ model AdPlacement {
   adMediaRelations AdMediaRelation[]
   adUsedCounts     AdUsedCount[] // 添加与 adUsedCount 模型的关联字段
   adConsume        AdConsume[]
+  AdReportByDay    AdReportByDay[]
 
   @@index([adMaterialId], name: "ad_material_id")
   @@index([enabled], name: "enabled")
@@ -266,4 +267,22 @@ model AdConsume {
   @@index([placementId], name: "placement_id")
   @@index([advertiserId], name: "advertiser_id")
   @@map("ad_consume")
+}
+
+model AdReportByDay {
+  id           BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  date         String      @default("1999-01-01")
+  placementId  BigInt      @map("placement_id")
+  adPlacement  AdPlacement @relation(fields: [placementId], references: [id])
+  // 已消耗预算
+  usedBudget   BigInt      @default(0) @map("used_budget") @db.UnsignedBigInt //分
+  // 展现次数
+  displayCount BigInt      @default(0) @map("display_count") @db.UnsignedBigInt
+  // 点击次数
+  clickCount   BigInt      @default(0) @map("click_count") @db.UnsignedBigInt
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  @@index([placementId], name: "placement_id")
+  @@map("ad_report_byday")
 }
