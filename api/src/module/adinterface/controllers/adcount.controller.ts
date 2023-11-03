@@ -266,6 +266,7 @@ export class AdCountController {
 
       const ReportByDay: AdReportByDayDto = {
         date: formattedDate,
+
         placementId: Number(adUsedCountdata.placementId),
         usedBudget: 0,
         displayCount: 0,

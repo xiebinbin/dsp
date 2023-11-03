@@ -13,7 +13,6 @@ export class AdvertiserService {
       },
     });
   }
-
   async findById(id: bigint): Promise<Advertiser | null> {
     return await this.prisma.advertiser.findFirst({
       where: {

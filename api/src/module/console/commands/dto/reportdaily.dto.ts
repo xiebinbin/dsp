@@ -36,7 +36,6 @@ export class ReportDailyDto {
 
   @IsNotEmpty()
   usedBudget: bigint;
-
   createdAt: string;
 
   updatedAt: string;

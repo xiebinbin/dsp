@@ -26,7 +26,12 @@ export class PlacementService {
       },
     });
   }
-
+  async findByAdv(advs: bigint[]) {
+    return await this.prisma.adPlacement.findMany({
+      where: { advertiserId: { in: advs } },
+      select: { id: true },
+    });
+  }
   async findById(id: bigint) {
     const Placementinfo = await this.prisma.adPlacement.findFirst({
       select: {

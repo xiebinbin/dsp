@@ -20,3 +20,7 @@ pnpm artisan create-root-user
 ```shell
 pnpm artisan generate-key
 ```
+5.报表计算(日期是开始计算数据的日期)
+```shell
+pnpm artisan execute-calculate 2023-11-02
+```

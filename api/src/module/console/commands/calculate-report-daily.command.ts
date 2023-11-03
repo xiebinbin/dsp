@@ -18,7 +18,7 @@ import { ReportService } from '../services/report.service';
 //   }
 // }
 
-@Command({ name: 'execute-query', options: { isDefault: false } })
+@Command({ name: 'execute-calculate', options: { isDefault: false } })
 export class CalculateReportDailyCommand extends CommandRunner {
   constructor(
     private readonly inquirer: InquirerService,

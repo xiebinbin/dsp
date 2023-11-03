@@ -28,6 +28,7 @@ import { ReportController } from './controllers/report.controller';
 import { ReportService } from './services/report.service';
 import { UploadController } from './controllers/upload.controller';
 import { DashboardController } from './controllers/dashboard.controller';
+import { AdReportByDayService } from './services/adreportbyday.service';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { DashboardController } from './controllers/dashboard.controller';
     MediaService,
     MediaRelationService,
     ReportService,
+    AdReportByDayService,
   ],
 })
 export class AdminModule {

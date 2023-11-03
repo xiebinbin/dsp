@@ -17,6 +17,7 @@ import { PlacementController } from './controllers/placement.controller';
 import { PrismaClient } from '@prisma/client';
 import { ReportController } from './controllers/report.controller';
 import { ReportService } from './services/report.service';
+import { AdReportByDayService } from './services/adreportbyday.service';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { ReportService } from './services/report.service';
     AdMaterialService,
     PlacementService,
     ReportService,
+    AdReportByDayService,
   ],
 })
 export class AdvertiserModule {
