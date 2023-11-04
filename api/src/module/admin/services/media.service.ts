@@ -1,9 +1,7 @@
-import { HttpException, Injectable, Res } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 
 import { AuthError } from 'src/utils/err_types';
 import { PrismaClient, AdMedia } from '@prisma/client';
-import { userInfo } from 'os';
-import { MaterialDto } from '../dto/material.dto';
 import { mediaDto } from '../dto/media.dto';
 
 @Injectable()

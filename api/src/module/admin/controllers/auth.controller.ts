@@ -7,7 +7,6 @@ import {
   Req,
   UseInterceptors,
   Logger,
-  Inject,
 } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { ConfigService } from '@nestjs/config';
@@ -17,8 +16,6 @@ import aes from '../../../utils/aes';
 import { LoginDto } from '../dto/auth.dto';
 import { ApiResInterceptor } from '../interceptors/api-res.interceptor';
 import { CodeService } from '../services/code.service';
-import * as fs from 'fs';
-import { Module } from '@nestjs/common';
 import { RedisCacheService } from '../../cache/services/redis-cache.service';
 import { randomstr } from 'src/utils/randomstr';
 import { PwdDto } from '../dto/pwd.dto';

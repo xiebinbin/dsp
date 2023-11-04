@@ -1,5 +1,4 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../services/prisma.service';
 import { PrismaClient, Role, User } from '@prisma/client';
 import { passwordHash } from 'src/utils/auth-tool';
 import { UserDto } from '../dto/user.dto';

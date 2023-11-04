@@ -7,14 +7,11 @@ import {
   Req,
   UseInterceptors,
   Logger,
-  Inject,
   Res,
   Param,
   Put,
-  ValidationPipe,
   Delete,
   UseGuards,
-  HttpStatus,
 } from '@nestjs/common';
 import { ApiResInterceptor } from '../interceptors/api-res.interceptor';
 import { UserService } from '../services/user.service';

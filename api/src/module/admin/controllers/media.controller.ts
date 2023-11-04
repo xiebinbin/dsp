@@ -7,21 +7,16 @@ import {
   Req,
   UseInterceptors,
   Logger,
-  Inject,
   Res,
   Param,
   Put,
-  ValidationPipe,
   Delete,
   UseGuards,
 } from '@nestjs/common';
 import { ApiResInterceptor } from '../interceptors/api-res.interceptor';
 import { MaterialService } from '../services/material.service';
-import { UserDto } from '../dto/user.dto';
 import { AuthError } from 'src/utils/err_types';
 import { Request } from 'express';
-import { AdvDto } from '../dto/adv.dto';
-import { MaterialDto } from '../dto/material.dto';
 import { AdvService } from '../services/adv.service';
 import { MediaService } from '../services/media.service';
 import { mediaDto } from '../dto/media.dto';

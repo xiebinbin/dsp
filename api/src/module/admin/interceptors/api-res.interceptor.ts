@@ -5,7 +5,7 @@ import {
   HttpStatus,
   NestInterceptor,
 } from '@nestjs/common';
-import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 
 export class ApiResInterceptor implements NestInterceptor {
   intercept(_: ExecutionContext, next: CallHandler): Observable<any> {

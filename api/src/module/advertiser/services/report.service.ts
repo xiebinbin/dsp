@@ -1,10 +1,9 @@
-import { HttpException, Injectable, Res } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
-import { AuthError } from 'src/utils/err_types';
-import { PrismaClient, AdMedia } from '@prisma/client';
-import { userInfo } from 'os';
+import { PrismaClient } from '@prisma/client';
 import { ReportDto } from '../dto/report.dto';
 import { reportParam } from '../dto/reportparam.dto';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class ReportService {
@@ -35,7 +34,7 @@ export class ReportService {
       },
     });
     const reportSummary: ReportDto[] = reports.map((report) => ({
-      date: report.date,
+      date: dayjs(report.date).toDate(),
       displayCount: Number(report._sum.displayCount),
       clickCount: Number(report._sum.clickCount),
       usedBudget: Number(report._sum.usedBudget),

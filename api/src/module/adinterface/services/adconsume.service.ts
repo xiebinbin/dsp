@@ -1,4 +1,4 @@
-import { HttpException, Injectable, Res } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaClient, AdConsume } from '@prisma/client';
 import { AdConsumeDto } from '../dto/adconsume.dto';
 import { RedisCacheService } from '../../cache/services/redis-cache.service';

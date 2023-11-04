@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaClient, AdUsedCount } from '@prisma/client';
 import { AdUsedCountDto } from '../dto/adusedcount.dto';
 import { RedisCacheService } from '../../cache/services/redis-cache.service';
-import { Console } from 'console';
 @Injectable()
 export class AdUsedCountService {
   constructor(

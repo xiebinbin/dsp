@@ -2,8 +2,6 @@ import {
   Command,
   CommandRunner,
   InquirerService,
-  Question,
-  QuestionSet,
 } from 'nest-commander';
 import { ReportService } from '../services/report.service';
 

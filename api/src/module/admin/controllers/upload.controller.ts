@@ -6,8 +6,6 @@ import {
   Param,
   Logger,
   Res,
-  Body,
-  HttpException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -15,10 +13,8 @@ import { extname } from 'path';
 import * as moment from 'moment';
 import { ApiResInterceptor } from '../interceptors/api-res.interceptor';
 import * as fs from 'fs';
-import { FileDto } from '../dto/file.dto';
 import { FileService } from '../services/file.service';
 import { v4 } from 'uuid';
-import * as mimeTypes from 'mime-types';
 
 @Controller('api/admin/upload')
 export class UploadController {

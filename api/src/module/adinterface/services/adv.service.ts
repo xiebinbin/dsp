@@ -1,15 +1,8 @@
 import {
-  BadRequestException,
-  HttpException,
   Injectable,
   NotFoundException,
-  Res,
 } from '@nestjs/common';
-import { PrismaService } from '../../../services/prisma.service';
-import { passwordHash } from 'src/utils/auth-tool';
-import { AuthError } from 'src/utils/err_types';
-import { PrismaClient, Role, Advertiser } from '@prisma/client';
-import { userInfo } from 'os';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class AdvService {

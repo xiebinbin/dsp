@@ -1,6 +1,5 @@
-import { HttpException, Injectable, Res } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../services/prisma.service';
-import { ReportDaily } from '@prisma/client';
 import { ReportDailyDto } from '../commands/dto/reportdaily.dto';
 
 @Injectable()

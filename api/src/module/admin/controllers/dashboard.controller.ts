@@ -1,12 +1,9 @@
 // report.controller.ts
 
 import {
-  Body,
   Controller,
-  Get,
   Logger,
   Post,
-  Query,
   Req,
   Res,
   UseGuards,
@@ -19,10 +16,8 @@ import { DashboardDto } from '../dto/dashboard.dto';
 import { AdvService } from '../services/adv.service';
 import { MaterialService } from '../services/material.service';
 import { PlacementService } from '../services/placement.service';
-import { agent } from 'supertest';
 import { GuardMiddlewareAll } from '../middlewares/guard.middleware';
 import { AdReportByDayService } from '../services/adreportbyday.service';
-import { Role } from '../dto/auth.dto';
 import { RedisCacheService } from '../../cache/services/redis-cache.service';
 
 @Controller('/api/admin/dahsbord')

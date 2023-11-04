@@ -1,4 +1,3 @@
-import { IsNotEmpty } from 'class-validator';
 export interface FileDto {
   credentials: {
     accessKeyId: string;

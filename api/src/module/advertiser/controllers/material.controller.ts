@@ -7,13 +7,7 @@ import {
   Req,
   UseInterceptors,
   Logger,
-  Inject,
-  Res,
   Param,
-  Put,
-  ValidationPipe,
-  Delete,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiResInterceptor } from '../interceptors/api-res.interceptor';
 import { AdMaterialService } from '../services/admaterial.service';
@@ -21,7 +15,6 @@ import { AdMaterialService } from '../services/admaterial.service';
 import { AuthError } from 'src/utils/err_types';
 import { Request } from 'express';
 import { MaterialDto } from '../dto/material.dto';
-import { GuardMiddlewareAdv } from '../middlewares/guard.middleware';
 import { AdvertiserService } from '../services/advertiser.service';
 @Controller('/api/advertiser/material')
 export class MaterialController {

@@ -1,7 +1,5 @@
-import { HttpException, Injectable, Res } from '@nestjs/common';
-import { PrismaClient, AdReportByDay } from '@prisma/client';
-import { AdReportByDayDto } from '../dto/adreportbyday.dto';
-import { RedisCacheService } from '../../cache/services/redis-cache.service';
+import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class AdReportByDayService {

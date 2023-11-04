@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../services/prisma.service';
 import { Advertiser, PrismaClient } from '@prisma/client';
-import { AdvertiserWallet } from '../dto/advertiserwallet.dto';
 
 @Injectable()
 export class AdvertiserService {
@@ -20,7 +18,7 @@ export class AdvertiserService {
       },
     });
   }
-  async walletById(id: bigint): Promise<AdvertiserWallet | null> {
+  async walletById(id: bigint) {
     return await this.prisma.advertiser.findFirst({
       select: {
         id: true,

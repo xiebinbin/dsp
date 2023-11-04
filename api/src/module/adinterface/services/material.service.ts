@@ -1,4 +1,4 @@
-import { HttpException, Injectable, Res } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaClient, AdMaterial } from '@prisma/client';
 
 @Injectable()

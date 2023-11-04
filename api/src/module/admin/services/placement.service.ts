@@ -1,19 +1,9 @@
-import { HttpException, Injectable, Res } from '@nestjs/common';
-import { PrismaService } from '../../../services/prisma.service';
-import { passwordHash } from 'src/utils/auth-tool';
-import { UserDto } from '../dto/user.dto';
+import { HttpException, Injectable } from '@nestjs/common';
 import { AuthError } from 'src/utils/err_types';
 import {
   PrismaClient,
-  Role,
-  Advertiser,
-  AdMaterial,
   AdPlacement,
-  AdMedia,
 } from '@prisma/client';
-import { userInfo } from 'os';
-import { MaterialDto } from '../dto/material.dto';
-import { mediaDto } from '../dto/media.dto';
 import { PlacementDto } from '../dto/placement.dto';
 
 @Injectable()
@@ -68,7 +58,7 @@ export class PlacementService {
         adMediaRelations: {
           select: {
             mediaId: true,
-            admedia: {
+            adMedia: {
               select: {
                 name: true,
               },

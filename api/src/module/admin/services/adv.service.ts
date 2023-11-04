@@ -1,11 +1,8 @@
-import { HttpException, Injectable, Res } from '@nestjs/common';
-import { PrismaService } from '../../../services/prisma.service';
+import { HttpException, Injectable } from '@nestjs/common';
 import { passwordHash } from 'src/utils/auth-tool';
-import { UserDto } from '../dto/user.dto';
 import { AuthError } from 'src/utils/err_types';
-import { PrismaClient, Role, Advertiser } from '@prisma/client';
+import { PrismaClient, Advertiser } from '@prisma/client';
 import { AdvDto } from '../dto/adv.dto';
-import { userInfo } from 'os';
 
 @Injectable()
 export class AdvService {

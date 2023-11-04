@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException } from '@nestjs/common';
 
 export class AuthError extends HttpException {
   static INVALID_CAPTCHA = new AuthError('验证码错误', 10001);

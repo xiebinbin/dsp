@@ -7,11 +7,9 @@ import {
   Req,
   UseInterceptors,
   Logger,
-  Inject,
   Res,
   Param,
   Put,
-  ValidationPipe,
   Delete,
   UseGuards,
 } from '@nestjs/common';
@@ -215,7 +213,7 @@ export class MaterialController {
       content: material.content,
       url: this.defaultUrl + material.url,
       advertiserId: Number(material.advertiserId),
-      jumpurl: material.jumpurl,
+      jumpUrl: material.jumpurl,
       advertiser: {
         taxNumber: material.advertiser.taxNumber,
         id: Number(material.advertiser.id), // 将 bigint 转换为 number
@@ -243,7 +241,7 @@ export class MaterialController {
       content: material.content,
       url: this.defaultUrl + material.url,
       advertiserId: null,
-      jumpurl: material.jumpurl,
+      jumpUrl: material.jumpUrl,
       advertiser: {
         id: Number(material.advertiser.id), // 将 bigint 转换为 number
         companyName: material.advertiser.companyName,

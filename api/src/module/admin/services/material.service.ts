@@ -1,10 +1,6 @@
-import { HttpException, Injectable, Res } from '@nestjs/common';
-import { PrismaService } from '../../../services/prisma.service';
-import { passwordHash } from 'src/utils/auth-tool';
-import { UserDto } from '../dto/user.dto';
+import { HttpException, Injectable } from '@nestjs/common';
 import { AuthError } from 'src/utils/err_types';
-import { PrismaClient, Role, Advertiser, AdMaterial } from '@prisma/client';
-import { userInfo } from 'os';
+import { PrismaClient, AdMaterial } from '@prisma/client';
 import { MaterialDto } from '../dto/material.dto';
 
 @Injectable()
@@ -31,7 +27,7 @@ export class MaterialService {
         content: true,
         url: true,
         advertiserId: true,
-        jumpurl: true,
+        jumpUrl: true,
         advertiser: {
           select: {
             id: true,
@@ -128,7 +124,7 @@ export class MaterialService {
         position,
         content,
         url,
-        jumpurl,
+        jumpUrl,
         advertiserId,
       } = materialDto;
       console.log('createMaterial materialDto', materialDto);
@@ -141,7 +137,7 @@ export class MaterialService {
           position,
           content,
           url,
-          jumpurl,
+          jumpUrl,
           advertiserId,
         },
       });
@@ -161,7 +157,7 @@ export class MaterialService {
           position: materialDto.position,
           content: materialDto.content,
           url: materialDto.url,
-          jumpurl: materialDto.jumpurl,
+          jumpUrl: materialDto.jumpUrl,
           advertiserId: materialDto.advertiserId,
           updatedAt: new Date(),
         },

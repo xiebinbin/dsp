@@ -1,7 +1,6 @@
-import { HttpException, Injectable, Res } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { AuthError } from 'src/utils/err_types';
 import { PrismaClient } from '@prisma/client';
-import { PrismaService } from 'src/services/prisma.service';
 
 @Injectable()
 export class AdMaterialService {

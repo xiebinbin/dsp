@@ -20,7 +20,7 @@ export class MaterialDto {
   // 图片链接
   url: string;
   // 跳转链接
-  jumpurl: string;
+  jumpUrl: string;
   enabled: boolean;
   @IsNotEmpty()
   advertiserId: number;

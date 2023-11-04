@@ -7,12 +7,7 @@ import {
   Req,
   UseInterceptors,
   Logger,
-  Inject,
-  Res,
   Param,
-  Put,
-  ValidationPipe,
-  Delete,
   UseGuards,
 } from '@nestjs/common';
 import { ApiResInterceptor } from '../interceptors/api-res.interceptor';

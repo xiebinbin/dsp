@@ -1,5 +1,4 @@
 import { IsNotEmpty } from 'class-validator';
-import { mediarelationDto } from './mediarelation.dto';
 
 export class PlacementDto {
   @IsNotEmpty()

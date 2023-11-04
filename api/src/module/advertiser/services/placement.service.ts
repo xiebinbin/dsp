@@ -1,4 +1,4 @@
-import { HttpException, Injectable, Res } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { AuthError } from 'src/utils/err_types';
 import { PrismaClient, AdPlacement } from '@prisma/client';
@@ -55,7 +55,7 @@ export class PlacementService {
         adMediaRelations: {
           select: {
             mediaId: true,
-            admedia: {
+            adMedia: {
               select: {
                 name: true,
               },

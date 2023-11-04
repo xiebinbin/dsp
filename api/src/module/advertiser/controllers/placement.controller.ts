@@ -6,18 +6,14 @@ import {
   Logger,
   Param,
   Post,
-  Put,
   Res,
-  Delete,
   UseInterceptors,
   Req,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiResInterceptor } from '../interceptors/api-res.interceptor';
 import { PlacementService } from '../services/placement.service';
 import { Request } from 'express';
 import { AdvertiserService } from '../services/advertiser.service';
-import { GuardMiddlewareAdv } from '../middlewares/guard.middleware';
 import { AuthError } from 'src/utils/err_types';
 
 @Controller('/api/advertiser/placement/')

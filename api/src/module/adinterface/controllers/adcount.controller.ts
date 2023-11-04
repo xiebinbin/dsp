@@ -325,7 +325,7 @@ export class AdCountController {
           ad: {
             media_url: Materialinfo.url,
             type: 'image',
-            jump_url: Materialinfo.jumpurl,
+            jump_url: Materialinfo.jumpUrl,
           },
         };
         responseData = {

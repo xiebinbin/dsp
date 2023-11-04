@@ -1,25 +1,19 @@
 // report.controller.ts
 
 import {
-  Body,
   Controller,
-  Get,
-  Inject,
   Logger,
   Post,
-  Query,
   Req,
   Res,
   UseGuards,
   UseInterceptors,
-  forwardRef,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { ApiResInterceptor } from '../interceptors/api-res.interceptor';
 import { DashboardDto } from '../dto/dashboard.dto';
 import { AdMaterialService } from '../services/admaterial.service';
 import { PlacementService } from '../services/placement.service';
-import { agent } from 'supertest';
 import { GuardMiddlewareAdv } from '../middlewares/guard.middleware';
 import { AdvertiserService } from '../services/advertiser.service';
 import { RedisCacheService } from '../../cache/services/redis-cache.service';
@@ -59,9 +53,9 @@ export class DashboardController {
       const placement = await this.PlacementService.countByAdvertiser(advId);
       dashboardres.ongoingPlans = placement.ongoing;
       dashboardres.completedPlans = placement.completed;
-      dashboardres.balance = (
+      dashboardres.balance = Number((
         await this.AdvertiserService.walletById(advId)
-      ).wallet.balance;
+      ).wallet.balance);
 
       const placementidsArray = await this.PlacementService.findByAdv([advId]);
       const placementids = placementidsArray.map((plas) => BigInt(plas.id));

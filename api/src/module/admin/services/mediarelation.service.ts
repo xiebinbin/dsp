@@ -1,10 +1,5 @@
-import { HttpException, Injectable, Res } from '@nestjs/common';
-
-import { AuthError } from 'src/utils/err_types';
-import { PrismaClient, AdMedia, AdMediaRelation } from '@prisma/client';
-import { userInfo } from 'os';
-import { MaterialDto } from '../dto/material.dto';
-import { mediaDto } from '../dto/media.dto';
+import { HttpException, Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 import { mediarelationDto } from '../dto/mediarelation.dto';
 
 @Injectable()
@@ -35,7 +30,7 @@ export class MediaRelationService {
         enabled: true,
       },
       include: {
-        admedia: {
+        adMedia: {
           select: {
             name: true,
           },
@@ -45,7 +40,7 @@ export class MediaRelationService {
 
     return adMediaRelations.map((relation) => ({
       mediaId: Number(relation.mediaId),
-      mediaName: relation.admedia.name,
+      mediaName: relation.adMedia.name,
     }));
   }
   async findById(id: bigint) {

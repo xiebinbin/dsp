@@ -1,4 +1,3 @@
-import { IsNotEmpty } from 'class-validator';
 
 export class DashboardDto {
   agentNumber: number;

@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+
 
 export class DashboardDto {
   adMaterialNumber: number; // 广告素材

@@ -1,12 +1,10 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../services/prisma.service';
-import { passwordHash } from 'src/utils/auth-tool';
-import { PrismaClient, Role, Bill } from '@prisma/client';
+import { Injectable } from '@nestjs/common';
+import { PrismaClient, Bill } from '@prisma/client';
 import { RechargeDto } from '../dto/recharge.dto';
 
 @Injectable()
 export class RechargeService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient) { }
   async findByadvertiserId(advertiserId: bigint): Promise<Bill | null> {
     return await this.prisma.bill.findFirst({
       where: {
@@ -62,7 +60,7 @@ export class RechargeService {
       });
       // 更新 Wallet 余额
       if (wallet) {
-        const newBalance = wallet.balance + data.amount;
+        const newBalance = Number(wallet.balance) + data.amount;
 
         await this.prisma.wallet.update({
           where: {

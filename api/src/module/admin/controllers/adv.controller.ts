@@ -7,7 +7,6 @@ import {
   Req,
   UseInterceptors,
   Logger,
-  Inject,
   Res,
   Param,
   Put,
@@ -20,7 +19,6 @@ import { AuthError } from 'src/utils/err_types';
 import { Request } from 'express';
 import { AdvDto } from '../dto/adv.dto';
 import {
-  GuardMiddlewareAgent,
   GuardMiddlewareAll,
   GuardMiddlewareRoot,
 } from '../middlewares/guard.middleware';
@@ -87,7 +85,7 @@ export class AdvController {
       const userinfo = await this.AdvService.findById(BigInt(id));
       if (userinfo.wallet == null) {
         userinfo.wallet = {
-          balance: 0,
+          balance: 0n,
         };
       }
       const res = this.convertAdvInfo(userinfo);

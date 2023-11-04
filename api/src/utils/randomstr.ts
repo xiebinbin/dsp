@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+
 // import { createCanvas } from 'canvas';
 export class randomstr {
   getrandstr(num: number) {

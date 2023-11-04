@@ -1,6 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { randomstr } from '../../../utils/randomstr';
-import { RedisCacheService } from '../../cache/services/redis-cache.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 // import { canvas } from 'src/utils/canvas';
