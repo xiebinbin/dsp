@@ -10,7 +10,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import * as moment from 'moment';
+import moment from 'moment';
 import { ApiResInterceptor } from '../interceptors/api-res.interceptor';
 import * as fs from 'fs';
 import { FileService } from '../services/file.service';

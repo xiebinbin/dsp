@@ -209,7 +209,7 @@ model AdPlacement {
 //日报report_daily
 model ReportDaily {
   id              BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
-  date            DateTime   @default(now()) @db.Date
+  date            DateTime @default(now()) @db.Date
   agentId         BigInt   @map("agent_id")
   agentName       String   @map("agent_name")
   advertiserId    BigInt   @map("advertiser_id")
@@ -278,7 +278,7 @@ model AdConsume {
 
 model AdReportByDay {
   id           BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
-  date         DateTime      @db.Date @default(now())
+  date         DateTime    @default(now()) @db.Date
   placementId  BigInt      @map("placement_id")
   adPlacement  AdPlacement @relation(fields: [placementId], references: [id])
   // 已消耗预算
@@ -292,5 +292,5 @@ model AdReportByDay {
 
   @@index([placementId], name: "placement_id")
   @@index([date], name: "date")
-  @@map("ad_report_byday")
+  @@map("ad_report_by_day")
 }

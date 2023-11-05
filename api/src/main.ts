@@ -6,7 +6,13 @@ import { AdvModule } from './adv.module';
 import { AdvGlobalErrorFilter } from './module/advertiser/interceptors/adv-GlobalErrorFilter';
 import { AdapiModule } from './adapi.module';
 import { AdapiGlobalErrorFilter } from './module/adinterface/interceptors/adapi-GlobalErrorFilter';
+declare global {
+  interface BigInt {
+    toJSON(): number;
+  }
+}
 
+BigInt.prototype.toJSON = function() { return Number(this); }
 async function bootstrap() {
   //管理员平台
   const app = await NestFactory.create(AppModule);

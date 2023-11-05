@@ -7,7 +7,7 @@ import { AuthError } from 'src/utils/err_types';
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaClient) {}
-  async findAgents(): Promise<{ id: number; name: string }[]> {
+  async findAgents() {
     const agents = await this.prisma.user.findMany({
       where: {
         role: 'Agent',
@@ -17,12 +17,10 @@ export class UserService {
         nickname: true, // 假设代理商有一个用户名字段，你可以根据实际情况选择需要的字段
       },
     });
-    const agentsArray = agents.map((agent) => ({
-      id: Number(agent.id),
+    return agents.map((agent) => ({
+      id: agent.id,
       name: agent.nickname, // 这里假设代理商的用户名字段为 username
     }));
-
-    return agentsArray;
   }
   async findByUsername(username: string): Promise<User | null> {
     return await this.prisma.user.findFirst({
@@ -125,14 +123,8 @@ export class UserService {
       take: limit,
       orderBy: orderBy,
     });
-
-    const usersWithNumberID = users.map((user) => ({
-      ...user,
-      id: Number(user.id),
-    }));
-
     return {
-      data: usersWithNumberID,
+      data: users,
       total,
     };
   }
@@ -171,7 +163,7 @@ export class UserService {
 
     return true;
   }
-  async countByAgent(): Promise<number> {
+  async countByAgent() {
     const where: any = {};
     where.role = Role.Agent;
     const agenttotal = await this.prisma.user.count({

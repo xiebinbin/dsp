@@ -93,14 +93,8 @@ export class MaterialService {
       },
     });
 
-    const adMaterialsWithNumberID = adMaterials.map((adMaterials) => ({
-      ...adMaterials,
-      id: Number(adMaterials.id),
-      advertiserId: Number(adMaterials.advertiserId),
-    }));
-    console.log('adMaterialsWithNumberID', adMaterialsWithNumberID);
     return {
-      data: adMaterialsWithNumberID,
+      data: adMaterials,
       total,
     };
   }
@@ -110,8 +104,7 @@ export class MaterialService {
       where.advertiser = { userId: userId };
     }
     // where.enabled = true;
-    const total = await this.prisma.adMaterial.count({ where });
-    return total;
+    return await this.prisma.adMaterial.count({ where });
   }
 
   async createMaterial(materialDto: MaterialDto): Promise<AdMaterial> {

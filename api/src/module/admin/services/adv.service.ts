@@ -6,7 +6,7 @@ import { AdvDto } from '../dto/adv.dto';
 
 @Injectable()
 export class AdvService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient) { }
   async findAdvertisers(
     queryParams: any,
   ): Promise<{ id: number; name: string; agentId: number }[]> {
@@ -132,25 +132,17 @@ export class AdvService {
       take: limit,
       orderBy: orderBy,
     });
-
-    const advertisersWithNumberID = advertisers.map((advertiser) => ({
-      ...advertiser,
-      id: Number(advertiser.id),
-      userId: role === 'Root' ? Number(advertiser.userId) : undefined,
-    }));
-
     return {
-      data: advertisersWithNumberID,
+      data: advertisers,
       total,
     };
   }
-  async countByAdv(userId: bigint): Promise<number> {
+  async countByAdv(userId: bigint) {
     const where: any = {};
     if (userId) {
       where.userId = userId;
     }
-    const res = await this.prisma.advertiser.count({ where });
-    return res;
+    return await this.prisma.advertiser.count({ where });
   }
   async createUser(advDto: AdvDto): Promise<Advertiser> {
     try {
@@ -207,7 +199,7 @@ export class AdvService {
           taxNumber: advDto.taxNumber,
           password: advDto.password,
           userId: advDto.userId,
-          cpmPrice: Number(advDto.cpmPrice),
+          cpmPrice: advDto.cpmPrice,
           enabled: advDto.enabled,
           updatedAt: new Date(),
         },

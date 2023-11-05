@@ -64,6 +64,7 @@ export class UserController {
         // enabled: queryParams.enabled || false,
       });
       //   return response.send(result);
+      console.log('result', result);
       return result;
     } catch (e) {
       console.log(e);

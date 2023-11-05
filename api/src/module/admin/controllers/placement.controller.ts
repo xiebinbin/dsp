@@ -23,7 +23,6 @@ import { AdvService } from '../services/adv.service';
 import { GuardMiddlewareRoot } from '../middlewares/guard.middleware';
 
 @Controller('/api/admin/placement/')
-@UseInterceptors(ApiResInterceptor)
 export class PlacementController {
   constructor(
     private readonly PlacementService: PlacementService,
@@ -52,16 +51,13 @@ export class PlacementController {
   async getList(
     @Req() req: Request,
     @Body() queryParams: any,
-    @Res() response,
   ) {
-    console.log('queryParams', queryParams);
-    // console.log('placement requser', req.user);
-    const { page, limit, q, filters, orderBy, extra } = queryParams;
+    const { page, limit, orderBy, extra } = queryParams;
     try {
       if (req.user.role != 'Root' && req.user.role != 'Operator') {
         extra.agentid = req.user.id;
       }
-      const result = await this.PlacementService.getList({
+      return await this.PlacementService.getList({
         page,
         limit,
         orderBy,
@@ -70,14 +66,7 @@ export class PlacementController {
         userId: extra.agentid || '', //代理商
         materialname: extra.materialname || '',
       });
-      console.log('placement result', result);
-      const responseData = {
-        data: { data: result.data, total: result.total },
-      };
-      // return result;
-      return response.send(responseData);
     } catch (e) {
-      console.log(e);
       throw new HttpException(e.message, e.status);
     }
   }

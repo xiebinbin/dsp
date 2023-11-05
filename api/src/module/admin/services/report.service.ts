@@ -8,23 +8,21 @@ import dayjs from 'dayjs';
 export class ReportService {
   constructor(private prisma: PrismaClient) {}
 
-  async findMedias(): Promise<{ id: number; name: string }[]> {
+  async findMedias() {
     const medias = await this.prisma.adMedia.findMany({
       select: {
         id: true,
         name: true, // 假设代理商有一个用户名字段，你可以根据实际情况选择需要的字段
       },
     });
-    const mediasArray = medias.map((agent) => ({
-      id: Number(agent.id),
-      name: agent.name, // 这里假设代理商的用户名字段为 username
+    return medias.map((media) => ({
+      id: media.id,
+      name: media.name,
     }));
-
-    return mediasArray;
   }
   async placements(
     materialId: bigint,
-  ): Promise<{ id: number; name: string }[]> {
+  ) {
     const where: any = {};
     if (materialId !== null) {
       where.adMaterialId = materialId;
@@ -34,11 +32,10 @@ export class ReportService {
       where,
       distinct: ['adPlacementId', 'adPlacementName'],
     });
-    const placementarray = placements.map((placement) => ({
-      id: Number(placement.adPlacementId),
+    return placements.map((placement) => ({
+      id: placement.adPlacementId,
       name: placement.adPlacementName,
     }));
-    return placementarray;
   }
   async getReportsByDateRange(param: reportParam) {
     const {
@@ -51,8 +48,8 @@ export class ReportService {
     } = param;
     const where: any = {};
     where.date = {
-      gte: startDate, // 大于或等于 startDate
-      lte: endDate, // 小于或等于 endDate
+      gte: dayjs(startDate).toDate(), // 大于或等于 startDate
+      lte: dayjs(endDate).toDate(), // 小于或等于 endDate
     };
     if (agentId !== null) {
       where.agentId = agentId;

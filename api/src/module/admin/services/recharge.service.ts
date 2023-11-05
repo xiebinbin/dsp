@@ -120,14 +120,8 @@ export class RechargeService {
       take: limit,
       orderBy: orderBy,
     });
-    const billWithNumberID = bill.map((bill) => ({
-      ...bill,
-      id: Number(bill.id),
-      advertiserId: Number(bill.advertiserId),
-    }));
-    console.log('total', total, 'users', billWithNumberID);
     return {
-      data: billWithNumberID,
+      data: bill,
       total,
     };
   }

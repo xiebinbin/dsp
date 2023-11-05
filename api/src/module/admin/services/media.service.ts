@@ -14,19 +14,17 @@ export class MediaService {
       },
     });
   }
-  async findMedias(): Promise<{ id: number; name: string }[]> {
+  async findMedias() {
     const medias = await this.prisma.adMedia.findMany({
       select: {
         id: true,
         name: true, // 假设代理商有一个用户名字段，你可以根据实际情况选择需要的字段
       },
     });
-    const mediasArray = medias.map((agent) => ({
-      id: Number(agent.id),
+    return medias.map((agent) => ({
+      id: agent.id,
       name: agent.name, // 这里假设代理商的用户名字段为 username
     }));
-
-    return mediasArray;
   }
   async findById(id: bigint) {
     const mediainfo = await this.prisma.adMedia.findFirst({
@@ -64,16 +62,8 @@ export class MediaService {
       skip: (page - 1) * limit,
       take: limit,
     });
-
-    const adMediaWithNumberID = adMedia.map((adMedia) => ({
-      ...adMedia,
-      id: Number(adMedia.id),
-      name: adMedia.name,
-      type: adMedia.type,
-    }));
-    console.log('adMediaWithNumberID', adMediaWithNumberID);
     return {
-      data: adMediaWithNumberID,
+      data: adMedia,
       total,
     };
   }

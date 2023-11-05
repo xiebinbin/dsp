@@ -34,9 +34,9 @@ export class AdvController {
     console.log('getOptList req', req.user);
     const { page, limit, q, filters, orderBy, extra } = queryParams;
     try {
-      // if (req.user.role == 'Root' || req.user.role == 'Operator') {
-      //   req.user.role = 'Root';
-      // }
+      if (req.user.role == 'Root' || req.user.role == 'Operator') {
+        req.user.role = 'Root';
+      }
       const result = await this.AdvService.findAdvertisers({
         page,
         limit,
@@ -47,7 +47,6 @@ export class AdvController {
         userId: req.user.id,
       });
       //   return response.send(result);
-      console.log('result', result);
       return result;
     } catch (e) {
       console.log(e);
@@ -58,11 +57,9 @@ export class AdvController {
   @UseGuards(GuardMiddlewareAll) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async getList(@Req() req: Request, @Body() queryParams: any) {
-    console.log('queryParams', queryParams);
-    console.log('req', req.user);
     const { page, limit, q, filters, orderBy, extra } = queryParams;
     try {
-      const result = await this.AdvService.getList({
+      return await this.AdvService.getList({
         page,
         limit,
         orderBy,
@@ -70,9 +67,6 @@ export class AdvController {
         role: queryParams.extra.role,
         userId: req.user.id,
       });
-      //   return response.send(result);
-      console.log('result', result);
-      return result;
     } catch (e) {
       console.log(e);
       throw new HttpException(e.message, e.status);

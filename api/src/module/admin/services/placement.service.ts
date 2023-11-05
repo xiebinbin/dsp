@@ -131,19 +131,9 @@ export class PlacementService {
       },
     });
 
-    const adPlacementsWithNumberID = adPlacements.map((adMaterials) => ({
-      ...adMaterials,
-      id: Number(adMaterials.id),
-      advertiserId: Number(adMaterials.advertiserId),
-      adMaterialId: Number(adMaterials.adMaterialId),
-      budget: Number(adMaterials.budget),
-      usedBudget: Number(adMaterials.usedBudget),
-      displayCount: Number(adMaterials.displayCount),
-      clickCount: Number(adMaterials.clickCount),
-    }));
-    console.log('adPlacementsWithNumberID', adPlacementsWithNumberID);
+    
     return {
-      data: adPlacementsWithNumberID,
+      data: adPlacements,
       total: total,
     };
   }

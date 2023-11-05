@@ -23,7 +23,7 @@ export class MediaRelationService {
   }
   async findMediaRelations(
     id: bigint,
-  ): Promise<{ mediaId: number; mediaName: string }[]> {
+  ) {
     const adMediaRelations = await this.prisma.adMediaRelation.findMany({
       where: {
         id,
@@ -39,7 +39,7 @@ export class MediaRelationService {
     });
 
     return adMediaRelations.map((relation) => ({
-      mediaId: Number(relation.mediaId),
+      mediaId: relation.mediaId,
       mediaName: relation.adMedia.name,
     }));
   }
@@ -78,15 +78,8 @@ export class MediaRelationService {
       take: limit,
     });
 
-    const adMediaRelationWithNumberID = adMediaRelation.map((adMedia) => ({
-      ...adMedia,
-      id: Number(adMedia.id),
-      mediaId: Number(adMedia.mediaId),
-      placementId: adMedia.placementId,
-    }));
-    console.log('adMediaRelationWithNumberID', adMediaRelationWithNumberID);
     return {
-      data: adMediaRelationWithNumberID,
+      data: adMediaRelation,
       total,
     };
   }

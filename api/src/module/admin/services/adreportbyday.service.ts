@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class AdReportByDayService {
@@ -9,14 +10,14 @@ export class AdReportByDayService {
     placementIds: bigint[],
     date: string,
     root: boolean,
-  ): Promise<number> {
+  ) {
     const where: any = {};
     if (!root) {
       where.placementId = {
         in: placementIds,
       };
     }
-    where.date = date;
+    where.date = dayjs(date).toDate();
 
     const totalDisplayCount = await this.prisma.adReportByDay.aggregate({
       where,
@@ -25,6 +26,6 @@ export class AdReportByDayService {
       },
     });
 
-    return Number(totalDisplayCount._sum.displayCount);
+    return totalDisplayCount._sum.displayCount || 0n;
   }
 }
