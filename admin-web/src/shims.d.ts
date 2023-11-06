@@ -86,7 +86,7 @@ interface AdMaterialAgent {
   advertiser: {
     id: number;
     companyName: string;
-    taxNumber: string;
+    domainName: string;
   };
 }
 interface Advertiser {
@@ -98,7 +98,7 @@ interface Advertiser {
   }; //余额
   //bill   :     Bill[] //流水
   companyName: string;
-  taxNumber: string;
+  domainName: string;
   address: string;
   enabled: boolean;
   cpmPrice: Int;

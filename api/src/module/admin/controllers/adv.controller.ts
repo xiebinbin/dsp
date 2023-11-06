@@ -66,6 +66,7 @@ export class AdvController {
         username: queryParams.q || '',
         role: queryParams.extra.role,
         userId: req.user.id,
+        comp: extra.comp,
       });
     } catch (e) {
       console.log(e);
@@ -146,7 +147,7 @@ export class AdvController {
     const advDto: AdvDto = {
       id: Number(adv.id),
       companyName: adv.companyName,
-      taxNumber: adv.taxNumber,
+      domainName: adv.domainName,
       username: adv.username,
       password: '',
       wallet: { balance: adv.wallet.balance },

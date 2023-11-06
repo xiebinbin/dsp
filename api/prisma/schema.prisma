@@ -42,7 +42,7 @@ model Advertiser {
   wallet      Wallet?
   bill        Bill[]
   companyName String?       @map("company_name")
-  taxNumber   String?       @map("tax_number")
+  domainName   String?       @map("domain_name") //域名
   address     String?
   enabled     Boolean       @default(true)
   cpmPrice    Int           @default(3000) @map("cpm_price")

@@ -32,7 +32,7 @@ export class MaterialService {
           select: {
             id: true,
             companyName: true,
-            taxNumber: true,
+            domainName: true,
             user: {
               select: {
                 id: true,

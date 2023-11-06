@@ -6,7 +6,7 @@ import { AdvDto } from '../dto/adv.dto';
 
 @Injectable()
 export class AdvService {
-  constructor(private prisma: PrismaClient) { }
+  constructor(private prisma: PrismaClient) {}
   async findAdvertisers(
     queryParams: any,
   ): Promise<{ id: number; name: string; agentId: number }[]> {
@@ -48,7 +48,7 @@ export class AdvService {
         id: true,
         username: true,
         companyName: true,
-        taxNumber: true,
+        domainName: true,
         password: true,
         cpmPrice: true,
         userId: true,
@@ -79,7 +79,7 @@ export class AdvService {
       id: boolean;
       companyName: boolean;
       username: boolean;
-      taxNumber: boolean;
+      domainName: boolean;
       cpmPrice: boolean;
       createdAt: boolean;
       enabled: boolean;
@@ -91,12 +91,12 @@ export class AdvService {
         };
       };
     };
-    const { page, limit, username, orderBy, role, userId } = queryParams;
+    const { page, limit, username, orderBy, role, userId, comp } = queryParams;
     let selectFields: MyType = {
       id: true,
       companyName: true,
       username: true,
-      taxNumber: true,
+      domainName: true,
       cpmPrice: true,
       createdAt: true,
       updatedAt: true,
@@ -113,6 +113,11 @@ export class AdvService {
             balance: true,
           },
         },
+      };
+    }
+    if (comp) {
+      where.companyName = {
+        contains: comp, // 使用 contains 进行模糊查询
       };
     }
 
@@ -152,7 +157,7 @@ export class AdvService {
         username,
         password,
         enabled,
-        taxNumber,
+        domainName,
         cpmPrice,
         userId,
       } = advDto;
@@ -161,7 +166,7 @@ export class AdvService {
         data: {
           companyName,
           username,
-          taxNumber,
+          domainName,
           password,
           userId,
           cpmPrice: Number(cpmPrice),
@@ -196,7 +201,7 @@ export class AdvService {
         data: {
           companyName: advDto.companyName,
           username: advDto.username,
-          taxNumber: advDto.taxNumber,
+          domainName: advDto.domainName,
           password: advDto.password,
           userId: advDto.userId,
           cpmPrice: advDto.cpmPrice,

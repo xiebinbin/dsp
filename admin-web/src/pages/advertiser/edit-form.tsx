@@ -51,7 +51,7 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
         companyName: "",
         username: "",
         password: "",
-        taxNumber: "",
+        domainName: "",
         enabled: "",
         cpmPrice: "",
       });
@@ -95,7 +95,7 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
         formRef.current?.setFieldsValue({
           companyName: user.companyName,
           username: user.username,
-          taxNumber: user.taxNumber,
+          domainName: user.domainName,
           password: user.password,
           confirmPassword: user.password,
           userId: user.userId,
@@ -200,7 +200,7 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
           rules={[{ required: true, message: "请输入域名" }]}
           initialValue={""}
           width="xl"
-          name="taxNumber"
+          name="domainName"
           label="域名"
           placeholder="请输入域名"
         />

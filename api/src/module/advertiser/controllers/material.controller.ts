@@ -104,7 +104,7 @@ export class MaterialController {
       advertiserId: Number(material.advertiserId),
 
       advertiser: {
-        taxNumber: material.advertiser.taxNumber,
+        domainName: material.advertiser.domainName,
         id: Number(material.advertiser.id), // 将 bigint 转换为 number
         companyName: material.advertiser.companyName,
         user: {

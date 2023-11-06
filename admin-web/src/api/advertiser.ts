@@ -3,7 +3,7 @@ import { Advertiser, AdvertiserOpt, GetListDto } from "@/shims";
 export interface AdvEditDto {
   companyName: string;
   username: string;
-  taxNumber: string;
+  domainName : string;
   cpmPrice: number;
   password?: string;
   confirmPassword?: string;

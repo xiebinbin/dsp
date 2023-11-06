@@ -27,7 +27,7 @@ export class MaterialDto {
   advertiser: {
     id: number;
     companyName: string;
-    taxNumber: string;
+    domainName: string;
     user: { id: number; nickname: string };
   };
 }

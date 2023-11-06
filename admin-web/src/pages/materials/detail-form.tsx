@@ -56,7 +56,7 @@ const MaterialDetail = (props: {
       setTimeout(() => {
         formRef.current?.setFieldsValue({
           companyName: data.advertiser.companyName,
-          taxNumber: data.advertiser.taxNumber,
+          domainName: data.advertiser.domainName,
           mediaType: data.mediaType,
           position: data.position,
           url: data.url,
@@ -119,8 +119,8 @@ const MaterialDetail = (props: {
           </ProForm.Group>
           <ProForm.Group>
             <ProFormText
-              name="taxNumber"
-              label="纳税人识别号"
+              name="domainName"
+              label="域名"
               placeholder=""
               disabled
               width="md"

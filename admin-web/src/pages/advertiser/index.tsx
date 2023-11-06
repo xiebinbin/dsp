@@ -228,7 +228,7 @@ const agentcolumns: ProColumns<Advertiser>[] = [
             val: record.id,
             companyName: record.companyName,
             cpmPrice: record.cpmPrice,
-            taxNumber: record.taxNumber,
+            domainName: record.domainName,
           });
         }}
       >

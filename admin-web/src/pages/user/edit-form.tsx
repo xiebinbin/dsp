@@ -221,12 +221,12 @@ const EditForm = (props: {
                 {role === 'Agent' ? (
                     <ProFormText
                     required
-                    rules={[{ required: true, message: '请输入纳税人识别号' }]}
+                    rules={[{ required: true, message: '请输入税号' }]}
                     initialValue={''}
                     width="xl"
                     name="taxnumber"
-                    label="纳税人识别号"
-                    placeholder="请输入纳税人识别号"
+                    label="税号"
+                    placeholder="请输入税号"
                     />
                 ) : (
                    null

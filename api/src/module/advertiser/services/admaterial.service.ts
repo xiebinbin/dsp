@@ -32,7 +32,7 @@ export class AdMaterialService {
           select: {
             id: true,
             companyName: true,
-            taxNumber: true,
+            domainName: true,
             user: {
               select: {
                 id: true,

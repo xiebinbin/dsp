@@ -5,7 +5,7 @@ export class AdvDto {
   id: number;
   @IsNotEmpty()
   companyName: string;
-  taxNumber: string;
+  domainName: string;
   wallet: { balance: number };
   @IsNotEmpty()
   username: string;

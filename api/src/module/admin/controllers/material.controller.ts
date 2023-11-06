@@ -215,7 +215,7 @@ export class MaterialController {
       advertiserId: Number(material.advertiserId),
       jumpUrl: material.jumpUrl,
       advertiser: {
-        taxNumber: material.advertiser.taxNumber,
+        domainName: material.advertiser.domainName,
         id: Number(material.advertiser.id), // 将 bigint 转换为 number
         companyName: material.advertiser.companyName,
         user: {
@@ -245,7 +245,7 @@ export class MaterialController {
       advertiser: {
         id: Number(material.advertiser.id), // 将 bigint 转换为 number
         companyName: material.advertiser.companyName,
-        taxNumber: material.advertiser.taxNumber,
+        domainName: material.advertiser.domainName,
         user: {
           id: null, // 将 bigint 转换为 number
 
