@@ -21,9 +21,7 @@ export class MediaRelationService {
       },
     });
   }
-  async findMediaRelations(
-    id: bigint,
-  ) {
+  async findMediaRelations(id: bigint) {
     const adMediaRelations = await this.prisma.adMediaRelation.findMany({
       where: {
         id,

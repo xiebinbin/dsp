@@ -175,6 +175,15 @@ const RechargeForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
           ]}
         />
       </ProForm.Group>
+      <ProForm.Group>
+        <ProFormText
+          name="remark" // 添加公司名称字段
+          label="备注"
+          placeholder=""
+          
+          width="md"
+        />{" "}
+      </ProForm.Group>
       <Button
         type="primary"
         onClick={() => {

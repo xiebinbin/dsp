@@ -12,8 +12,8 @@ export class ApiResInterceptor implements NestInterceptor {
       map((data) => {
         // console.log('ApiResInterceptor', data);
         // 将所有的bigint转换为number
-          console.log(next.handle());
-        console.log('data', '来来');
+        console.log(next.handle());
+        // console.log('data', '来来');
         return {
           data,
           code: 200,

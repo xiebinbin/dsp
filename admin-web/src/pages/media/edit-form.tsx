@@ -1,19 +1,17 @@
 import {
   ModalForm,
-   ProFormInstance,
+  ProFormInstance,
   ProFormRadio,
-   ProFormText,
+  ProFormText,
 } from "@ant-design/pro-components";
-import { message, } from "antd";
+import { message } from "antd";
 import { useMount, useSafeState, useUnmount } from "ahooks";
 import Emittery from "emittery";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, } from "react";
 import "xgplayer/dist/index.min.css";
 import { getCountryList } from "@/utils/country.ts";
-import AgentApi from "@/api/agent.ts";
-import AdvAPI from "@/api/advertiser.ts";
 import MedialApi, { MediaEditDto } from "@/api/media.ts";
- 
+
 // eslint-disable-next-line react-refresh/only-export-components
 export const $emit = new Emittery();
 
@@ -26,99 +24,31 @@ const EditForm = () => {
   const [id, setId] = useSafeState<bigint>(BigInt(0));
   const formRef = useRef<ProFormInstance>();
   const [mode, setMode] = useSafeState("add");
-  const [, setAgents] = useSafeState<{ name: string; id: number }[]>([]);
-  const [, setAdvertisers] = useState<
-    { id: number; name: string; agentId: number }[]
-  >([]);
-  const [advertisersList, setadvertisersList] = useState<
-    { id: number; name: string; agentId: number }[]
-  >([]);
-  const [selectedAgent, ] = useState<number | string>("");
+
   //   const [selectedMaterial, setselectedMaterial] = useSafeState<{ name: string; id: number }[]>([]);
-  
-  const [, setMediaslist] = useSafeState<
-    { name: string; id: number }[]
-  >([]); // 使用 useState 初始化为空数组
 
-  useEffect(() => {
-    loadAgentsRelation();
-    loadAdvertisers("");
-    loadMedias();
-    if (selectedAgent) {
-      const filteredAdvertisers = advertisersList.filter(
-        (advertiser) => advertiser.agentId === selectedAgent
-      );
-      setAdvertisers(filteredAdvertisers);
-      formRef.current?.setFieldsValue({
-        advertiserId: "",
-        adMaterialId: "",
-      });
-    } else {
-      setAdvertisers([]);
-    }
-  }, [selectedAgent]);
+  const [, setMediaslist] = useSafeState<{ name: string; id: number }[]>([]); // 使用 useState 初始化为空数组
 
-  const loadAgentsRelation = useCallback(async () => {
-    const agentList = await AgentApi.getAgentsList();
-    setAgents(agentList);
-  }, [setAgents]);
-
-  const loadAdvertisers = useCallback(
-    async (q: string) => {
-      const filters: Record<string, (number | string | boolean)[] | null> = {};
-      const orderBy: { [key: string]: "asc" | "desc" } = {};
-      const res = await AdvAPI.getOptList({
-        page: 1,
-        limit: 1000,
-        q: q ?? "",
-        filters,
-        orderBy,
-        extra: {},
-      });
-
-      setadvertisersList(
-        res.map((item) => {
-          return {
-            name: item.name,
-            id: Number(item.id),
-            agentId: Number(item.agentId),
-          };
-        })
-      );
-    },
-    [setadvertisersList]
-  );
-  const loadMedias = useCallback(async () => {
-    const res = await MedialApi.getMediasList();
-    setMediaslist(
-      res.map((item) => {
-        return {
-          name: item.name,
-          id: Number(item.id),
-        };
-      })
-    );
-  }, [setMediaslist]);
- 
   useMount(async () => {
     $emit.on("add", (val: bigint) => {
       setId(val);
       setMode("add");
-      loadAgentsRelation();
-      loadAdvertisers("");
-      loadMedias();
+      // loadAgentsRelation();
+      // loadAdvertisers("");
+      // loadMedias();
       formRef.current?.resetFields();
       formRef.current?.setFieldsValue({
-        name:"",
+        name: "",
         enabled: "",
         adMaterialId: "",
-        budget:"",
+        budget: "",
         mediaType: "",
         usedBudget: "",
         displayCount: "",
         clickCount: "",
         agent: "",
         advertiserId: "",
+        url: "",
         medias: [],
       });
       // setId(BigInt(0));
@@ -144,26 +74,21 @@ const EditForm = () => {
     $emit.clearListeners();
   });
   const close = useCallback(() => {
-    setMediaslist([])
+    setMediaslist([]);
     setShow(false);
   }, [setShow]);
-  const loadInfo = useCallback(
-    async (val: bigint) => {
-      const data = await MedialApi.getInfo(val);
+  const loadInfo = useCallback(async (val: bigint) => {
+    const data = await MedialApi.getInfo(val);
 
-      setTimeout(() => {
-        formRef.current?.setFieldsValue({
-          name: data.name,
-          enabled: data.enabled,
-          
-          type: data.type,
-          
-        });
-      }, 500);
-  
-    },
-    []
-  );
+    setTimeout(() => {
+      formRef.current?.setFieldsValue({
+        name: data.name,
+        enabled: data.enabled,
+        url: data.url,
+        type: data.type,
+      });
+    }, 500);
+  }, []);
   const update = useCallback(
     async (vId: bigint, data: MediaEditDto) => {
       await MedialApi.update(vId, data);
@@ -231,9 +156,8 @@ const EditForm = () => {
           label="请输入名称"
           placeholder="请输入名称"
         />
-  
-   
-          <ProFormRadio.Group
+
+        <ProFormRadio.Group
           name="type"
           label="媒体类型"
           required
@@ -242,9 +166,15 @@ const EditForm = () => {
             { label: "网站", value: 1 },
             { label: "pc软件", value: 2 },
           ]}
-
         />
-          <ProFormRadio.Group
+        <ProFormText
+          name="url"
+          label="链接地址/下载地址"
+          initialValue={""}
+          width="xl"
+          placeholder="请输入地址"
+        />
+        <ProFormRadio.Group
           name="enabled"
           label="启用状态"
           required

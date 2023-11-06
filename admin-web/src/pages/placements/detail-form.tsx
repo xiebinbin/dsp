@@ -59,8 +59,8 @@ const PlacementDetail = (props: {
             clickCount: data.clickCount,
             startedAt: data.startedAt,  
             endedAt:data.endedAt, 
-            budget: data.budget,
-            usedBudget: data.usedBudget,
+            budget: Number(data.budget)/100,
+            usedBudget: Number(data.usedBudget)/100,
             // materialurl:data.adMaterial.url,
         });
       }, 500);

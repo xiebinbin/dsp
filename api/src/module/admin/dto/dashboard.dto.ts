@@ -1,4 +1,3 @@
-
 export class DashboardDto {
   agentNumber: number;
   advertiserNumber: number;

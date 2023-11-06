@@ -4,7 +4,7 @@ import { RechargeDto } from '../dto/recharge.dto';
 
 @Injectable()
 export class RechargeService {
-  constructor(private prisma: PrismaClient) { }
+  constructor(private prisma: PrismaClient) {}
   async findByadvertiserId(advertiserId: bigint): Promise<Bill | null> {
     return await this.prisma.bill.findFirst({
       where: {
@@ -27,6 +27,7 @@ export class RechargeService {
       const bill = await this.prisma.bill.create({
         data: {
           amount: data.amount,
+          remark: data.remark,
           advertiser: {
             connect: {
               id: data.id,
@@ -106,6 +107,7 @@ export class RechargeService {
       amount: true,
       advertiserId: true,
       createdAt: true,
+      remark: true,
       advertiser: {
         select: { username: true },
       },

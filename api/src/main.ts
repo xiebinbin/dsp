@@ -12,7 +12,9 @@ declare global {
   }
 }
 
-BigInt.prototype.toJSON = function() { return Number(this); }
+BigInt.prototype.toJSON = function () {
+  return Number(this);
+};
 async function bootstrap() {
   //管理员平台
   const app = await NestFactory.create(AppModule);

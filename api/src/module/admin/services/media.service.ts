@@ -34,6 +34,7 @@ export class MediaService {
         enabled: true,
         // 类型 1 网站 2pc 软件
         type: true,
+        url: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -76,6 +77,7 @@ export class MediaService {
         enabled,
         // 类型 1 网站 2pc 软件
         type,
+        url,
       } = mediaDto;
       console.log('createMaterial mediaDto', mediaDto);
       return await this.prisma.adMedia.create({
@@ -85,6 +87,7 @@ export class MediaService {
           enabled,
           // 类型 1 网站 2pc 软件
           type,
+          url,
         },
       });
     } catch (error) {
@@ -101,6 +104,7 @@ export class MediaService {
           enabled: mediaDto.enabled,
           // 类型 1 网站 2pc 软件
           type: mediaDto.type,
+          url: mediaDto.url,
         },
       });
       console.log('res', res);

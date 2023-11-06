@@ -48,10 +48,7 @@ export class PlacementController {
   }
   @Post('list')
   @UseInterceptors(ApiResInterceptor)
-  async getList(
-    @Req() req: Request,
-    @Body() queryParams: any,
-  ) {
+  async getList(@Req() req: Request, @Body() queryParams: any) {
     const { page, limit, orderBy, extra } = queryParams;
     try {
       if (req.user.role != 'Root' && req.user.role != 'Operator') {
@@ -75,7 +72,7 @@ export class PlacementController {
   async getUser(@Param('id') id: number, @Res() response) {
     try {
       const placementinfo = await this.PlacementService.findById(BigInt(id));
-      console.log('placementinfo', placementinfo);
+      console.log('Get placementinfo', placementinfo);
       const convertdata = this.convertPlacementInfo(placementinfo);
       console.log('convertdata', convertdata);
       const responseData = {
@@ -107,12 +104,12 @@ export class PlacementController {
         );
       }
       const advres = await this.AdvService.findById(data.advertiserId);
-      if (advres.wallet == null || advres.wallet.balance < data.budget) {
-        throw new HttpException(
-          AuthError.BALANCE_NOTENOUGH.message,
-          AuthError.BALANCE_NOTENOUGH.code,
-        );
-      }
+      // if (advres.wallet == null || advres.wallet.balance < data.budget) {
+      //   throw new HttpException(
+      //     AuthError.BALANCE_NOTENOUGH.message,
+      //     AuthError.BALANCE_NOTENOUGH.code,
+      //   );
+      // }
       const res = await this.PlacementService.createPlacement(data);
       console.log('placement res', res);
       const mediarelation = data.medias.map((mediaId) => ({
@@ -142,12 +139,12 @@ export class PlacementController {
   ) {
     console.log('placement Putdata', data);
     const advres = await this.AdvService.findById(data.advertiserId);
-    if (advres.wallet == null || advres.wallet.balance < data.budget) {
-      throw new HttpException(
-        AuthError.BALANCE_NOTENOUGH.message,
-        AuthError.BALANCE_NOTENOUGH.code,
-      );
-    }
+    // if (advres.wallet == null || advres.wallet.balance < data.budget) {
+    //   throw new HttpException(
+    //     AuthError.BALANCE_NOTENOUGH.message,
+    //     AuthError.BALANCE_NOTENOUGH.code,
+    //   );
+    // }
 
     const endedAtDate = new Date(data.endedAt);
     const currentDate = new Date();
@@ -263,11 +260,11 @@ export class PlacementController {
     newPlacement.clickCount = Number(placement.clickCount);
     newPlacement.adMediaRelations = placement.adMediaRelations.map((val) => ({
       mediaId: Number(val.mediaId),
-      mediaName: val.admedia.name,
+      mediaName: val.adMedia.name,
     }));
     newPlacement.advertiser.id = Number(placement.advertiser.id);
     newPlacement.advertiser.user.id = Number(placement.advertiser.user.id);
-
+    newPlacement.name = placement.name;
     return newPlacement;
   }
 }

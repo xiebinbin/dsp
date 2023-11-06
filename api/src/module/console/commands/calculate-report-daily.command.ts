@@ -1,8 +1,4 @@
-import {
-  Command,
-  CommandRunner,
-  InquirerService,
-} from 'nest-commander';
+import { Command, CommandRunner, InquirerService } from 'nest-commander';
 import { ReportService } from '../services/report.service';
 
 // @QuestionSet({ name: 'execute-query-questions' })

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaClient, AdReportByDay } from '@prisma/client';
 import { AdReportByDayDto } from '../dto/adreportbyday.dto';
 import { RedisCacheService } from '../../cache/services/redis-cache.service';
+import { parseISO } from 'date-fns';
 
 @Injectable()
 export class AdReportByDayService {
@@ -82,7 +83,7 @@ export class AdReportByDayService {
       return this.prisma.adReportByDay.create({ data });
     }
   }
-  async findById(placementId: bigint, date: string): Promise<AdReportByDay> {
+  async findById(placementId: bigint, date: Date): Promise<AdReportByDay> {
     const adReportByDay = await this.prisma.adReportByDay.findFirst({
       where: {
         placementId,

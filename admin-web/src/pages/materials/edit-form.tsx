@@ -130,7 +130,7 @@ const EditForm = () => {
         advertiser: "",
         position: "",
         url: "",
-        jumpurl: "",
+        jumpUrl: "",
       });
       // setId(BigInt(0));
       setShow(true);
@@ -170,7 +170,7 @@ const EditForm = () => {
           advertiserId: data.advertiser.id,
           position: data.position,
           materialurl: data.url,
-          jumpurl: data.jumpurl,
+          jumpUrl: data.jumpUrl,
         });
       }, 500);
       setMaterialurl(data.url);
@@ -389,11 +389,11 @@ const EditForm = () => {
           ]}
         />
         <ProFormText
-          required
-          rules={[{ required: true, message: "请输入素材跳转地址" }]}
+          // required
+          // rules={[{ required: true, message: "请输入素材跳转地址" }]}
           initialValue={""}
           width="xl"
-          name="jumpurl"
+          name="jumpUrl"
           label="素材跳转地址"
           placeholder="请输入素材跳转地址"
         />

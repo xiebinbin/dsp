@@ -3,6 +3,8 @@ import { PrismaClient } from '@prisma/client';
 import { ReportDto } from '../dto/report.dto';
 import { reportParam } from '../dto/reportparam.dto';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
 @Injectable()
 export class ReportService {
@@ -20,9 +22,7 @@ export class ReportService {
       name: media.name,
     }));
   }
-  async placements(
-    materialId: bigint,
-  ) {
+  async placements(materialId: bigint) {
     const where: any = {};
     if (materialId !== null) {
       where.adMaterialId = materialId;
@@ -46,10 +46,12 @@ export class ReportService {
       endDate,
       adPlacementId,
     } = param;
+    const formattedStartDate = dayjs(startDate).startOf('day').format(); // 将日期转换为 ISO 8601 字符串
+    const formattedEndDate = dayjs(endDate).endOf('day').format();
     const where: any = {};
     where.date = {
-      gte: dayjs(startDate).toDate(), // 大于或等于 startDate
-      lte: dayjs(endDate).toDate(), // 小于或等于 endDate
+      gte: formattedStartDate, // 大于或等于 startDate
+      lte: formattedEndDate, // 小于或等于 endDate
     };
     if (agentId !== null) {
       where.agentId = agentId;
@@ -64,6 +66,7 @@ export class ReportService {
     if (adMaterialId !== null) {
       where.adMaterialId = adMaterialId;
     }
+    console.log('report where : ', where);
 
     const reports = await this.prisma.reportDaily.groupBy({
       by: ['date'],

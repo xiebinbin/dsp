@@ -68,6 +68,12 @@ const RechargeHist = (props: { role: "Root" | "Agent"; roleName: string }) => {
         return `¥ ${budgetYuan.toFixed(2)}`; // 显示为元并保留两位小数
       },
     },
+    {
+      title: "备注",
+      dataIndex: "remark",
+      valueType: "text",
+      hideInSearch: true,
+    },
   ];
   const location = useLocation();
   useEffect(() => {

@@ -120,6 +120,15 @@ const MediaIndexPage = (props: MediaPageProps) => {
       hideInSearch: true,
     },
     {
+      title: "url",
+      key: "url",
+      dataIndex: "url",
+      ellipsis: true,
+      valueType: "text",
+      width: 100,
+      hideInSearch: true,
+    },
+    {
       title: "状态",
       key: "enabled",
       dataIndex: "enabled",

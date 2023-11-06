@@ -20,7 +20,7 @@ export interface MaterialEditDto {
   url: string;
   enabled: boolean;
   advertiser: bigint;
-  jumpurl: string;
+  jumpUrl: string;
 }
 
 const remove = (id: bigint) => {

@@ -9,4 +9,5 @@ export class RechargeDto {
   currentBalance: number;
   @IsNotEmpty()
   amount: number;
+  remark: string;
 }

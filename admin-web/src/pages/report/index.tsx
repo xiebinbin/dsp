@@ -1,14 +1,20 @@
 import { useCallback, useEffect, useRef } from "react";
 import {
+  ActionType,
   PageContainer,
   ProCard,
+  ProColumns,
   ProForm,
   ProFormDateTimePicker,
   ProFormInstance,
   ProFormSelect,
+  ProTable,
 } from "@ant-design/pro-components";
 import { Line } from "@antv/g2plot";
-import ReportApi, { ChartDataRequest } from "@/api/report.ts";
+import ReportApi, {
+  ChartDataRequest,
+  ChartDataResponse,
+} from "@/api/report.ts";
 import { useMount, useSafeState } from "ahooks";
 import MaterialApi from "@/api/material.ts";
 import AgentApi from "@/api/agent.ts";
@@ -17,6 +23,9 @@ import { useRecoilState } from "recoil";
 import { AuthInfo } from "@/stores/auth-info";
 import { useNavigate } from "react-router-dom";
 import App from "@/App.tsx";
+import { CloseCircleOutlined } from "@ant-design/icons";
+import { Tag } from "antd";
+import dayjs from "dayjs";
 
 export interface ReportPageProps {
   role: "Root" | "Agent" | "Advertiser";
@@ -26,6 +35,7 @@ export interface ReportPageProps {
 const ReportIndexPage = (props: ReportPageProps) => {
   const { role, roleName } = props;
   const [authUser] = useRecoilState(AuthInfo);
+  const actionRef = useRef<ActionType>();
 
   const plotRef = useRef<Line | null>(null); // 用于引用 G2Plot 的实例
   const formRef = useRef<ProFormInstance>();
@@ -43,6 +53,9 @@ const ReportIndexPage = (props: ReportPageProps) => {
   const [advertisersList, setadvertisersList] = useSafeState<
     { id: number; name: string; agentId: number }[]
   >([]);
+  const reload = useCallback(() => {
+    actionRef.current?.reload();
+  }, []);
   const handleAdvertiserChange = (e: string | null) => {
     setSelectedAgent;
     console.log("hand adverchange e,", e);
@@ -50,6 +63,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
       loadMaterials(e);
     }
   };
+  const [detailData, setDetailData] = useSafeState<ChartDataResponse[]>([]); // 用于保存明细数据
 
   const handleMaterialChange = (e: string | null) => {
     console.log("handleMaterialChange e,", e);
@@ -127,7 +141,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
           q: q ?? "",
           extra: {},
         });
-        console.log("placement", res)
+        console.log("placement", res);
 
         setPlacements(
           res.data.map((item) => {
@@ -144,130 +158,145 @@ const ReportIndexPage = (props: ReportPageProps) => {
     [setPlacements]
   );
 
-  const loadInfo = useCallback(async (data: ChartDataRequest) => {
-    try {
-      const chartContainer = document.getElementById("chart-container");
-      // 检查元素是否存在
-      if (chartContainer) {
-        // 清空元素内容
-        chartContainer.innerHTML = "";
-      }
-
-      const response = await ReportApi.getChartData(data);
-      if (response && response.length > 0) {
-        const transformedData: {
-          date: string;
-          value: number;
-          category: string;
-        }[] = [];
-
-        for (const item of response) {
-          transformedData.push(
-            {
-              date: item.date,
-              value: item.displayCount,
-              category: "展现数",
-            },
-            {
-              date: item.date,
-              value: item.clickCount,
-              category: "点击数",
-            },
-            {
-              date: item.date,
-              value: (Number(item.usedBudget / 100)),
-              category: "消耗金额",
-            }
-          );
+  const loadInfo = useCallback(
+    async (data: ChartDataRequest) => {
+      try {
+        const chartContainer = document.getElementById("chart-container");
+        // 检查元素是否存在
+        if (chartContainer) {
+          // 清空元素内容
+          chartContainer.innerHTML = "";
         }
-        const line = new Line("chart-container", {
-          data: transformedData,
-          xField: "date",
-          yField: "value",
-          seriesField: "category",
-          xAxis: {
-            nice: true,
-            type: "time",
-            // 文本标签
-            label: {
-              autoRotate: true,
-              rotate: Math.PI / 6,
-              offset: 15,
-              style: {
-                fontSize: 10,
+
+        const response = await ReportApi.getChartData(data);
+
+        if (response && response.length > 0) {
+          setDetailData(response); // 设置明细表数据
+
+          const transformedData: {
+            date: string;
+            value: number;
+            category: string;
+          }[] = [];
+
+          for (const item of response) {
+            transformedData.push(
+              {
+                date: item.date,
+                value: item.displayCount,
+                category: "展现量",
+              },
+              {
+                date: item.date,
+                value: item.clickCount,
+                category: "点击数",
+              },
+              {
+                date: item.date,
+                value: Number(item.usedBudget / 100),
+                category: "消耗金额",
+              }
+            );
+          }
+          const line = new Line("chart-container", {
+            data: transformedData,
+            xField: "date",
+            yField: "value",
+            seriesField: "category",
+            xAxis: {
+              nice: true,
+              type: "time",
+              // 文本标签
+              label: {
+                autoRotate: true,
+                rotate: Math.PI / 6,
+                offset: 15,
+                style: {
+                  fontSize: 10,
+                },
+                formatter: (text) => {
+                  const formattedDate = dayjs(text).format("YYYY-MM-DD");
+                  return formattedDate;
+                },
               },
             },
-          },
-          yAxis: {
-            nice: true,
+            yAxis: {
+              nice: true,
+              label: {
+                offset: 25,
+                // formatter: (v) => Number(v).toFixed(2),
+
+                // 数值格式化为千分位
+
+                formatter: (v) =>
+                  `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+              },
+            },
+
+            // label
             label: {
-              offset: 25,
-              // formatter: (v) => Number(v).toFixed(2),
-
-              // 数值格式化为千分位
-           
-              formatter: (v) =>
-                `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+              // layout: [{ type: "hide-overlap" }], // 隐藏重叠label
+              style: { color: "#d62728", textAlign: "center" },
+              formatter: (item) => {
+                if (item.category === "消耗金额") {
+                  console.log(
+                    "消耗金额",
+                    (Number(item.value) / 100).toFixed(2)
+                  );
+                  return Number(item.value).toFixed(2);
+                } else {
+                  return item.value.toString();
+                }
+              },
             },
-          },
-
-          // label
-          label: {
-            // layout: [{ type: "hide-overlap" }], // 隐藏重叠label
-            style: { color: "#d62728", textAlign: "center" },
-            formatter: (item) => {
-              if (item.category === "消耗金额") {
-                console.log('消耗金额',(Number(item.value) / 100).toFixed(2))
-                return (Number(item.value)).toFixed(2);
-              } else {
-                return item.value.toString();
-              }
+            padding: "auto",
+            point: {
+              size: 5,
+              style: {
+                lineWidth: 1,
+                fillOpacity: 1,
+              },
+              shape: (item) => {
+                if (item.category === "Cement production") {
+                  return "circle";
+                }
+                return "diamond";
+              },
             },
-          },
-          padding: "auto",
-          point: {
-            size: 5,
-            style: {
-              lineWidth: 1,
-              fillOpacity: 1,
+            legend: {
+              position: "top",
             },
-            shape: (item) => {
-              if (item.category === "Cement production") {
-                return "circle";
-              }
-              return "diamond";
+            animation: {
+              appear: {
+                duration: 3500,
+              },
             },
-          },
-          legend: {
-            position: "top",
-          },
-          animation: {
-            appear: {
-              duration: 3500,
-            },
-          },
-        });
-
-        line.render();
-
-        plotRef.current = line;
-
-        // // 更新图表数据
-        if (plotRef.current) {
-          plotRef.current.update({
-            data: transformedData,
           });
+
+          line.render();
+
+          plotRef.current = line;
+
+          // // 更新图表数据
+          if (plotRef.current) {
+            plotRef.current.update({
+              data: transformedData,
+            });
+          }
+          return transformedData; // 表示成功
+        } else {
+          setDetailData([]);
+
+          return false; // 表示失败
         }
-        return transformedData; // 表示成功
-      } else {
+        // 保存 G2Plot 实例的引用
+      } catch (error) {
+        console.error("获取数据失败：", error);
         return false; // 表示失败
       }
-      // 保存 G2Plot 实例的引用
-    } catch (error) {
-      console.error("获取数据失败：", error);
-      return false; // 表示失败
-    }
-  }, []);
+    },
+    [setDetailData]
+  );
   console.log("roleName", roleName);
   useEffect(() => {
     console.log("useEffect");
@@ -284,10 +313,12 @@ const ReportIndexPage = (props: ReportPageProps) => {
         adMaterialId: "",
         adPlacmentId: "",
       });
+      reload();
     } else {
       setAdvertisers([]);
     }
   }, [selectedAgent]);
+
   useMount(() => {
     console.log("useMount");
     // 发起 POST 请求来获取数据
@@ -326,7 +357,68 @@ const ReportIndexPage = (props: ReportPageProps) => {
         endDate: formattedcurrentDate,
       });
     }, 500);
+    reload();
   });
+  const rootcolumns: ProColumns<ChartDataResponse>[] = [
+    {
+      title: "日期",
+      key: "date",
+      dataIndex: "date",
+      ellipsis: true,
+      valueType: "date",
+      width: 200,
+      hideInSearch: true,
+    },
+    {
+      title: "展现量",
+      key: "displayCount",
+      dataIndex: "displayCount",
+      ellipsis: true,
+      valueType: "select",
+      width: 200,
+      hideInSearch: true,
+    },
+    {
+      title: "点击数",
+      key: "clickCount",
+      dataIndex: "clickCount",
+      ellipsis: true,
+      valueType: "select",
+      width: 200,
+      hideInSearch: true,
+    },
+    {
+      title: "点击率",
+      key: "clickrate",
+      dataIndex: "clickrate",
+      ellipsis: true,
+      valueType: "text",
+      width: 200,
+
+      render: (_, record) => {
+        // 自定义渲染函数，将 AdMaterial 中的 companyName 放到 agentname 处
+        const clickRate = (record.clickCount / record.displayCount) * 100;
+        return clickRate.toFixed(2) + "%";
+      },
+      hideInSearch: true,
+    },
+
+    {
+      title: "消耗金额",
+      key: "usedBudget",
+      width: 100,
+      dataIndex: "usedBudget",
+      valueType: "money",
+      hideInSearch: true,
+      render: (_, entity) => {
+        // 假设 budget 字段以分为单位
+        const text = entity.usedBudget; // 获取实体对象中的 budget 属性
+
+        const usedBudgetYuan = Number(text) / 100; // 将分转换为元
+        return `¥ ${usedBudgetYuan.toFixed(2)}`; // 显示为元并保留两位小数
+      },
+    },
+  ];
   const navigate = useNavigate();
 
   const renderContent = () => {
@@ -339,7 +431,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
         <div>
           <ProCard>
             <ProForm
-              //   layout="horizontal"
+              // layout="horizontal"
               formRef={formRef}
               onFinish={async (values) => {
                 try {
@@ -381,9 +473,10 @@ const ReportIndexPage = (props: ReportPageProps) => {
                     format: "YYYY-MM-DD",
                   }}
                 />
+              </ProForm.Group>
+              <ProForm.Group>
                 <ProFormSelect
                   initialValue=""
-                  //   width="xl"
                   name="agent"
                   label="选择代理商"
                   placeholder="选择代理商"
@@ -393,11 +486,14 @@ const ReportIndexPage = (props: ReportPageProps) => {
                   }))}
                   fieldProps={{
                     onChange: setSelectedAgent,
+                    style: {
+                      width: "200px", // 设置代理商选择框的宽度
+                    },
                   }}
                 />
+
                 <ProFormSelect
                   initialValue=""
-                  //   width="xl"
                   name="advertiserId"
                   label="选择广告主"
                   placeholder="选择广告主"
@@ -409,11 +505,13 @@ const ReportIndexPage = (props: ReportPageProps) => {
                   )}
                   fieldProps={{
                     onChange: handleAdvertiserChange, // 直接传递选中的值
+                    style: {
+                      width: "200px", // 设置代理商选择框的宽度
+                    },
                   }}
                 />
                 <ProFormSelect
                   initialValue={""}
-                  //   width="xl"
                   name="adMaterialId"
                   label="选择广告创意"
                   placeholder="选择广告创意"
@@ -423,11 +521,13 @@ const ReportIndexPage = (props: ReportPageProps) => {
                   }))}
                   fieldProps={{
                     onChange: handleMaterialChange, // 直接传递选中的值
+                    style: {
+                      width: "200px", // 设置代理商选择框的宽度
+                    },
                   }}
                 />
                 <ProFormSelect
                   initialValue={""}
-                  //   width="xl"
                   name="adPlacementId"
                   label="选择广告计划"
                   placeholder="选择广告计划"
@@ -435,10 +535,33 @@ const ReportIndexPage = (props: ReportPageProps) => {
                     label: placement.name,
                     value: placement.id,
                   }))}
+                  fieldProps={{
+                    style: {
+                      width: "200px", // 设置代理商选择框的宽度
+                    },
+                  }}
                 />
               </ProForm.Group>
             </ProForm>
             <div id="chart-container"></div>
+          </ProCard>
+          <ProCard>
+            {detailData.length > 0 ? (
+              <ProTable<ChartDataResponse>
+                columns={rootcolumns}
+                dataSource={detailData}
+                search={false}
+                scroll={{ x: 1000 }}
+                actionRef={actionRef}
+                pagination={false}
+              />
+            ) : (
+              <div>
+                <Tag icon={<CloseCircleOutlined />} color="error">
+                  暂无数据
+                </Tag>
+              </div>
+            )}
           </ProCard>
         </div>
       );

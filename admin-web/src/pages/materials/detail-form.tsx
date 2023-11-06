@@ -60,7 +60,7 @@ const MaterialDetail = (props: {
           mediaType: data.mediaType,
           position: data.position,
           url: data.url,
-          jumpurl: data.jumpurl,
+          jumpUrl: data.jumpUrl,
         });
       }, 500);
       setMaterialurl(data.url);
@@ -147,12 +147,12 @@ const MaterialDetail = (props: {
             options={positionOptions}
           />
           <ProFormText
-            required
+            // required
             disabled
             rules={[{ required: true, message: "请输入素材跳转地址" }]}
             initialValue={""}
             width="xl"
-            name="jumpurl"
+            name="jumpUrl"
             label="素材跳转地址"
             placeholder="请输入素材跳转地址"
           />

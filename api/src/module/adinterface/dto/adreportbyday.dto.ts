@@ -2,7 +2,7 @@ import { IsNotEmpty } from 'class-validator';
 
 export class AdReportByDayDto {
   @IsNotEmpty()
-  date: string;
+  date: Date;
   @IsNotEmpty()
   placementId: number;
   @IsNotEmpty()

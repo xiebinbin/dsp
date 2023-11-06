@@ -133,6 +133,7 @@ export class MediaController {
       enabled: media.enabled,
       // 类型 1 网站 2pc 软件
       type: media.type,
+      url: media.url,
       createdAt: media.createdAt,
       updatedAt: media.updatedAt,
     };

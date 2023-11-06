@@ -212,11 +212,11 @@ const EditForm = () => {
           name: data.name,
           enabled: data.enabled,
           adMaterialId: data.adMaterialId,
-          budget: data.budget,
+          budget: Number(data.budget)/100,
           mediaType: data.mediaType,
           startedAt: data.startedAt,
           endedAt: data.endedAt,
-          usedBudget: data.usedBudget,
+          usedBudget: Number(data.usedBudget) / 100,
           displayCount: data.displayCount,
           clickCount: data.clickCount,
           agent: data.advertiser.user.id,
@@ -286,6 +286,7 @@ const EditForm = () => {
         if (formRef.current) {
           const data = await formRef.current.validateFields();
           // data.avatar = avatar;
+          data.budget = data.budget * 100; //转换成分
           console.log("validateFields data", data);
 
           data.medias = data.medias.map(Number); // 将媒体 id 转换为数字

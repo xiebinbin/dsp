@@ -197,12 +197,12 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
       <ProForm.Group>
         <ProFormText
           required
-          rules={[{ required: true, message: "请输入纳税人识别号" }]}
+          rules={[{ required: true, message: "请输入域名" }]}
           initialValue={""}
           width="xl"
           name="taxNumber"
-          label="纳税人识别号"
-          placeholder="请输入纳税人识别号"
+          label="域名"
+          placeholder="请输入域名"
         />
       </ProForm.Group>
       <ProForm.Group>

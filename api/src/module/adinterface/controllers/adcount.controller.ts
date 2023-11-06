@@ -153,7 +153,7 @@ export class AdCountController {
       console.log('ReportByDaycacheKey', ReportByDaycacheKey);
 
       const ReportByDay: AdReportByDayDto = {
-        date: formattedDate,
+        date: new Date(formattedDate),
         placementId: Number(adConsumeData.placementId),
         usedBudget: prePrice,
         displayCount: count,
@@ -265,8 +265,7 @@ export class AdCountController {
       console.log('ReportByDaycacheKey', ReportByDaycacheKey);
 
       const ReportByDay: AdReportByDayDto = {
-        date: formattedDate,
-
+        date: new Date(formattedDate),
         placementId: Number(adUsedCountdata.placementId),
         usedBudget: 0,
         displayCount: 0,

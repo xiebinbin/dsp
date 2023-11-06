@@ -53,8 +53,10 @@ const advcolumns: ProColumns<Advertiser>[] = [
     ellipsis: true,
     sorter: true,
     valueType: "text",
-    width: 100,
-    hideInSearch: true,
+    width: 150,
+    formItemProps: {
+      name: "comp",
+    },
   },
 
   {
@@ -63,25 +65,15 @@ const advcolumns: ProColumns<Advertiser>[] = [
     dataIndex: "username",
     ellipsis: true,
     valueType: "text",
-    width: 100,
+    width: 80,
     formItemProps: {
       name: "q",
     },
   },
-  // {
-  //     title: '角色',
-  //     key: 'role',
-  //     dataIndex: 'role',
-  //     ellipsis: true,
-  //     valueType: 'text',
-  //     width: 100,
-  //     hideInSearch: true,
-
-  // },
   {
     title: "余额",
     key: "balance",
-    width: 100,
+    width: 80,
     dataIndex: "balance",
     valueType: "money",
 
@@ -97,7 +89,7 @@ const advcolumns: ProColumns<Advertiser>[] = [
   {
     title: "更新时间",
     key: "updatedAt",
-    width: 100,
+    width: 80,
     dataIndex: "updatedAt",
     valueType: "dateTime",
     sorter: true,
@@ -109,7 +101,7 @@ const advcolumns: ProColumns<Advertiser>[] = [
     dataIndex: "enabled",
     ellipsis: true,
     valueType: "text",
-    width: 100,
+    width: 50,
     hideInSearch: true,
     valueEnum: maps,
   },
@@ -186,8 +178,10 @@ const agentcolumns: ProColumns<Advertiser>[] = [
     ellipsis: true,
     sorter: true,
     valueType: "text",
-    width: 100,
-    hideInSearch: true,
+    width: 150,
+    formItemProps: {
+      name: "comp",
+    },
   },
 
   {
@@ -196,7 +190,7 @@ const agentcolumns: ProColumns<Advertiser>[] = [
     dataIndex: "username",
     ellipsis: true,
     valueType: "text",
-    width: 100,
+    width: 80,
     formItemProps: {
       name: "q",
     },
@@ -204,7 +198,7 @@ const agentcolumns: ProColumns<Advertiser>[] = [
   {
     title: "更新时间",
     key: "updatedAt",
-    width: 100,
+    width: 80,
     dataIndex: "updatedAt",
     valueType: "dateTime",
     sorter: true,
@@ -216,7 +210,7 @@ const agentcolumns: ProColumns<Advertiser>[] = [
     dataIndex: "enabled",
     ellipsis: true,
     valueType: "text",
-    width: 100,
+    width: 50,
     hideInSearch: true,
     valueEnum: maps,
   },
@@ -313,7 +307,9 @@ const AdvertiserIndexPage = (props: AdvIndexPageProps) => {
               // if (params?.address) {
               //     extra.address = params.address;
               // }
-
+              if (params?.comp) {
+                extra.comp = params.comp;
+              }
               const result = await AdvAPI.getList({
                 page: params.current ?? 1,
                 limit: params.pageSize ?? 10,
