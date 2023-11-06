@@ -75,11 +75,10 @@ export class PlacementController {
         userId: '',
         materialname: extra.materialname || '',
       });
-      const responseData = {
+      return {
         data: result,
         total: result.total,
       };
-      return response.send(responseData);
     } catch (e) {
       console.log(e);
       throw new HttpException(e.message, e.status);
