@@ -2,7 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { AuthError } from 'src/utils/err_types';
 import { PrismaClient, AdPlacement } from '@prisma/client';
 import { PlacementDto } from '../dto/placement.dto';
-
+import {utcToZonedTime} from 'date-fns-tz';
 @Injectable()
 export class PlacementService {
   constructor(private prisma: PrismaClient) {}
@@ -157,8 +157,8 @@ export class PlacementService {
           adMaterialId,
           budget,
           mediaType,
-          startedAt,
-          endedAt,
+          startedAt: utcToZonedTime(startedAt, 'Asia/Shanghai'),
+          endedAt: utcToZonedTime(endedAt, 'Asia/Shanghai'),
           usedBudget,
           displayCount,
           clickCount,
@@ -179,8 +179,8 @@ export class PlacementService {
           adMaterialId: PlacementDto.adMaterialId,
           budget: PlacementDto.budget,
           mediaType: PlacementDto.mediaType,
-          startedAt: PlacementDto.startedAt,
-          endedAt: PlacementDto.endedAt,
+          startedAt: utcToZonedTime(PlacementDto.startedAt, 'Asia/Shanghai'),
+          endedAt: utcToZonedTime(PlacementDto.endedAt, 'Asia/Shanghai'),
           usedBudget: PlacementDto.usedBudget,
           displayCount: PlacementDto.displayCount,
           clickCount: PlacementDto.clickCount,
