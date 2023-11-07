@@ -1,41 +1,42 @@
 import { HttpException, Injectable } from '@nestjs/common';
-
 import { AuthError } from 'src/utils/err_types';
-import { PrismaClient, AdMedia } from '@prisma/client';
-import { mediaDto } from '../dto/media.dto';
+import { PrismaClient, AdMedia, AdPosition } from '@prisma/client';
+import { PositionDto } from '../dto/position.dto';
 
 @Injectable()
-export class MediaService {
+export class PositionService {
   constructor(private prisma: PrismaClient) {}
-  async findByUsername(name: string) {
-    return await this.prisma.adMedia.findFirst({
+  async findByUsername(name: string, type: number) {
+    return await this.prisma.adPosition.findFirst({
       where: {
         name,
+        type,
       },
     });
   }
-  async findMedias() {
-    const medias = await this.prisma.adMedia.findMany({
+  async findPositions() {
+    const positions = await this.prisma.adPosition.findMany({
       where: { enabled: true }, // 获取可用的
       select: {
         id: true,
-        name: true, // 假设代理商有一个用户名字段，你可以根据实际情况选择需要的字段
+        name: true,
+        type: true,
       },
     });
-    return medias.map((agent) => ({
-      id: agent.id,
-      name: agent.name, // 这里假设代理商的用户名字段为 username
+    return positions.map((position) => ({
+      id: position.id,
+      name: position.name,
+      type: position.type,
     }));
   }
   async findById(id: bigint) {
-    const mediainfo = await this.prisma.adMedia.findFirst({
+    const positioninfo = await this.prisma.adPosition.findFirst({
       select: {
         id: true,
         name: true,
         enabled: true,
         // 类型 1 网站 2pc 软件
         type: true,
-        url: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -43,8 +44,8 @@ export class MediaService {
         id,
       },
     });
-    console.log('mediainfo', mediainfo);
-    return mediainfo;
+    console.log('positioninfo', positioninfo);
+    return positioninfo;
   }
   async getList(queryParams: any) {
     const { page, limit, name, orderBy, role, type } = queryParams;
@@ -53,11 +54,11 @@ export class MediaService {
     if (name) {
       where.name = name;
     }
-    const total = await this.prisma.adMedia.count({
+    const total = await this.prisma.adPosition.count({
       where,
     });
 
-    const adMedia = await this.prisma.adMedia.findMany({
+    const position = await this.prisma.adPosition.findMany({
       where,
       //   select: selectFields,
       orderBy: orderBy,
@@ -65,12 +66,12 @@ export class MediaService {
       take: limit,
     });
     return {
-      data: adMedia,
+      data: position,
       total,
     };
   }
 
-  async createMaterial(mediaDto: mediaDto): Promise<AdMedia> {
+  async createPosition(positionDto: PositionDto): Promise<AdPosition> {
     try {
       const {
         id,
@@ -78,34 +79,31 @@ export class MediaService {
         enabled,
         // 类型 1 网站 2pc 软件
         type,
-        url,
-      } = mediaDto;
-      console.log('createMaterial mediaDto', mediaDto);
-      return await this.prisma.adMedia.create({
+      } = positionDto;
+      console.log('create positionDto', positionDto);
+      return await this.prisma.adPosition.create({
         data: {
           id,
           name,
           enabled,
           // 类型 1 网站 2pc 软件
           type,
-          url,
         },
       });
     } catch (error) {
       throw new HttpException(error.message, error.code);
     }
   }
-  async updateMaterial(id: bigint, mediaDto: mediaDto) {
+  async updatePosition(id: bigint, positionDto: PositionDto) {
     try {
-      const res = await this.prisma.adMedia.update({
+      const res = await this.prisma.adPosition.update({
         where: { id },
         data: {
-          id: mediaDto.id,
-          name: mediaDto.name,
-          enabled: mediaDto.enabled,
+          id: positionDto.id,
+          name: positionDto.name,
+          enabled: positionDto.enabled,
           // 类型 1 网站 2pc 软件
-          type: mediaDto.type,
-          url: mediaDto.url,
+          type: positionDto.type,
         },
       });
       console.log('res', res);
@@ -114,16 +112,16 @@ export class MediaService {
       throw new HttpException(e.message, e.status);
     }
   }
-  async removeUser(id: bigint): Promise<boolean> {
+  async removePosition(id: bigint): Promise<boolean> {
     // 查询要删除的用户
-    const media = await this.prisma.adMedia.findUnique({ where: { id } });
+    const media = await this.prisma.adPosition.findUnique({ where: { id } });
 
     if (!media) {
-      throw AuthError.MEDIA_NOT_FOUND;
+      throw AuthError.POSITION_NOT_FOUND;
     }
 
     // 执行删除操作
-    await this.prisma.adMedia.delete({ where: { id } });
+    await this.prisma.adPosition.delete({ where: { id } });
 
     return true;
   }

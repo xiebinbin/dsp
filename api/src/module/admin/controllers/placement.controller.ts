@@ -21,7 +21,9 @@ import { AuthError } from 'src/utils/err_types';
 import { Request } from 'express';
 import { AdvService } from '../services/adv.service';
 import { GuardMiddlewareRoot } from '../middlewares/guard.middleware';
-
+import dayjs from 'dayjs';
+import moment from 'moment';
+import 'moment-timezone';
 @Controller('/api/admin/placement/')
 export class PlacementController {
   constructor(
@@ -154,6 +156,10 @@ export class PlacementController {
     } else {
       data.enabled = 2;
     }
+
+    data.startedAt = dayjs(data.startedAt).format();
+    data.endedAt = dayjs(data.endedAt).format();
+
     const result = this.PlacementService.updatePlacement(id, data);
     const mediarelation = data.medias.map((mediaId) => ({
       mediaId: mediaId,

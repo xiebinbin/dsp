@@ -20,6 +20,8 @@ import { CloudUploadOutlined } from "@ant-design/icons";
 import { getImgUrl, removeImgUrl } from "@/utils/file";
 import { RcFile } from "antd/es/upload";
 import FileApi from "@/api/file.ts";
+import PositionApi from "@/api/position.ts";
+import { AdpositionOpt } from "@/shims";
 // eslint-disable-next-line react-refresh/only-export-components
 export const $emit = new Emittery();
 
@@ -34,11 +36,15 @@ const EditForm = () => {
   const [materialurl, setMaterialurl] = useSafeState(""); //http://static-edu-test.leleshuju.com/
   const [fileList, setFileList] = useSafeState<UploadFile[]>([]);
   const [mode, setMode] = useSafeState("add");
-  const [positionOptions, setPositionOptions] = useState([
-    { label: "列表页", value: 1 },
-    { label: "详情页", value: 2 },
-    { label: "侧边栏", value: 3 },
-  ]);
+  const [positionOptionsPC, setPositionOptionsPC] = useSafeState<
+    { label: string; value: number }[]
+  >([]);
+  const [positionOptionsSoft, setPositionOptionsSoft] = useSafeState<
+    { label: string; value: number }[]
+  >([]);
+  const [positionOptions, setPositionOptions] = useSafeState<
+    { label: string; value: number }[]
+  >([]);
   const [agents, setAgents] = useSafeState<{ name: string; id: number }[]>([]);
   const [advertisers, setAdvertisers] = useState<
     { id: number; name: string; agentId: number }[]
@@ -51,25 +57,16 @@ const EditForm = () => {
 
   const handleMediaTypeChange = (e: RadioChangeEvent) => {
     if (e.target.value === 2) {
-      setPositionOptions([
-        { label: "列表页", value: 1 },
-        { label: "详情页", value: 2 },
-        { label: "侧边栏", value: 3 },
-        { label: "全屏弹窗", value: 4 },
-      ]);
+      setPositionOptions(positionOptionsSoft);
     } else {
-      setPositionOptions([
-        { label: "列表页", value: 1 },
-        { label: "详情页", value: 2 },
-        { label: "侧边栏", value: 3 },
-      ]);
+      setPositionOptions(positionOptionsPC);
     }
   };
 
   useEffect(() => {
     loadAgentsRelation();
     loadAdvertisers("");
-
+    loadPositionsOpt();
     if (selectedAgent) {
       const filteredAdvertisers = advertisersList.filter(
         (advertiser) => advertiser.agentId === selectedAgent
@@ -82,7 +79,25 @@ const EditForm = () => {
       setAdvertisers([]);
     }
   }, [selectedAgent]);
-
+  const loadPositionsOpt = useCallback(async () => {
+    const positionOpt: AdpositionOpt[] = await PositionApi.getPositionsList();
+    setPositionOptionsPC(
+      positionOpt
+        .filter((opt) => opt.type === 1)
+        .map((opt) => ({
+          label: opt.name,
+          value: opt.id,
+        }))
+    );
+    setPositionOptionsSoft(
+      positionOpt
+        .filter((opt) => opt.type === 2)
+        .map((opt) => ({
+          label: opt.name,
+          value: opt.id,
+        }))
+    );
+  }, [setPositionOptionsPC, setPositionOptionsSoft]);
   const loadAgentsRelation = useCallback(async () => {
     const agentList = await AgentApi.getAgentsList();
 
@@ -162,13 +177,13 @@ const EditForm = () => {
       setTimeout(() => {
         formRef.current?.setFieldsValue({
           name: data.name,
-          mediaType: data.mediaType,
+          mediaType: data.adPosition.type,
           content: data.content,
           contentType: data.contentType,
           enabled: data.enabled,
           agent: data.advertiser.user.id,
           advertiserId: data.advertiser.id,
-          position: data.position,
+          position: data.adPosition.id,
           materialurl: data.url,
           jumpUrl: data.jumpUrl,
         });
@@ -185,22 +200,13 @@ const EditForm = () => {
         },
       ]);
 
-      if (data.mediaType == 2) {
-        setPositionOptions([
-          { label: "列表页", value: 1 },
-          { label: "详情页", value: 2 },
-          { label: "侧边栏", value: 3 },
-          { label: "全屏弹窗", value: 4 },
-        ]);
+      if (data.adPosition.type == 2) {
+        setPositionOptions(positionOptionsSoft);
       } else {
-        setPositionOptions([
-          { label: "列表页", value: 1 },
-          { label: "详情页", value: 2 },
-          { label: "侧边栏", value: 3 },
-        ]);
+        setPositionOptions(positionOptionsPC);
       }
     },
-    [setAgents, setAdvertisers]
+    [setAgents, setAdvertisers, positionOptionsSoft, positionOptionsPC]
   );
   const customRequest = useCallback(
     async (file: RcFile) => {
@@ -273,9 +279,9 @@ const EditForm = () => {
       onFinish={async () => {
         if (formRef.current) {
           const data = await formRef.current.validateFields();
+          console.log('material data',data)
           // data.avatar = avatar;
           data.url = removeImgUrl(materialurl);
-
           // console.log("validateFields data", data);
           if (mode === "add") {
             // data.role = role;

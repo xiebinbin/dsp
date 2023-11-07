@@ -211,7 +211,7 @@ const MaterialsIndexPage = (props: MaterialsPageProps) => {
     {
       title: "更新时间",
       key: "updatedAt",
-      width: 200,
+      width: 80,
       dataIndex: "updatedAt",
       valueType: "dateTime",
       sorter: true,
@@ -220,7 +220,7 @@ const MaterialsIndexPage = (props: MaterialsPageProps) => {
     {
       title: "操作",
       valueType: "option",
-      width: 200,
+      width: 100,
       key: "option",
       fixed: "right",
       render: (_text, record, _, action) => [

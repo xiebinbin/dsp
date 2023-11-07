@@ -200,7 +200,7 @@ import type {
       {
         title: "开始时间",
         key: "startedAt",
-        width: 200,
+        width: 80,
         dataIndex: "startedAt",
         valueType: "dateTime",
         sorter: true,
@@ -209,7 +209,7 @@ import type {
       {
         title: "结束时间",
         key: "endedAt",
-        width: 200,
+        width: 80,
         dataIndex: "endedAt",
         valueType: "dateTime",
         sorter: true,
@@ -222,7 +222,7 @@ import type {
         dataIndex: "enabled",
         ellipsis: true,
         valueType: "text",
-        width: 100,
+        width: 50,
         hideInSearch: true,
         valueEnum: maps,
       },

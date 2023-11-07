@@ -210,6 +210,11 @@ export class MaterialController {
       contentType: material.contentType,
       enabled: material.enabled,
       position: material.position,
+      adPosition: {
+        id: Number(material.adPosition.id),
+        name: material.adPosition.name,
+        type: Number(material.adPosition.type),
+      },
       content: material.content,
       url: this.defaultUrl + material.url,
       advertiserId: Number(material.advertiserId),
@@ -237,21 +242,26 @@ export class MaterialController {
       mediaType: material.mediaType,
       contentType: material.contentType,
       enabled: null,
-      position: material.position,
+      adPosition: {
+        id: Number(material.adPosition.id),
+        name: material.adPosition.name,
+        type: Number(material.adPosition.type),
+      },
       content: material.content,
       url: this.defaultUrl + material.url,
       advertiserId: null,
       jumpUrl: material.jumpUrl,
       advertiser: {
-        id: Number(material.advertiser.id), // 将 bigint 转换为 number
+        id: Number(material.advertiser.id),
         companyName: material.advertiser.companyName,
         domainName: material.advertiser.domainName,
         user: {
-          id: null, // 将 bigint 转换为 number
+          id: null,
 
           nickname: null,
         }, // 使用对象字面量设置 user 属性的值
       },
+      position: Number(material.adPosition.id),
     };
 
     return materialDto;

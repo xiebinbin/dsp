@@ -1,6 +1,7 @@
 import {
   ModalForm,
   ProForm,
+  ProFormDatePicker,
   ProFormDigit,
   ProFormInstance,
   ProFormText,
@@ -181,6 +182,14 @@ const RechargeForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
           label="备注"
           placeholder=""
           
+          width="md"
+        />{" "}
+      </ProForm.Group>
+      <ProForm.Group>
+        <ProFormDatePicker
+          name="billdate" // 添加公司名称字段
+          label="对账日期"
+          placeholder=""
           width="md"
         />{" "}
       </ProForm.Group>

@@ -16,6 +16,8 @@ import { AdvIndexPageProps } from "@/pages/advertiser";
 import { MaterialsPageProps } from "@/pages/materials";
 import { PlacementsPageProps } from "./pages/placements";
 import { MediaPageProps } from "@/pages/media/index";
+import { PositionPageProps } from "@/pages/position/index";
+
 import { ReportPageProps } from "@/pages/report";
 import { DashbordPageProps } from "@/pages/dashboard";
 dayjs.extend(utc);
@@ -32,14 +34,12 @@ const UserIndexPage: React.LazyExoticComponent<React.FC<UserIndexPageProps>> =
 // const FeaturedCardIndexPage: React.LazyExoticComponent<React.FC> = lazy(
 //   () => import("@/pages/featured-card")
 // );
- 
+
 const LoginPage: React.LazyExoticComponent<React.FC> = lazy(
   () => import("@/pages/login")
 );
-const DashboardPage: React.LazyExoticComponent<React.FC<DashbordPageProps>> = lazy(
-  () => import("@/pages/dashboard")
-);
- 
+const DashboardPage: React.LazyExoticComponent<React.FC<DashbordPageProps>> =
+  lazy(() => import("@/pages/dashboard"));
 
 const AdvertiserIndexPage: React.LazyExoticComponent<
   React.FC<AdvIndexPageProps>
@@ -65,21 +65,22 @@ const PlacementsAdvertiserIndexPage: React.LazyExoticComponent<
 > = lazy(() => import("@/pages/placements/index-advertiser"));
 const MediaIndexPage: React.LazyExoticComponent<React.FC<MediaPageProps>> =
   lazy(() => import("@/pages/media/index"));
-  const ReportIndexPage: React.LazyExoticComponent<React.FC<ReportPageProps>> = lazy(
-    () => import("@/pages/report")
-  );
-  const ReportAgentIndexPage: React.LazyExoticComponent<React.FC<ReportPageProps>> = lazy(
-    () => import("@/pages/report/index-agent")
-  );
-  const UserAgreementPage: React.LazyExoticComponent<React.FC> = lazy(
-    () => import("@/pages/policy/user")
-  );
-  const PrivacyPolicyPage: React.LazyExoticComponent<React.FC> = lazy(
-    () => import("@/pages/policy/privacy")
-  );
-  
-const router = createBrowserRouter([
+const PositionIndexPage: React.LazyExoticComponent<
+  React.FC<PositionPageProps>
+> = lazy(() => import("@/pages/position/index"));
+const ReportIndexPage: React.LazyExoticComponent<React.FC<ReportPageProps>> =
+  lazy(() => import("@/pages/report"));
+const ReportAgentIndexPage: React.LazyExoticComponent<
+  React.FC<ReportPageProps>
+> = lazy(() => import("@/pages/report/index-agent"));
+const UserAgreementPage: React.LazyExoticComponent<React.FC> = lazy(
+  () => import("@/pages/policy/user")
+);
+const PrivacyPolicyPage: React.LazyExoticComponent<React.FC> = lazy(
+  () => import("@/pages/policy/privacy")
+);
 
+const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
@@ -92,7 +93,7 @@ const router = createBrowserRouter([
         path: "unauthorized",
         element: <UnauthorizedPage />,
       },
-    
+
       {
         path: "admin",
         element: <AdminLayout />,
@@ -102,12 +103,11 @@ const router = createBrowserRouter([
             element: (
               <Suspense>
                 {" "}
-                <DashboardPage  role="Root" roleName="管理员看板"/>
+                <DashboardPage role="Root" roleName="管理员看板" />
               </Suspense>
             ),
           },
-      
-   
+
           {
             path: "advertiser/root",
             element: (
@@ -203,7 +203,7 @@ const router = createBrowserRouter([
               </Suspense>
             ),
           },
-          
+
           {
             path: "media/manage",
             element: (
@@ -213,6 +213,15 @@ const router = createBrowserRouter([
             ),
           },
           {
+            path: "position/manage",
+            element: (
+              <Suspense>
+                <PositionIndexPage role="Root" roleName="广告位置管理" />
+              </Suspense>
+            ),
+          },
+        
+          {
             path: "content/helps",
             element: (
               <Suspense>
@@ -220,9 +229,7 @@ const router = createBrowserRouter([
               </Suspense>
             ),
           },
-        
-        
-       
+
           // {
           //   path: "placement/agents",
           //   element: (
@@ -231,12 +238,12 @@ const router = createBrowserRouter([
           //     </Suspense>
           //   ),
           // },
-         
+
           {
             path: "report/index",
             element: (
               <Suspense>
-                <ReportIndexPage role="Root" roleName="管理员"/>
+                <ReportIndexPage role="Root" roleName="管理员" />
               </Suspense>
             ),
           },
@@ -244,12 +251,10 @@ const router = createBrowserRouter([
             path: "report/agent",
             element: (
               <Suspense>
-                <ReportAgentIndexPage role="Agent" roleName="代理商"/>
+                <ReportAgentIndexPage role="Agent" roleName="代理商" />
               </Suspense>
             ),
           },
-          
-          
         ],
       },
     ],
@@ -265,8 +270,8 @@ const router = createBrowserRouter([
 ]);
 ReactDOM.createRoot(document.getElementById("root")!).render(
   // <React.StrictMode>
-    <RecoilRoot>
-      <RouterProvider router={router} />
-    </RecoilRoot>
+  <RecoilRoot>
+    <RouterProvider router={router} />
+  </RecoilRoot>
   // </React.StrictMode>
 );

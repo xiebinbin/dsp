@@ -42,7 +42,7 @@ model Advertiser {
   wallet      Wallet?
   bill        Bill[]
   companyName String?       @map("company_name")
-  domainName   String?       @map("domain_name") //域名
+  domainName  String?       @map("domain_name") //域名
   address     String?
   enabled     Boolean       @default(true)
   cpmPrice    Int           @default(3000) @map("cpm_price")
@@ -84,6 +84,7 @@ model Bill {
   amount       Int        @default(0) //分
   advertiser   Advertiser @relation(fields: [advertiserId], references: [id])
   advertiserId BigInt     @map("advertiser_id") @db.UnsignedBigInt
+  billdate     DateTime?  @map("bill_date")
   createdAt    DateTime   @default(now()) @map("created_at")
   updatedAt    DateTime   @updatedAt @map("updated_at")
   deletedAt    DateTime?  @map("deleted_at")
@@ -105,7 +106,8 @@ model AdMaterial {
   // 类型 1:图片 2:视频 3:文字
   contentType  Int           @default(1) @map("content_type")
   // 广告位置 1.列表页 2.详情页 3.侧边栏 4.全屏弹窗(仅 pc 有)
-  position     Int           @default(1)
+  position     BigInt        @default(1)
+  adPosition   AdPosition    @relation(fields: [position], references: [id])
   // 广告内容
   content      String
   // 图片链接
@@ -137,7 +139,7 @@ model AdMedia {
   enabled          Boolean           @default(true)
   // 类型 1 网站 2pc 软件
   type             Int               @default(1)
-  url              String              @default("")
+  url              String            @default("")
   createdAt        DateTime          @default(now()) @map("created_at")
   updatedAt        DateTime          @updatedAt @map("updated_at")
   deletedAt        DateTime?         @map("deleted_at")
@@ -151,7 +153,7 @@ model AdMedia {
 // 投放媒体关系表
 model AdMediaRelation {
   id          BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
-  // 广告主id
+  // 媒体id
   mediaId     BigInt      @map("media_id")
   adMedia     AdMedia     @relation(fields: [mediaId], references: [id])
   enabled     Boolean     @default(true)
@@ -166,20 +168,37 @@ model AdMediaRelation {
   @@map("ad_media_relation")
 }
 
+// 投放广告位置表
+model AdPosition {
+  id         BigInt       @id @default(autoincrement()) @db.UnsignedBigInt
+  name       String
+  enabled    Boolean      @default(true)
+  type       Int          @default(1) // 类型 1 网站 2pc 软件
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @updatedAt @map("updated_at")
+  deletedAt  DateTime?    @map("deleted_at")
+  AdMaterial AdMaterial[]
+
+  @@index([enabled], name: "enabled")
+  @@index([type], name: "type")
+  @@map("ad_position")
+}
+
 // 广告投放计划表
 model AdPlacement {
-  id               BigInt            @id @default(autoincrement()) @db.UnsignedBigInt
-  name             String
-  enabled          Int               @default(1)
+  id           BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  name         String
+  enabled      Int        @default(1)
   // 广告素材
-  adMaterialId     BigInt            @map("ad_material_id")
-  adMaterial       AdMaterial        @relation(fields: [adMaterialId], references: [id])
+  adMaterialId BigInt     @map("ad_material_id")
+  adMaterial   AdMaterial @relation(fields: [adMaterialId], references: [id])
   // 预算金额上限
-  budget           BigInt            @default(0) @db.UnsignedBigInt //分
+  budget       BigInt     @default(0) @db.UnsignedBigInt //分
   // 媒体类型
-  mediaType        Int               @default(1) @map("media_type")
+  mediaType    Int        @default(1) @map("media_type")
   // 开始日期
-  startedAt        DateTime          @default(now()) @map("started_at")
+  startedAt    DateTime    @map("started_at")
+
   // 结束日期
   endedAt          DateTime?         @default(now()) @map("ended_at")
   // 已消耗预算

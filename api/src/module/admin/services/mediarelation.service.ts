@@ -132,17 +132,4 @@ export class MediaRelationService {
       throw new HttpException(e.message, e.status);
     }
   }
-  //   async removeUser(id: bigint): Promise<boolean> {
-  //     // 查询要删除的用户
-  //     const media = await this.prisma.adMedia.findUnique({ where: { id } });
-
-  //     if (!media) {
-  //       throw AuthError.MEDIA_NOT_FOUND;
-  //     }
-
-  //     // 执行删除操作
-  //     await this.prisma.adMedia.delete({ where: { id } });
-
-  //     return true;
-  //   }
 }

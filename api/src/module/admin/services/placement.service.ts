@@ -1,9 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { AuthError } from 'src/utils/err_types';
-import {
-  PrismaClient,
-  AdPlacement,
-} from '@prisma/client';
+import { PrismaClient, AdPlacement } from '@prisma/client';
 import { PlacementDto } from '../dto/placement.dto';
 
 @Injectable()
@@ -131,7 +128,6 @@ export class PlacementService {
       },
     });
 
-    
     return {
       data: adPlacements,
       total: total,
@@ -175,6 +171,7 @@ export class PlacementService {
   }
   async updatePlacement(id: bigint, PlacementDto: PlacementDto) {
     try {
+      console.log('PlacementDto', PlacementDto);
       const res = await this.prisma.adPlacement.update({
         where: { id },
         data: {

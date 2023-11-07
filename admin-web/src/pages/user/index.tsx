@@ -61,7 +61,7 @@ const Supercolumns: ProColumns<SuperUser>[] = [
         dataIndex: 'role',
         ellipsis: true,
         valueType: 'text',
-        width: 100,
+        width: 50,
         hideInSearch: true,
 
         // valueEnum: {
@@ -77,7 +77,7 @@ const Supercolumns: ProColumns<SuperUser>[] = [
     {
         title: '更新时间',
         key: 'updatedAt',
-        width: 100,
+        width: 80,
         dataIndex: 'updatedAt',
         valueType: 'dateTime',
         sorter: true,
@@ -89,7 +89,7 @@ const Supercolumns: ProColumns<SuperUser>[] = [
         dataIndex: 'enabled',
         ellipsis: true,
         valueType: 'text',
-        width: 100,
+        width: 50,
         hideInSearch: true,
         valueEnum: maps,
 
@@ -153,7 +153,7 @@ const AgentColumns: ProColumns<SuperUser>[] = [
         ellipsis: true,
         sorter: true,
         valueType: 'text',
-        width: 100,
+        width: 200,
         hideInSearch: true,
      
     },
@@ -164,7 +164,7 @@ const AgentColumns: ProColumns<SuperUser>[] = [
         dataIndex: 'username',
         ellipsis: true,
         valueType: 'text',
-        width: 100,
+        width: 200,
         formItemProps: {
             name: 'q',
         }
@@ -182,7 +182,7 @@ const AgentColumns: ProColumns<SuperUser>[] = [
     {
         title: '更新时间',
         key: 'updatedAt',
-        width: 100,
+        width: 80,
         dataIndex: 'updatedAt',
         valueType: 'dateTime',
         sorter: true,
@@ -194,7 +194,7 @@ const AgentColumns: ProColumns<SuperUser>[] = [
         dataIndex: 'enabled',
         ellipsis: true,
         valueType: 'text',
-        width: 100,
+        width: 50,
         hideInSearch: true,
         valueEnum: maps,
 

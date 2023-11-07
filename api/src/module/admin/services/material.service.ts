@@ -24,6 +24,7 @@ export class MaterialService {
         mediaType: true,
         contentType: true,
         position: true,
+        adPosition: { select: { id: true, name: true, type: true } },
         content: true,
         url: true,
         advertiserId: true,
@@ -114,13 +115,14 @@ export class MaterialService {
         mediaType,
         contentType,
         enabled,
-        position,
+        adPosition,
         content,
         url,
         jumpUrl,
         advertiserId,
       } = materialDto;
       console.log('createMaterial materialDto', materialDto);
+      const position = adPosition.id;
       return await this.prisma.adMaterial.create({
         data: {
           name,
@@ -140,6 +142,7 @@ export class MaterialService {
   }
   async updateMaterial(id: bigint, materialDto: MaterialDto) {
     try {
+      console.log('updateMaterial', materialDto);
       const res = await this.prisma.adMaterial.update({
         where: { id },
         data: {

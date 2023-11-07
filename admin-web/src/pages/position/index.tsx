@@ -12,9 +12,9 @@ import { Button, Popconfirm } from "antd";
 import { ReactNode, useCallback, useEffect, useRef } from "react";
 import EditForm, { $emit } from "./edit-form.tsx";
 import { useMount, useSafeState, useUnmount } from "ahooks";
-import MediaApi, { MediaEditDto } from "@/api/media.ts";
+import PositionApi, { PositionEditDto } from "@/api/position.ts";
 import { PlusOutlined } from "@ant-design/icons";
-export interface MediaPageProps {
+export interface PositionPageProps {
   role: "Root" | "Operator";
   roleName: string;
 }
@@ -45,7 +45,7 @@ types.set(1, {
 types.set(2, {
   text: "PC软件",
 });
-const MediaIndexPage = (props: MediaPageProps) => {
+const PositionIndexPage = (props: PositionPageProps) => {
   const { role,  } = props;
   const [authUser] = useRecoilState(AuthInfo);
 
@@ -72,7 +72,7 @@ const MediaIndexPage = (props: MediaPageProps) => {
     });
   });
 
-  const rootcolumns: ProColumns<MediaEditDto>[] = [
+  const rootcolumns: ProColumns<PositionEditDto>[] = [
     {
       title: "ID",
       key: "id",
@@ -101,7 +101,7 @@ const MediaIndexPage = (props: MediaPageProps) => {
       dataIndex: "type",
       ellipsis: true,
       valueType: "text",
-      width: 50,
+      width: 200,
       valueEnum: types,
       hideInSearch: true,
 
@@ -120,21 +120,12 @@ const MediaIndexPage = (props: MediaPageProps) => {
       hideInSearch: true,
     },
     {
-      title: "url",
-      key: "url",
-      dataIndex: "url",
-      ellipsis: true,
-      valueType: "text",
-      width: 100,
-      hideInSearch: true,
-    },
-    {
       title: "状态",
       key: "enabled",
       dataIndex: "enabled",
       ellipsis: true,
       valueType: "text",
-      width: 50,
+      width: 100,
       hideInSearch: true,
       valueEnum: maps,
     },
@@ -160,10 +151,10 @@ const MediaIndexPage = (props: MediaPageProps) => {
               key: "remove",
               name: (
                 <Popconfirm
-                  title="删除媒体"
-                  description="是否删除该媒体？"
+                  title="删除广告位置"
+                  description="是否删除该广告位置？"
                   onConfirm={() => {
-                    MediaApi.remove(BigInt(record.id))
+                    PositionApi.remove(BigInt(record.id))
                       .then(() => {
                         action?.reload();
                         window.Message.success("删除成功");
@@ -193,7 +184,7 @@ const MediaIndexPage = (props: MediaPageProps) => {
       }
       return (
         <div>
-          <ProTable<MediaEditDto>
+          <ProTable<PositionEditDto>
             columns={rootcolumns}
             scroll={{ x: 1000 }}
             actionRef={actionRef}
@@ -211,7 +202,7 @@ const MediaIndexPage = (props: MediaPageProps) => {
               }
               const extra: Record<string, boolean> = {};
               console.log("extra", extra);
-              const result = await MediaApi.getList({
+              const result = await PositionApi.getList({
                 page: (params?.current ?? 1) as number,
                 limit: (params.pageSize ?? 10) as number,
                 q: params?.q ?? undefined,
@@ -243,7 +234,7 @@ const MediaIndexPage = (props: MediaPageProps) => {
               },
             }}
             dateFormatter="string"
-            headerTitle={"媒体列表"}
+            headerTitle={"广告位置列表"}
             toolBarRender={() => [
               <Button
                 key="button"
@@ -253,7 +244,7 @@ const MediaIndexPage = (props: MediaPageProps) => {
                 }}
                 type="primary"
               >
-                新建{"媒体"}
+                新建{"广告位置"}
               </Button>,
             ]}
           />
@@ -276,4 +267,4 @@ const MediaIndexPage = (props: MediaPageProps) => {
   );
 };
 
-export default MediaIndexPage;
+export default PositionIndexPage;

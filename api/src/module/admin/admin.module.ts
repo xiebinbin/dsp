@@ -29,6 +29,8 @@ import { ReportService } from './services/report.service';
 import { UploadController } from './controllers/upload.controller';
 import { DashboardController } from './controllers/dashboard.controller';
 import { AdReportByDayService } from './services/adreportbyday.service';
+import { PositionService } from './services/position.service';
+import { PositionController } from './controllers/position.controller';
 
 @Module({
   imports: [
@@ -50,6 +52,7 @@ import { AdReportByDayService } from './services/adreportbyday.service';
     ReportController,
     UploadController,
     DashboardController,
+    PositionController,
   ],
   providers: [
     AuthService,
@@ -68,6 +71,7 @@ import { AdReportByDayService } from './services/adreportbyday.service';
     MediaRelationService,
     ReportService,
     AdReportByDayService,
+    PositionService,
   ],
 })
 export class AdminModule {

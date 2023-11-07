@@ -16,11 +16,11 @@ export class PlacementDto {
   @IsNotEmpty()
 
   // 开始日期
-  startedAt: Date;
+  startedAt: string;
   @IsNotEmpty()
 
   // 结束日期
-  endedAt: Date;
+  endedAt: string;
   // 已消耗预算
   usedBudget: bigint;
   // 展现次数

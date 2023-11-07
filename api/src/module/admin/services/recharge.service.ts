@@ -28,6 +28,7 @@ export class RechargeService {
         data: {
           amount: data.amount,
           remark: data.remark,
+          billdate: data.billdate,
           advertiser: {
             connect: {
               id: data.id,
@@ -108,6 +109,7 @@ export class RechargeService {
       advertiserId: true,
       createdAt: true,
       remark: true,
+      billdate: true,
       advertiser: {
         select: { username: true },
       },

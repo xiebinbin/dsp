@@ -17,13 +17,15 @@ export class AuthError extends HttpException {
   static PLACEMENTNAME_IS_SAME = new AuthError('计划名已存在，请修改', 10010);
   static BALANCE_NOTENOUGH = new AuthError('该广告主余额不足,请充值', 10011);
   static USER_NOT_Permission = new AuthError('用户无权限', 10012);
+  static Position_IS_SAME = new AuthError('位置名已存在，请修改', 10013);
 
   static ADV_NOT_FOUND = new AuthError('广告主不存在', 20001);
   static ADV_DISABLED = new AuthError('广告主被禁用', 20002);
   static ADV_IS_EXSIT = new AuthError('广告主已存在', 20003);
   static PLACEMENT_NOT_FOUND = new AuthError('广告计划不存在', 20004);
   static PLACEMENT_NOT_ENOUGH = new AuthError('广告计划余额不足', 20005);
-  static Material_NOT_FOUND = new AuthError('广告创意不存在', 20004);
+  static Material_NOT_FOUND = new AuthError('广告创意不存在', 20006);
+  static POSITION_NOT_FOUND = new AuthError('广告位置不存在', 20007);
 
   constructor(public message: string, public code: number) {
     super(message, code);

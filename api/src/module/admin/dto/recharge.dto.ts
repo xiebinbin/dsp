@@ -10,4 +10,5 @@ export class RechargeDto {
   @IsNotEmpty()
   amount: number;
   remark: string;
+  billdate: Date;
 }

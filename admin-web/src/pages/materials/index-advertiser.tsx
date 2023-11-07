@@ -63,7 +63,7 @@ import type {
       {
         title: "更新时间",
         key: "updatedAt",
-        width: 200,
+        width: 80,
         dataIndex: "updatedAt",
         valueType: "dateTime",
         sorter: true,

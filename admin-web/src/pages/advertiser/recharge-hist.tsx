@@ -74,6 +74,12 @@ const RechargeHist = (props: { role: "Root" | "Agent"; roleName: string }) => {
       valueType: "text",
       hideInSearch: true,
     },
+    {
+      title: "对账日期",
+      dataIndex: "billdate",
+      valueType: "date",
+      hideInSearch: true,
+    },
   ];
   const location = useLocation();
   useEffect(() => {

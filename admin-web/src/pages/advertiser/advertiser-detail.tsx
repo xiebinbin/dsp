@@ -23,20 +23,20 @@ const AdvertiserDetail = (props: {
   const formRef = useRef<ProFormInstance>();
   const companyNameRef = useRef<string | undefined>();
 
-  const taxNumberRef = useRef<string | undefined>();
+  const domainNameRef = useRef<string | undefined>();
   const cpmPriceRef = useRef<number | undefined>();
 
   useMount(() => {
-    $detailemit.on("detail", ({ val, companyName, taxNumber, cpmPrice }) => {
+    $detailemit.on("detail", ({ val, companyName, domainName, cpmPrice }) => {
       setMode("detail");
       
     // setCompanyName(companyName);
     // settaxNumber(taxNumber);
     // setcpmPrice(cpmPrice);
     console.log(role,roleName)
-      console.log('val',val,'taxNumber',taxNumber,'cpmPrice',cpmPrice)
+      console.log('val',val,'domainName',domainName,'cpmPrice',cpmPrice)
       companyNameRef.current = companyName;
-      taxNumberRef.current = taxNumber;
+      domainNameRef.current = domainName;
       cpmPriceRef.current = cpmPrice/100;
       loadInfo()
         .then(() => {
@@ -57,7 +57,7 @@ const AdvertiserDetail = (props: {
 
     setTimeout(() => {
       formRef.current?.setFieldsValue({
-        taxNumber: taxNumberRef.current,
+        domainName: domainNameRef.current,
         companyName: companyNameRef.current,
         cpmPrice: Number(cpmPriceRef.current).toFixed(2)+'(元)'||'0.00(元)',
       });
@@ -101,8 +101,8 @@ const AdvertiserDetail = (props: {
           </ProForm.Group>
           <ProForm.Group>
             <ProFormText
-              name="taxNumber"
-              label="纳税人识别号"
+              name="domainName"
+              label="域名"
               placeholder=""
               disabled
               width="md"

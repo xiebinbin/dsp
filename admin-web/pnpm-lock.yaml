@@ -80,6 +80,9 @@ dependencies:
   mime-types:
     specifier: ^2.1.35
     version: registry.npmmirror.com/mime-types@2.1.35
+  moment-timezone:
+    specifier: ^0.5.43
+    version: registry.npmmirror.com/moment-timezone@0.5.43
   parse-url:
     specifier: ^8.1.0
     version: 8.1.0
@@ -10255,6 +10258,20 @@ packages:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/minimist/-/minimist-1.2.8.tgz}
     name: minimist
     version: 1.2.8
+    dev: false
+
+  registry.npmmirror.com/moment-timezone@0.5.43:
+    resolution: {integrity: sha512-72j3aNyuIsDxdF1i7CEgV2FfxM1r6aaqJyLB2vwb33mXYyoyLly+F1zbWqhA3/bVIoJ4szlUoMbUnVdid32NUQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/moment-timezone/-/moment-timezone-0.5.43.tgz}
+    name: moment-timezone
+    version: 0.5.43
+    dependencies:
+      moment: registry.npmmirror.com/moment@2.29.4
+    dev: false
+
+  registry.npmmirror.com/moment@2.29.4:
+    resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/moment/-/moment-2.29.4.tgz}
+    name: moment
+    version: 2.29.4
     dev: false
 
   registry.npmmirror.com/motion@10.16.2:

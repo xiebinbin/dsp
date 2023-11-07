@@ -55,7 +55,11 @@ interface AdMaterial {
   // 类型 1:图片 2:视频 3:文字
   contentType: Int;
   // 广告位置 1.列表页 2.详情页 3.侧边栏 4.全屏弹窗(仅 pc 有)
-  position: Int;
+  adPosition: {
+    id: number;
+    name: string;
+    type: number;
+  };
   // 广告内容
   content: string;
   // 广告链接
@@ -82,7 +86,7 @@ interface AdMaterialAgent {
   // 广告链接
   url: string;
   updatedAt: DateTime;
-  jumpUrl:string;
+  jumpUrl: string;
   advertiser: {
     id: number;
     companyName: string;
@@ -159,7 +163,7 @@ interface AdPlacement {
     companyName: string;
     user: { id: number; nickname: string };
   };
-  adMediaRelations: [{mediaId: number, mediaName: string}];
+  adMediaRelations: [{ mediaId: number; mediaName: string }];
 }
 interface Admedia {
   id: number;
@@ -167,13 +171,27 @@ interface Admedia {
   enabled: number;
   // 类型 1 网站 2pc 软件
   type: number;
-  url :string;
+  url: string;
   createdAt: string;
   updatedAt: string;
 }
 interface AdmediaOpt {
   id: number;
   name: string;
+}
+interface Adposition {
+  id: number;
+  name: string;
+  enabled: number;
+  // 类型 1 网站 2pc 软件
+  type: number;
+  createdAt: string;
+  updatedAt: string;
+}
+interface AdpositionOpt {
+  id: number;
+  name: string;
+  type: number;
 }
 interface Tag {
   id: bigint;

@@ -53,7 +53,7 @@ const advcolumns: ProColumns<Advertiser>[] = [
     ellipsis: true,
     sorter: true,
     valueType: "text",
-    width: 150,
+    width: 200,
     formItemProps: {
       name: "comp",
     },

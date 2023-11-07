@@ -13,7 +13,11 @@ export interface MaterialEditDto {
   // 类型 1:图片 2:视频 3:文字
   contentType: number;
   // 广告位置 1.列表页 2.详情页 3.侧边栏 4.全屏弹窗(仅 pc 有)
-  position: number;
+  adPosition: {
+    id: number;
+    name: string;
+    type: number;
+  };
   // 广告内容
   content: string;
   // 广告链接

@@ -12,8 +12,13 @@ export class MaterialDto {
   @IsNotEmpty()
   contentType: number;
   // 广告位置 1.列表页 2.详情页 3.侧边栏 4.全屏弹窗(仅 pc 有)
-  @IsNotEmpty()
   position: number;
+  @IsNotEmpty()
+  adPosition: {
+    id: number;
+    name: string;
+    type: number;
+  };
   // 广告内容
   @IsNotEmpty()
   content: string;
