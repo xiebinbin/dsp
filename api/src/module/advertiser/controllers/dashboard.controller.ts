@@ -31,7 +31,7 @@ export class DashboardController {
   @UseInterceptors(ApiResInterceptor)
   @Post('/getData')
   @UseGuards(GuardMiddlewareAdv) // 使用 RootGuard 守卫
-  async getData(@Req() req: Request, @Res() response): Promise<DashboardDto> {
+  async getData(@Req() req: Request) {
     const advId = req.advertiser.id;
     // const role = req.user.role;
     const root = false;
@@ -59,11 +59,13 @@ export class DashboardController {
 
       const placementidsArray = await this.PlacementService.findByAdv([advId]);
       const placementids = placementidsArray.map((plas) => BigInt(plas.id));
+      
       dashboardres.todayPV = await this.AdReportByDayService.findByIds(
         placementids,
         todayformat,
         root,
       );
+      console.log('dashboardres.todayPV',dashboardres.todayPV);
       dashboardres.yesterdayPV = await this.AdReportByDayService.findByIds(
         placementids,
         yestdayformat,
@@ -77,11 +79,7 @@ export class DashboardController {
       );
       cacheres = dashboardres;
     }
-
-    const responseData = {
-      data: cacheres,
-      code: 200,
-    };
-    return response.send(responseData);
+    console.log('cacheres', cacheres);
+    return cacheres
   }
 }

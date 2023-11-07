@@ -13,8 +13,8 @@ export class ReportService {
     const { startDate, endDate, advertiserId, adPlacementId } = param;
     const where: any = {};
     where.date = {
-      gte: startDate, // 大于或等于 startDate
-      lte: endDate, // 小于或等于 endDate
+      gte: dayjs(startDate).startOf('day').toDate(), // 大于或等于 startDate
+      lte: dayjs(endDate).endOf('day').toDate(), // 小于或等于 endDate
     };
 
     where.advertiserId = advertiserId;
