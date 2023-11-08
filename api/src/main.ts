@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { GlobalErrorFilter } from './module/admin/interceptors/GlobalErrorFilter';
 import { AdvModule } from './adv.module';
-import * as moment from 'moment-timezone';
+process.env.TZ = 'Asia/Shanghai';
 
 import { AdvGlobalErrorFilter } from './module/advertiser/interceptors/adv-GlobalErrorFilter';
 import { AdapiModule } from './adapi.module';

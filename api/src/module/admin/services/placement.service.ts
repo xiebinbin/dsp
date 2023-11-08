@@ -1,11 +1,12 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { AuthError } from 'src/utils/err_types';
-import { PrismaClient, AdPlacement } from '@prisma/client';
+import { AdPlacement } from '@prisma/client';
 import { PlacementDto } from '../dto/placement.dto';
 import {utcToZonedTime} from 'date-fns-tz';
+import { PrismaService } from 'src/services/prisma.service';
 @Injectable()
 export class PlacementService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaService) {}
   async findByname(name: string): Promise<AdPlacement | null> {
     return await this.prisma.adPlacement.findFirst({
       where: {
@@ -171,7 +172,7 @@ export class PlacementService {
   }
   async updatePlacement(id: bigint, PlacementDto: PlacementDto) {
     try {
-      console.log('PlacementDto', PlacementDto);
+      console.log('PlacementDtox', PlacementDto);
       const res = await this.prisma.adPlacement.update({
         where: { id },
         data: {
@@ -179,8 +180,8 @@ export class PlacementService {
           adMaterialId: PlacementDto.adMaterialId,
           budget: PlacementDto.budget,
           mediaType: PlacementDto.mediaType,
-          startedAt: utcToZonedTime(PlacementDto.startedAt, 'Asia/Shanghai'),
-          endedAt: utcToZonedTime(PlacementDto.endedAt, 'Asia/Shanghai'),
+          startedAt: PlacementDto.startedAt,
+          endedAt:  PlacementDto.endedAt,
           usedBudget: PlacementDto.usedBudget,
           displayCount: PlacementDto.displayCount,
           clickCount: PlacementDto.clickCount,

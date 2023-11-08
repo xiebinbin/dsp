@@ -197,10 +197,10 @@ model AdPlacement {
   // 媒体类型
   mediaType    Int        @default(1) @map("media_type")
   // 开始日期
-  startedAt    DateTime    @map("started_at")
+  startedAt    DateTime    @map("started_at") @db.DateTime
 
   // 结束日期
-  endedAt          DateTime?         @default(now()) @map("ended_at")
+  endedAt          DateTime?         @default(now()) @map("ended_at") @db.DateTime
   // 已消耗预算
   usedBudget       BigInt            @default(0) @map("used_budget") @db.UnsignedBigInt //分
   // 展现次数

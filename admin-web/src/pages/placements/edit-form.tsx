@@ -18,8 +18,15 @@ import AdvAPI from "@/api/advertiser.ts";
 import error from "xgplayer/es/error";
 import MedialApi from "@/api/media.ts";
 import PlacementApi, { PlacementEditDto } from "@/api/placement.ts";
-import moment from "moment-timezone";
- 
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import advancedFormat from "dayjs/plugin/advancedFormat";
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(localizedFormat);
+dayjs.extend(advancedFormat);
 // eslint-disable-next-line react-refresh/only-export-components
 export const $emit = new Emittery();
 
@@ -286,6 +293,10 @@ const EditForm = () => {
       onFinish={async () => {
         if (formRef.current) {
           const data = await formRef.current.validateFields();
+
+          data.startedAt = dayjs(data.startedAt).utcOffset(8).format("YYYY-MM-DD HH:mm:ss");
+          data.endedAt =dayjs(data.endedAt).utcOffset(8).format("YYYY-MM-DD HH:mm:ss");
+          console.log("validateFields data", data);
           // data.avatar = avatar;
           data.budget = Math.round(data.budget * 100); //转换成分
           console.log("validateFields data", data);
