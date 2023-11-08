@@ -53,19 +53,19 @@ export class DashboardController {
       const placement = await this.PlacementService.countByAdvertiser(advId);
       dashboardres.ongoingPlans = placement.ongoing;
       dashboardres.completedPlans = placement.completed;
-      dashboardres.balance = Number((
-        await this.AdvertiserService.walletById(advId)
-      ).wallet.balance);
+      dashboardres.balance = Number(
+        (await this.AdvertiserService.walletById(advId)).wallet.balance,
+      );
 
       const placementidsArray = await this.PlacementService.findByAdv([advId]);
       const placementids = placementidsArray.map((plas) => BigInt(plas.id));
-      
+
       dashboardres.todayPV = await this.AdReportByDayService.findByIds(
         placementids,
         todayformat,
         root,
       );
-      console.log('dashboardres.todayPV',dashboardres.todayPV);
+      console.log('dashboardres.todayPV', dashboardres.todayPV);
       dashboardres.yesterdayPV = await this.AdReportByDayService.findByIds(
         placementids,
         yestdayformat,
@@ -80,6 +80,6 @@ export class DashboardController {
       cacheres = dashboardres;
     }
     console.log('cacheres', cacheres);
-    return cacheres
+    return cacheres;
   }
 }

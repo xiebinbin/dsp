@@ -146,20 +146,17 @@ export class PlacementService {
     const currentDate = new Date();
     const where: any = {};
     where.advertiserId = userId;
-
+    where.enabled = 1;
+    where.endedAt = { lte: currentDate };
     // 查询已完成计划数量
     const completedPlanCount = await this.prisma.adPlacement.count({
-      where: {
-        enabled: 1, // 仅考虑启用的计划
-        endedAt: {
-          lte: currentDate, // 结束日期在当前日期之前的计划
-        },
-      },
+      where,
     });
 
     // 查询进行中计划数量
     const ongoingPlanCount = await this.prisma.adPlacement.count({
       where: {
+        advertiserId: userId,
         enabled: 1, // 仅考虑启用的计划
         startedAt: {
           lte: currentDate, // 开始日期在当前日期之前的计划
