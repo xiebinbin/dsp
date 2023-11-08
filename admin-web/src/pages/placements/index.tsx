@@ -149,37 +149,6 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
       hideInTable: true,
     },
     {
-      title: "计划名称",
-      key: "name",
-      dataIndex: "name",
-      ellipsis: true,
-      valueType: "text",
-      width: 200,
-      formItemProps: {
-        name: "q",
-      },
-    },
-    {
-      title: "代理商",
-      key: "agentname",
-      dataIndex: "agentname",
-      ellipsis: true,
-      valueType: "select",
-      width: 200,
-      fieldProps: {
-        showSearch: true,
-        options: agents,
-        onChange: setSelectedAgent,
-      },
-      formItemProps: {
-        name: "agentid",
-      },
-      render: (_, record) => {
-        // 自定义渲染函数，将 AdMaterial 中的 nickname 放到 agentname 处
-        return record.advertiser?.user?.nickname || "-";
-      },
-    },
-    {
       title: "广告主",
       key: "advertiserSearch",
       dataIndex: "advertiserSearch",
