@@ -106,8 +106,8 @@ model AdMaterial {
   // 类型 1:图片 2:视频 3:文字
   contentType  Int           @default(1) @map("content_type")
   // 广告位置 1.列表页 2.详情页 3.侧边栏 4.全屏弹窗(仅 pc 有)
-  position     BigInt        @default(1)
-  adPosition   AdPosition    @relation(fields: [position], references: [id])
+  positionId   BigInt        @default(1) @db.UnsignedBigInt @map("position_id")
+  adPosition   AdPosition    @relation(fields: [positionId], references: [id])
   // 广告内容
   content      String
   // 图片链接
@@ -125,7 +125,7 @@ model AdMaterial {
   adUsedCounts AdUsedCount[] // 添加与 adUsedCount 模型的关联字段
   adConsumes   AdConsume[]
 
-  @@index([position], name: "position")
+  @@index([positionId], name: "position_id")
   @@index([enabled], name: "enabled")
   @@index([contentType], name: "content_type")
   @@index([advertiserId], name: "advertiser_id")

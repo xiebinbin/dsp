@@ -24,7 +24,7 @@ export class AdMaterialService {
         enabled: true,
         mediaType: true,
         contentType: true,
-        position: true,
+        positionId: true,
         content: true,
         url: true,
         advertiserId: true,

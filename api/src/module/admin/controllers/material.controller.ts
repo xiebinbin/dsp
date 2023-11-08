@@ -148,7 +148,6 @@ export class MaterialController {
   @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async materialstore(@Body() data: MaterialDto) {
-    const name = data.name;
 
     try {
       const materialname = await this.MaterialService.findByUsername(data.name);
@@ -209,7 +208,7 @@ export class MaterialController {
       mediaType: material.mediaType,
       contentType: material.contentType,
       enabled: material.enabled,
-      position: material.position,
+      positionId: material.positionId,
       adPosition: {
         id: Number(material.adPosition.id),
         name: material.adPosition.name,
@@ -261,7 +260,7 @@ export class MaterialController {
           nickname: null,
         }, // 使用对象字面量设置 user 属性的值
       },
-      position: Number(material.adPosition.id),
+      positionId: Number(material.adPosition.id),
     };
 
     return materialDto;

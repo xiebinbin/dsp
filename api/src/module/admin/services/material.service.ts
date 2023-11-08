@@ -23,7 +23,7 @@ export class MaterialService {
         enabled: true,
         mediaType: true,
         contentType: true,
-        position: true,
+        positionId: true,
         adPosition: { select: { id: true, name: true, type: true } },
         content: true,
         url: true,
@@ -115,21 +115,20 @@ export class MaterialService {
         mediaType,
         contentType,
         enabled,
-        adPosition,
+        positionId,
         content,
         url,
         jumpUrl,
         advertiserId,
       } = materialDto;
       console.log('createMaterial materialDto', materialDto);
-      const position = adPosition.id;
       return await this.prisma.adMaterial.create({
         data: {
           name,
           mediaType,
           contentType,
           enabled,
-          position,
+          positionId,
           content,
           url,
           jumpUrl,
@@ -150,7 +149,7 @@ export class MaterialService {
           mediaType: materialDto.mediaType,
           contentType: materialDto.contentType,
           enabled: materialDto.enabled,
-          position: materialDto.position,
+          positionId: materialDto.positionId,
           content: materialDto.content,
           url: materialDto.url,
           jumpUrl: materialDto.jumpUrl,
