@@ -49,7 +49,7 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
   const [advertisers, setAdvertisers] = useSafeState<
     { id: number; name: string; agentId: number }[]
   >([]);
-  const [agents, setAgents] = useSafeState<{ label: string; value: number }[]>(
+  const [, setAgents] = useSafeState<{ label: string; value: number }[]>(
     []
   );
   const [advertisersList, setadvertisersList] = useSafeState<
@@ -60,7 +60,7 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
   const reload = useCallback(() => {
     actionRef.current?.reload();
   }, []);
-  const [selectedAgent, setSelectedAgent] = useSafeState<number | string>("");
+  const [selectedAgent] = useSafeState<number | string>("");
 
   const loadAgents = useCallback(async () => {
     try {
