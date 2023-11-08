@@ -87,15 +87,6 @@ const advcolumns: ProColumns<Advertiser>[] = [
     },
   },
   {
-    title: "更新时间",
-    key: "updatedAt",
-    width: 80,
-    dataIndex: "updatedAt",
-    valueType: "dateTime",
-    sorter: true,
-    hideInSearch: true,
-  },
-  {
     title: "状态",
     key: "enabled",
     dataIndex: "enabled",

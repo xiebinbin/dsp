@@ -75,15 +75,6 @@ const Supercolumns: ProColumns<SuperUser>[] = [
         // }
     },
     {
-        title: '更新时间',
-        key: 'updatedAt',
-        width: 80,
-        dataIndex: 'updatedAt',
-        valueType: 'dateTime',
-        sorter: true,
-        hideInSearch: true,
-    },
-    {
         title: '状态',
         key: 'enabled',
         dataIndex: 'enabled',
@@ -168,25 +159,6 @@ const AgentColumns: ProColumns<SuperUser>[] = [
         formItemProps: {
             name: 'q',
         }
-    },
-    // {
-    //     title: '角色',
-    //     key: 'role',
-    //     dataIndex: 'role',
-    //     ellipsis: true,
-    //     valueType: 'text',
-    //     width: 100,
-    //     hideInSearch: true,
-
-    // },
-    {
-        title: '更新时间',
-        key: 'updatedAt',
-        width: 80,
-        dataIndex: 'updatedAt',
-        valueType: 'dateTime',
-        sorter: true,
-        hideInSearch: true,
     },
     {
         title: '状态',

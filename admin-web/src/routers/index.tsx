@@ -162,12 +162,12 @@ const GetRouter = (userRole:string): Route => {
         routes: [
           {
             path: "/admin/report/index",
-            name: "运营日报",
+            name: "运营报表",
             access: ["Root","Operator"]
           },
           {
             path: "/admin/report/agent",
-            name: "代理商日报",
+            name: "代理商报表",
             access: ["Agent"]
           },
         ],
