@@ -5,7 +5,7 @@ import {
   ProCard,
   ProColumns,
   ProForm,
-  ProFormDateTimePicker,
+  ProFormDateRangePicker,
   ProFormInstance,
   ProFormSelect,
   ProTable,
@@ -353,8 +353,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
         adPlacementId: 0,
       });
       formRef.current?.setFieldsValue({
-        startDate: formattedStartDate,
-        endDate: formattedcurrentDate,
+        rangeDate: [dayjs(formattedStartDate),dayjs(formattedcurrentDate)],
       });
     }, 500);
     reload();
@@ -435,9 +434,10 @@ const ReportIndexPage = (props: ReportPageProps) => {
               formRef={formRef}
               onFinish={async (values) => {
                 try {
+                  
                   const requestData: ChartDataRequest = {
-                    startDate: values.startDate,
-                    endDate: values.endDate,
+                    startDate: values.rangeDate[0],
+                    endDate: values.rangeDate[1],
                     agentId: values.agent,
                     advertiserId: values.advertiserId,
                     adMaterialId: values.adMaterialId,
@@ -459,26 +459,21 @@ const ReportIndexPage = (props: ReportPageProps) => {
               }}
             >
               <ProForm.Group>
-                <ProFormDateTimePicker
-                  name="startDate"
-                  label="开始投放时间"
+                <ProFormDateRangePicker
+                  name="rangeDate"
+                  label="投放时间"
                   fieldProps={{
                     format: "YYYY-MM-DD",
-                  }}
-                />
-                <ProFormDateTimePicker
-                  name="endDate"
-                  label="结束投放时间"
-                  fieldProps={{
-                    format: "YYYY-MM-DD",
+                    onChange: (e) => {
+                      console.log("e", e);
+                    },
                   }}
                 />
               </ProForm.Group>
               <ProForm.Group>
                 <ProFormSelect
-                  initialValue=""
+                  initialValue={null}
                   name="agent"
-                  label="选择代理商"
                   placeholder="选择代理商"
                   options={agents.map((agent) => ({
                     label: agent.name,
@@ -493,9 +488,8 @@ const ReportIndexPage = (props: ReportPageProps) => {
                 />
 
                 <ProFormSelect
-                  initialValue=""
+                  initialValue={null}
                   name="advertiserId"
-                  label="选择广告主"
                   placeholder="选择广告主"
                   options={advertisers.map(
                     (advertiser: { name: string; id: number }) => ({
@@ -511,9 +505,8 @@ const ReportIndexPage = (props: ReportPageProps) => {
                   }}
                 />
                 <ProFormSelect
-                  initialValue={""}
+                  initialValue={null}
                   name="adMaterialId"
-                  label="选择广告创意"
                   placeholder="选择广告创意"
                   options={materials.map((material) => ({
                     label: material.name,
@@ -527,9 +520,8 @@ const ReportIndexPage = (props: ReportPageProps) => {
                   }}
                 />
                 <ProFormSelect
-                  initialValue={""}
+                  initialValue={null}
                   name="adPlacementId"
-                  label="选择广告计划"
                   placeholder="选择广告计划"
                   options={placements.map((placement) => ({
                     label: placement.name,
