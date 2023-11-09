@@ -156,7 +156,7 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
       width: 200,
       fieldProps: {
         showSearch: true,
-        options: advertisers.map(
+        options: advertisersList.map(
           (advertiser: { name: string; id: number }) => ({
             label: advertiser.name,
             value: advertiser.id,

@@ -91,7 +91,6 @@ model Bill {
   // 1成功 2 撤销
   status       Int        @default(0) @db.SmallInt
   remark       String?    @default("") @db.Text
-
   @@index([advertiserId], name: "advertiser_id")
   @@index([status], name: "status")
   @@map("bills")
@@ -106,7 +105,7 @@ model AdMaterial {
   // 类型 1:图片 2:视频 3:文字
   contentType  Int           @default(1) @map("content_type")
   // 广告位置 1.列表页 2.详情页 3.侧边栏 4.全屏弹窗(仅 pc 有)
-  positionId   BigInt        @default(1) @db.UnsignedBigInt @map("position_id")
+  positionId   BigInt        @default(1) @map("position_id") @db.UnsignedBigInt
   adPosition   AdPosition    @relation(fields: [positionId], references: [id])
   // 广告内容
   content      String
@@ -144,7 +143,7 @@ model AdMedia {
   updatedAt        DateTime          @updatedAt @map("updated_at")
   deletedAt        DateTime?         @map("deleted_at")
   adMediaRelations AdMediaRelation[]
-
+  AdPosition       AdPosition[]
   @@index([enabled], name: "enabled")
   @@index([type], name: "type")
   @@map("ad_medias")
@@ -161,27 +160,47 @@ model AdMediaRelation {
   adPlacement AdPlacement @relation(fields: [placementId], references: [id])
   createdAt   DateTime    @default(now()) @map("created_at")
   updatedAt   DateTime    @updatedAt @map("updated_at")
-
   @@index([placementId], name: "placement_id")
   @@index([mediaId], name: "media_id")
   @@index([enabled], name: "enabled")
   @@map("ad_media_relation")
 }
-
 // 投放广告位置表
 model AdPosition {
-  id         BigInt       @id @default(autoincrement()) @db.UnsignedBigInt
-  name       String
-  enabled    Boolean      @default(true)
-  type       Int          @default(1) // 类型 1 网站 2pc 软件
+  id       BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
+  name     String
+  enabled  Boolean @default(true)
+  adSpecId BigInt  @map("ad_spec_id") @default(0)
+  adSpec   AdSpec  @relation(fields: [adSpecId], references: [id])
+  adMediaId  BigInt  @map("ad_media_id")  @default(0)
+  adMedia  AdMedia @relation(fields: [adMediaId], references: [id])
+  type     Int     @default(1) // 类型 1 网站 2pc 软件
+  cpmPrice Int     @default(3000) @map("cpm_price")
   createdAt  DateTime     @default(now()) @map("created_at")
   updatedAt  DateTime     @updatedAt @map("updated_at")
   deletedAt  DateTime?    @map("deleted_at")
   AdMaterial AdMaterial[]
-
+  @@index([adMediaId], name: "media_id")
+  @@index([adSpecId], name: "ad_spec_id")
   @@index([enabled], name: "enabled")
   @@index([type], name: "type")
   @@map("ad_position")
+}
+// 投放广告规格表
+model AdSpec {
+  id         BigInt       @id @default(autoincrement()) @db.UnsignedBigInt
+  name       String
+  enabled    Boolean      @default(true)
+  type       Int          @default(1) // 媒体类型类型 1 图片2 视频
+  size       String       @map("size") //100*100
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @updatedAt @map("updated_at")
+  deletedAt  DateTime?    @map("deleted_at")
+  AdPosition AdPosition[]
+
+  @@index([enabled], name: "enabled")
+  @@index([type], name: "type")
+  @@map("ad_spec")
 }
 
 // 广告投放计划表
@@ -197,7 +216,7 @@ model AdPlacement {
   // 媒体类型
   mediaType    Int        @default(1) @map("media_type")
   // 开始日期
-  startedAt    DateTime    @map("started_at") @db.DateTime
+  startedAt    DateTime   @map("started_at") @db.DateTime
 
   // 结束日期
   endedAt          DateTime?         @default(now()) @map("ended_at") @db.DateTime

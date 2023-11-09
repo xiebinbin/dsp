@@ -30,12 +30,13 @@ export class MediaController {
     private readonly MediaService: MediaService,
   ) {}
   private readonly logger = new Logger(MediaController.name);
-  @Get('mediaslist')
+  @Post('mediaslist')
   @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
-  async getMedias() {
+  async getMedias(@Body() qureyParams?: { type: number }) {
     try {
-      const mediainfo = await this.MediaService.findMedias();
+      console.log(qureyParams.type);
+      const mediainfo = await this.MediaService.findMedias(qureyParams.type);
       console.log(mediainfo);
       // const userInfoconvert = this.convertReturnInfo(userinfo);
       return mediainfo;

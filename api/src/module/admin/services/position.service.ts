@@ -36,6 +36,21 @@ export class PositionService {
         name: true,
         enabled: true,
         // 类型 1 网站 2pc 软件
+        adSpecId: true,
+        adSpec: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        adMediaId: true,
+        adMedia: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        cpmPrice: true,
         type: true,
         createdAt: true,
         updatedAt: true,
@@ -60,7 +75,30 @@ export class PositionService {
 
     const position = await this.prisma.adPosition.findMany({
       where,
-      //   select: selectFields,
+      select: {
+        id: true,
+        name: true,
+        enabled: true,
+        // 类型 1 网站 2pc 软件
+        adSpecId: true,
+        adSpec: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        adMediaId: true,
+        adMedia: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        cpmPrice: true,
+        type: true,
+        createdAt: true,
+        updatedAt: true,
+      },
       orderBy: orderBy,
       skip: (page - 1) * limit,
       take: limit,
@@ -78,6 +116,9 @@ export class PositionService {
         name,
         enabled,
         // 类型 1 网站 2pc 软件
+        adSpecId,
+        adMediaId,
+        cpmPrice,
         type,
       } = positionDto;
       console.log('create positionDto', positionDto);
@@ -87,6 +128,9 @@ export class PositionService {
           name,
           enabled,
           // 类型 1 网站 2pc 软件
+          adSpecId,
+          adMediaId,
+          cpmPrice,
           type,
         },
       });
@@ -103,6 +147,9 @@ export class PositionService {
           name: positionDto.name,
           enabled: positionDto.enabled,
           // 类型 1 网站 2pc 软件
+          adSpecId: positionDto.adSpecId,
+          adMediaId: positionDto.adMediaId,
+          cpmPrice: positionDto.cpmPrice,
           type: positionDto.type,
         },
       });

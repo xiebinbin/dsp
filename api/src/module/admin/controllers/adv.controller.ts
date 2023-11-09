@@ -104,12 +104,12 @@ export class AdvController {
       const username = await this.AdvService.findByUsername(data.username);
       console.log('data,username', username);
 
-      if (username) {
-        throw new HttpException(
-          AuthError.USERNAME_IS_SAME.message,
-          AuthError.USERNAME_IS_SAME.code,
-        );
-      }
+      // if (username) {
+      //   throw new HttpException(
+      //     AuthError.USERNAME_IS_SAME.message,
+      //     AuthError.USERNAME_IS_SAME.code,
+      //   );
+      // }
 
       const res = await this.AdvService.createUser(data);
       // console.log('res', res);

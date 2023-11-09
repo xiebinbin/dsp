@@ -178,6 +178,22 @@ interface Admedia {
 interface AdmediaOpt {
   id: number;
   name: string;
+  type: number;
+}
+interface Adspec {
+  id: number;
+  name: string;
+  enabled: number;
+  // 类型 1 图片2视频
+  type: number;
+  size: string;
+  createdAt: string;
+  updatedAt: string;
+}
+interface AdspecOpt {
+  id: number;
+  name: string;
+  type: number;
 }
 interface Adposition {
   id: number;
@@ -185,8 +201,17 @@ interface Adposition {
   enabled: number;
   // 类型 1 网站 2pc 软件
   type: number;
+  cpmPrice: number;
   createdAt: string;
   updatedAt: string;
+  adSpec: {
+    id: number;
+    name: string;
+  };
+  adMedia: {
+    id: number;
+    name: string;
+  };
 }
 interface AdpositionOpt {
   id: number;

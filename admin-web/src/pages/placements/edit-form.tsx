@@ -115,7 +115,7 @@ const EditForm = () => {
     [setadvertisersList]
   );
   const loadMedias = useCallback(async () => {
-    const res = await MedialApi.getMediasList();
+    const res = await MedialApi.postMediasList();
     console.log("res", res);
     setMediasAlllist(
       res.map((item) => {
@@ -241,6 +241,8 @@ const EditForm = () => {
           id: val.mediaId,
         })) || []
       );
+      console.log('mediaslist',mediaslist)
+
       setAgents([
         { name: data.advertiser.user.nickname, id: data.advertiser.user.id },
       ]);
@@ -294,8 +296,12 @@ const EditForm = () => {
         if (formRef.current) {
           const data = await formRef.current.validateFields();
 
-          data.startedAt = dayjs(data.startedAt).utcOffset(8).format("YYYY-MM-DD HH:mm:ss");
-          data.endedAt =dayjs(data.endedAt).utcOffset(8).format("YYYY-MM-DD HH:mm:ss");
+          data.startedAt = dayjs(data.startedAt)
+            .utcOffset(8)
+            .format("YYYY-MM-DD HH:mm:ss");
+          data.endedAt = dayjs(data.endedAt)
+            .utcOffset(8)
+            .format("YYYY-MM-DD HH:mm:ss");
           console.log("validateFields data", data);
           // data.avatar = avatar;
           data.budget = Math.round(data.budget * 100); //转换成分
@@ -320,15 +326,7 @@ const EditForm = () => {
       onOpenChange={setShow}
     >
       <div>
-        <ProFormText
-          required
-          rules={[{ required: true, message: "请输入计划名称" }]}
-          initialValue={""}
-          width="xl"
-          name="name"
-          label="请输入计划名称"
-          placeholder="请输入计划名称"
-        />
+   
         <ProFormSelect
           required
           rules={[{ required: true, message: "选择代理商" }]}
@@ -436,6 +434,13 @@ const EditForm = () => {
             }}
           />
         </div>
+        <ProFormText
+          initialValue={""}
+          width="xl"
+          name="name"
+          label="计划备注"
+          placeholder="请输入计划备注"
+        />
       </div>
     </ModalForm>
   );

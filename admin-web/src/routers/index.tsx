@@ -153,6 +153,11 @@ const GetRouter = (userRole:string): Route => {
             name: "广告位置管理",
             access: ["Root","Operator"]
           },
+          {
+            path: "/admin/spec/manage",
+            name: "广告规格管理",
+            access: ["Root","Operator"]
+          },
         ],
       },
       {

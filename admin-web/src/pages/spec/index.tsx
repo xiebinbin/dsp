@@ -12,9 +12,9 @@ import { Button, Popconfirm } from "antd";
 import { ReactNode, useCallback, useEffect, useRef } from "react";
 import EditForm, { $emit } from "./edit-form.tsx";
 import { useMount, useSafeState, useUnmount } from "ahooks";
-import PositionApi, { PositionEditDto } from "@/api/position.ts";
+import specApi, { specEditDto } from "@/api/spec.ts";
 import { PlusOutlined } from "@ant-design/icons";
-export interface PositionPageProps {
+export interface SpecPageProps {
   role: "Root" | "Operator";
   roleName: string;
 }
@@ -22,6 +22,7 @@ import { AuthInfo } from "@/stores/auth-info.ts";
 import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 import App from "@/App.tsx";
+
 const maps = new Map<
   string | number | boolean,
   ProSchemaValueEnumType | ReactNode
@@ -36,12 +37,12 @@ maps.set(false, {
 });
 const types = new Map<number, ProSchemaValueEnumType | ReactNode>();
 types.set(1, {
-  text: "网站",
+  text: "图片",
 });
 types.set(2, {
-  text: "PC软件",
+  text: "视频",
 });
-const PositionIndexPage = (props: PositionPageProps) => {
+const SpecIndexPage = (props: SpecPageProps) => {
   const { role } = props;
   const [authUser] = useRecoilState(AuthInfo);
 
@@ -65,7 +66,7 @@ const PositionIndexPage = (props: PositionPageProps) => {
     });
   });
 
-  const rootcolumns: ProColumns<PositionEditDto>[] = [
+  const rootcolumns: ProColumns<specEditDto>[] = [
     {
       title: "ID",
       key: "id",
@@ -73,74 +74,44 @@ const PositionIndexPage = (props: PositionPageProps) => {
       render: (_dom, record) => {
         return record.id.toString();
       },
-      width: 50,
+      width: 200,
       hideInSearch: true,
+      hideInTable: true,
     },
     {
       title: "名称",
+      key: "name",
       dataIndex: "name",
       ellipsis: true,
       valueType: "text",
-      width: 150,
+      width: 200,
       formItemProps: {
         name: "q",
       },
     },
     {
-      title: "类型", // 类型 1 网站 2pc 软件
+      title: "类型", // 类型 1 图片 2视频
+      key: "type",
       dataIndex: "type",
       ellipsis: true,
       valueType: "text",
-      width: 150,
+      width: 200,
       valueEnum: types,
       hideInSearch: true,
-
-      // render: (_, record) => {
-      //   // 自定义渲染函数，将 AdMaterial 中的 nickname 放到 agentname 处
-      //   return record.advertiser?.user?.nickname || "-";
-      // },
     },
     {
-      title: "规格",
-      dataIndex: "spec",
+      title: "尺寸",
+      key: "size",
+      dataIndex: "size",
       ellipsis: true,
       valueType: "text",
-      width: 100,
+      width: 200,
       hideInSearch: true,
-
-      render: (_, record) => {
-        return record.adSpec?.name || "-";
-      },
-    },
-    {
-      title: "媒体",
-      dataIndex: "media",
-      ellipsis: true,
-      valueType: "text",
-      width: 100,
-      hideInSearch: true,
-
-      render: (_, record) => {
-        return record.adMedia?.name || "-";
-      },
-    },
-    {
-      title: "千次展现价格",
-      dataIndex: "cpmPrice",
-      ellipsis: true,
-      valueType: "text",
-      width: 100,
-      hideInSearch: true,
-
-      render: (_, record) => {
-        const balanceYuan = Number(record.cpmPrice) / 100; // 将分转换为元
-        return `¥ ${balanceYuan.toFixed(2)}`;
-        // return `¥ $(record.cpmPrice / 100).toFixed(2)`;
-      },
     },
     {
       title: "更新时间",
-      width: 100,
+      key: "updatedAt",
+      width: 80,
       dataIndex: "updatedAt",
       valueType: "dateTime",
       sorter: true,
@@ -148,10 +119,11 @@ const PositionIndexPage = (props: PositionPageProps) => {
     },
     {
       title: "状态",
+      key: "enabled",
       dataIndex: "enabled",
       ellipsis: true,
       valueType: "text",
-      width: 50,
+      width: 100,
       hideInSearch: true,
       valueEnum: maps,
     },
@@ -159,6 +131,7 @@ const PositionIndexPage = (props: PositionPageProps) => {
       title: "操作",
       valueType: "option",
       width: 100,
+      key: "option",
       fixed: "right",
       render: (_text, record, _, action) => [
         <a
@@ -176,10 +149,11 @@ const PositionIndexPage = (props: PositionPageProps) => {
               key: "remove",
               name: (
                 <Popconfirm
-                  title="删除广告位置"
-                  description="是否删除该广告位置？"
+                  title="删除广告规格"
+                  description="是否删除该广告规格？"
                   onConfirm={() => {
-                    PositionApi.remove(BigInt(record.id))
+                    specApi
+                      .remove(BigInt(record.id))
                       .then(() => {
                         action?.reload();
                         window.Message.success("删除成功");
@@ -208,7 +182,7 @@ const PositionIndexPage = (props: PositionPageProps) => {
       }
       return (
         <div>
-          <ProTable<PositionEditDto>
+          <ProTable<specEditDto>
             columns={rootcolumns}
             scroll={{ x: 1000 }}
             actionRef={actionRef}
@@ -226,7 +200,7 @@ const PositionIndexPage = (props: PositionPageProps) => {
               }
               const extra: Record<string, boolean> = {};
               console.log("extra", extra);
-              const result = await PositionApi.getList({
+              const result = await specApi.getList({
                 page: (params?.current ?? 1) as number,
                 limit: (params.pageSize ?? 10) as number,
                 q: params?.q ?? undefined,
@@ -257,7 +231,7 @@ const PositionIndexPage = (props: PositionPageProps) => {
               },
             }}
             dateFormatter="string"
-            headerTitle={"广告位置列表"}
+            headerTitle={"广告规格列表"}
             toolBarRender={() => [
               <Button
                 key="button"
@@ -267,7 +241,7 @@ const PositionIndexPage = (props: PositionPageProps) => {
                 }}
                 type="primary"
               >
-                新建{"广告位置"}
+                新建{"广告规格"}
               </Button>,
             ]}
           />
@@ -292,4 +266,4 @@ const PositionIndexPage = (props: PositionPageProps) => {
   );
 };
 
-export default PositionIndexPage;
+export default SpecIndexPage;

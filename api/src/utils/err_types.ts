@@ -11,6 +11,7 @@ export class AuthError extends HttpException {
   static USER_IS_EXSIT = new AuthError('用户已存在', 10005);
   static USERNAME_IS_SAME = new AuthError('用户名存在相同，请修改', 10005);
   static MaterialName_IS_SAME = new AuthError('创意名已存在，请修改', 10006);
+  static ADSPEC_IS_SAME = new AuthError('广告规格已存在', 10007);
 
   static MEDIA_NOT_FOUND = new AuthError('媒体不存在', 10008);
   static MediaName_IS_SAME = new AuthError('媒体名已存在，请修改', 10009);
@@ -26,7 +27,7 @@ export class AuthError extends HttpException {
   static PLACEMENT_NOT_ENOUGH = new AuthError('广告计划余额不足', 20005);
   static Material_NOT_FOUND = new AuthError('广告创意不存在', 20006);
   static POSITION_NOT_FOUND = new AuthError('广告位置不存在', 20007);
-
+  static ADSPEC_NOT_FOUND = new AuthError('广告规格不存在', 20008);
   constructor(public message: string, public code: number) {
     super(message, code);
   }

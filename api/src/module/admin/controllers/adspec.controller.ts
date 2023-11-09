@@ -16,26 +16,23 @@ import {
 import { ApiResInterceptor } from '../interceptors/api-res.interceptor';
 import { AuthError } from 'src/utils/err_types';
 import { Request } from 'express';
-import { PositionService } from '../services/position.service';
 import { GuardMiddlewareRoot } from '../middlewares/guard.middleware';
-import { PositionDto } from '../dto/position.dto';
+import { AdSpecDto } from '../dto/AdSpec.dto';
 import { AdSpecService } from '../services/adspec.service';
-@Controller('/api/admin/position')
-export class PositionController {
-  constructor(
-    private readonly PositionService: PositionService,
-    private readonly AdSpecService: AdSpecService,
-  ) {}
-  private readonly logger = new Logger(PositionController.name);
-  @Get('positionoptlist')
+
+@Controller('/api/admin/adspec')
+export class AdSpecController {
+  constructor(private readonly AdSpecService: AdSpecService) {}
+  private readonly logger = new Logger(AdSpecController.name);
+  @Get('specoptlist')
   @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
-  async getPosition() {
+  async getAdSpec() {
     try {
-      const mediainfo = await this.PositionService.findPositions();
-      console.log(mediainfo);
+      const specinfo = await this.AdSpecService.findAdSpecs();
+      console.log(specinfo);
       // const userInfoconvert = this.convertReturnInfo(userinfo);
-      return mediainfo;
+      return specinfo;
     } catch (e) {
       console.log(e);
       throw new HttpException(e.message, e.status);
@@ -47,7 +44,7 @@ export class PositionController {
   async getList(@Req() req: Request, @Body() queryParams: any) {
     const { page, limit, q, filters, orderBy, extra } = queryParams;
     try {
-      const result = await this.PositionService.getList({
+      const result = await this.AdSpecService.getList({
         page,
         limit,
         orderBy,
@@ -64,8 +61,8 @@ export class PositionController {
   @UseInterceptors(ApiResInterceptor)
   async getMaterial(@Param('id') id: number) {
     try {
-      const userinfo = await this.PositionService.findById(BigInt(id));
-      const res = this.convertPositionnfo(userinfo);
+      const userinfo = await this.AdSpecService.findById(BigInt(id));
+      const res = this.convertAdSpecnfo(userinfo);
       console.log('getresult', res);
 
       return res;
@@ -78,23 +75,22 @@ export class PositionController {
   @Post('store')
   @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
-  async materialstore(@Body() data: PositionDto) {
+  async materialstore(@Body() data: AdSpecDto) {
     const name = data.name;
 
     try {
-      const positionname = await this.PositionService.findByUsername(
+      const AdSpecname = await this.AdSpecService.findByUsername(
         data.name,
         data.type,
       );
 
-      if (positionname) {
+      if (AdSpecname) {
         throw new HttpException(
-          AuthError.Position_IS_SAME.message,
-          AuthError.Position_IS_SAME.code,
+          AuthError.ADSPEC_IS_SAME.message,
+          AuthError.ADSPEC_IS_SAME.code,
         );
       }
-      console.log('create position', data);
-      const res = await this.PositionService.createPosition(data);
+      const res = await this.AdSpecService.createAdSpec(data);
       // console.log('res', res);
       if (!res.id) {
         return false;
@@ -110,10 +106,10 @@ export class PositionController {
   async updateMaterial(
     @Param('id') id: bigint,
     @Body()
-    positionDto: PositionDto,
+    AdSpecDto: AdSpecDto,
     @Res() response,
   ) {
-    const result = this.PositionService.updatePosition(id, positionDto);
+    const result = this.AdSpecService.updateAdSpec(id, AdSpecDto);
 
     return response.send(result);
   }
@@ -122,32 +118,22 @@ export class PositionController {
   @UseInterceptors(ApiResInterceptor)
   async removeUser(@Param('id') id: bigint): Promise<boolean> {
     console.log('id', id);
-    return this.PositionService.removePosition(id);
+    return this.AdSpecService.removeAdSpec(id);
   }
-  convertPositionnfo(positon: any): any {
+  convertAdSpecnfo(adSpec: any): any {
     // Make a shallow copy of the user object
 
-    const positonDto: PositionDto = {
-      id: Number(positon.id),
-      name: positon.name,
-      enabled: positon.enabled,
-      // 类型 1 网站 2pc 软件
-      type: positon.type,
-      createdAt: positon.createdAt,
-      updatedAt: positon.updatedAt,
-      adSpecId: positon.adSpecId,
-      adMediaId: positon.adMediaId,
-      cpmPrice: positon.cpmPrice,
-      adSpec: {
-        id: positon.adSpec.id,
-        name: positon.adSpec.name,
-      },
-      adMedia: {
-        id: positon.adMedia.id,
-        name: positon.adMedia.name,
-      },
+    const adSpecdto: AdSpecDto = {
+      id: Number(adSpec.id),
+      name: adSpec.name,
+      enabled: adSpec.enabled,
+      // 类型 1 图片 2视频
+      type: adSpec.type,
+      createdAt: adSpec.createdAt,
+      updatedAt: adSpec.updatedAt,
+      size: adSpec.size,
     };
 
-    return positonDto;
+    return adSpecdto;
   }
 }

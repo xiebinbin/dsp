@@ -10,7 +10,9 @@ export interface MediaEditDto {
   createdAt: string;
   updatedAt: string;
 }
-
+export interface MediaParams {
+  type: number;
+}
 const remove = (id: bigint) => {
   return createRequestInstance().delete(`/api/admin/media/${id}`);
 };
@@ -34,14 +36,14 @@ const update = (id: bigint, params: MediaEditDto): Promise<Admedia> => {
   return createRequestInstance().put(`/api/admin/media/${id}`, params);
 };
 
-const getMediasList = (): Promise<AdmediaOpt[]> => {
-    return createRequestInstance().get(`/api/admin/media/mediaslist`);
-  };
+const postMediasList = (params?: MediaParams): Promise<AdmediaOpt[]> => {
+  return createRequestInstance().post(`/api/admin/media/mediaslist`, params);
+};
 export default {
   remove,
   getList,
   getInfo,
   create,
   update,
-  getMediasList,
+  postMediasList,
 };

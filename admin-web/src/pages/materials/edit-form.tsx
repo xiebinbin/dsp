@@ -45,6 +45,9 @@ const EditForm = () => {
   const [positionOptions, setPositionOptions] = useSafeState<
     { label: string; value: number }[]
   >([]);
+  const [positionOptionsAll, setPositionOptionsAll] = useSafeState<
+    { label: string; value: number }[]
+  >([]);
   const [agents, setAgents] = useSafeState<{ name: string; id: number }[]>([]);
   const [advertisers, setAdvertisers] = useState<
     { id: number; name: string; agentId: number }[]
@@ -57,9 +60,9 @@ const EditForm = () => {
 
   const handleMediaTypeChange = (e: RadioChangeEvent) => {
     if (e.target.value === 2) {
-      setPositionOptions(positionOptionsSoft);
+      setPositionOptionsAll(positionOptionsSoft);
     } else {
-      setPositionOptions(positionOptionsPC);
+      setPositionOptionsAll(positionOptionsPC);
     }
   };
 
@@ -78,9 +81,18 @@ const EditForm = () => {
     } else {
       setAdvertisers([]);
     }
+    if (positionOptionsAll) {
+      console.log("positionOptionsAll", positionOptionsAll);
+    }
   }, [selectedAgent]);
   const loadPositionsOpt = useCallback(async () => {
     const positionOpt: AdpositionOpt[] = await PositionApi.getPositionsList();
+    setPositionOptionsAll(
+      positionOpt.map((opt) => ({
+        label: opt.name,
+        value: opt.id,
+      }))
+    );
     setPositionOptionsPC(
       positionOpt
         .filter((opt) => opt.type === 1)
@@ -97,10 +109,14 @@ const EditForm = () => {
           value: opt.id,
         }))
     );
-  }, [setPositionOptionsPC, setPositionOptionsSoft]);
+    // return positionOpt.map((opt) => ({
+    //   label: opt.name,
+    //   value: opt.id,
+    //   type: opt.type,
+    // }));
+  }, []);
   const loadAgentsRelation = useCallback(async () => {
     const agentList = await AgentApi.getAgentsList();
-
     setAgents(agentList);
   }, [setAgents]);
   const loadAdvertisers = useCallback(
@@ -135,7 +151,6 @@ const EditForm = () => {
       loadAdvertisers("");
       setMode("add");
       setMaterialurl("");
-
       formRef.current?.resetFields();
       formRef.current?.setFieldsValue({
         name: "",
@@ -152,7 +167,6 @@ const EditForm = () => {
     });
     $emit.on("update", (val: bigint) => {
       setMode("update");
-
       setId(val);
       //   setDefaultFileList([]);
       loadInfo(val)
@@ -169,45 +183,51 @@ const EditForm = () => {
   });
   const close = useCallback(() => {
     setShow(false);
-  }, [setShow]);
-  const loadInfo = useCallback(
-    async (val: bigint) => {
-      const data = await MaterialApi.getInfo(val);
-      console.log("material load data", data);
-      setTimeout(() => {
-        formRef.current?.setFieldsValue({
-          name: data.name,
-          mediaType: data.adPosition.type,
-          content: data.content,
-          contentType: data.contentType,
-          enabled: data.enabled,
-          agent: data.advertiser.user.id,
-          advertiserId: data.advertiser.id,
-          position: data.adPosition.id,
-          materialurl: data.url,
-          jumpUrl: data.jumpUrl,
-        });
-      }, 500);
-      setMaterialurl(data.url);
-      setAgents([
-        { name: data.advertiser.user.nickname, id: data.advertiser.user.id },
-      ]);
-      setAdvertisers([
-        {
-          id: data.advertiser.id,
-          name: data.advertiser.companyName,
-          agentId: data.advertiser.user.id,
-        },
-      ]);
 
-      if (data.adPosition.type == 2) {
-        setPositionOptions(positionOptionsSoft);
-      } else {
-        setPositionOptions(positionOptionsPC);
-      }
-    },
-    [setAgents, setAdvertisers, positionOptionsSoft, positionOptionsPC]
-  );
+    setPositionOptionsAll([]);
+  }, [setShow]);
+  const loadInfo = useCallback(async (val: bigint) => {
+    const data = await MaterialApi.getInfo(val);
+    console.log("material load data", data);
+    // console.log("positions",positions)
+    setTimeout(() => {
+      formRef.current?.setFieldsValue({
+        name: data.name,
+        mediaType: data.adPosition.type,
+        content: data.content,
+        contentType: data.contentType,
+        enabled: data.enabled,
+        agent: data.advertiser.user.id,
+        advertiserId: data.advertiser.id,
+        position: data.adPosition.id,
+        materialurl: data.url,
+        jumpUrl: data.jumpUrl,
+      });
+      loadPositionsOpt();
+
+    }, 500);
+    setMaterialurl(data.url);
+    setAgents([
+      { name: data.advertiser.user.nickname, id: data.advertiser.user.id },
+    ]);
+
+    setAdvertisers([
+      {
+        id: data.advertiser.id,
+        name: data.advertiser.companyName,
+        agentId: data.advertiser.user.id,
+      },
+    ]);
+    if (data.adPosition.type == 2) {
+      setPositionOptions(positionOptionsSoft);
+      setPositionOptionsAll(positionOptionsSoft);
+    } else {
+      setPositionOptions(positionOptionsPC);
+      setPositionOptionsAll(positionOptionsPC);
+    }
+    console.log("soft pc", positionOptionsSoft, positionOptionsPC);
+    // loadPositionsOpt();
+  }, []);
   const customRequest = useCallback(
     async (file: RcFile) => {
       setFileList([
@@ -279,7 +299,7 @@ const EditForm = () => {
       onFinish={async () => {
         if (formRef.current) {
           const data = await formRef.current.validateFields();
-          console.log('material data',data)
+          console.log("material data", data);
           // data.avatar = avatar;
           data.url = removeImgUrl(materialurl);
           // console.log("validateFields data", data);
@@ -297,15 +317,6 @@ const EditForm = () => {
       onOpenChange={setShow}
     >
       <div>
-        <ProFormText
-          required
-          rules={[{ required: true, message: "请输入广告创意名称" }]}
-          initialValue={""}
-          width="xl"
-          name="name"
-          label="广告创意名称"
-          placeholder="请输入广告创意名称"
-        />
         <ProFormSelect
           required
           rules={[{ required: true, message: "选择代理商" }]}
@@ -366,8 +377,20 @@ const EditForm = () => {
           name="position"
           label="广告位置"
           required
-          initialValue={true}
-          options={positionOptions}
+          initialValue={positionOptions.map((val) => val.value)}
+          options={positionOptionsAll.map((val) => ({
+            label: val.label,
+            value: val.value,
+          }))}
+        />
+        <ProFormText
+          required
+          rules={[{ required: true, message: "请输入广告创意名称" }]}
+          initialValue={""}
+          width="xl"
+          name="name"
+          label="广告创意名称"
+          placeholder="请输入广告创意名称"
         />
         <ProFormText
           required
@@ -378,6 +401,7 @@ const EditForm = () => {
           label="广告内容"
           placeholder="请输入广告内容"
         />
+
         <ProFormRadio.Group
           name="enabled"
           label="启用状态"

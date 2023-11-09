@@ -186,6 +186,7 @@ export class PlacementService {
           displayCount: PlacementDto.displayCount,
           clickCount: PlacementDto.clickCount,
           advertiserId: PlacementDto.advertiserId,
+          name: PlacementDto.name,
           updatedAt: new Date(),
         },
       });
@@ -230,31 +231,29 @@ export class PlacementService {
     userId: number,
   ): Promise<{ ongoing: number; completed: number }> {
     const currentDate = new Date();
-    const where: any = {};
+    const wherecompleted: any = {};
     if (userId) {
-      where.advertiser = { userId: userId };
+      wherecompleted.advertiser = { userId: userId };
     }
+    wherecompleted.enabled = 1;
+    wherecompleted.endedAt = {
+      lte: currentDate, // 结束日期在当前日期之前的计划
+    };
     // 查询已完成计划数量
     const completedPlanCount = await this.prisma.adPlacement.count({
-      where: {
-        enabled: 1, // 仅考虑启用的计划
-        endedAt: {
-          lte: currentDate, // 结束日期在当前日期之前的计划
-        },
-      },
+      where: wherecompleted,
     });
-
+    const whereongoing: any = {};
+    whereongoing.enabled = 1;
+    whereongoing.startedAt = {
+      lte: currentDate,
+    };
+    whereongoing.endedAt = {
+      gte: currentDate, // 结束日期在当前日期之后的计划
+    };
     // 查询进行中计划数量
     const ongoingPlanCount = await this.prisma.adPlacement.count({
-      where: {
-        enabled: 1, // 仅考虑启用的计划
-        startedAt: {
-          lte: currentDate, // 开始日期在当前日期之前的计划
-        },
-        endedAt: {
-          gte: currentDate, // 结束日期在当前日期之后的计划
-        },
-      },
+      where: whereongoing,
     });
 
     console.log('已完成计划数量:', completedPlanCount);

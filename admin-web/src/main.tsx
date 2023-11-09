@@ -20,6 +20,7 @@ import { PositionPageProps } from "@/pages/position/index";
 
 import { ReportPageProps } from "@/pages/report";
 import { DashbordPageProps } from "@/pages/dashboard";
+import { SpecPageProps } from "./pages/spec";
 dayjs.extend(utc);
 const HelpIndexPage: React.LazyExoticComponent<React.FC> = lazy(
   () => import("@/pages/help")
@@ -68,6 +69,9 @@ const MediaIndexPage: React.LazyExoticComponent<React.FC<MediaPageProps>> =
 const PositionIndexPage: React.LazyExoticComponent<
   React.FC<PositionPageProps>
 > = lazy(() => import("@/pages/position/index"));
+const SpecIndexPage: React.LazyExoticComponent<React.FC<SpecPageProps>> = lazy(
+  () => import("@/pages/spec/index")
+);
 const ReportIndexPage: React.LazyExoticComponent<React.FC<ReportPageProps>> =
   lazy(() => import("@/pages/report"));
 const ReportAgentIndexPage: React.LazyExoticComponent<
@@ -220,7 +224,14 @@ const router = createBrowserRouter([
               </Suspense>
             ),
           },
-        
+          {
+            path: "spec/manage",
+            element: (
+              <Suspense>
+                <SpecIndexPage role="Root" roleName="广告规格管理" />
+              </Suspense>
+            ),
+          },
           {
             path: "content/helps",
             element: (

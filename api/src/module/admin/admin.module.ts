@@ -31,6 +31,8 @@ import { DashboardController } from './controllers/dashboard.controller';
 import { AdReportByDayService } from './services/adreportbyday.service';
 import { PositionService } from './services/position.service';
 import { PositionController } from './controllers/position.controller';
+import { AdSpecService } from './services/adspec.service';
+import { AdSpecController } from './controllers/adspec.controller';
 
 @Module({
   imports: [
@@ -53,6 +55,7 @@ import { PositionController } from './controllers/position.controller';
     UploadController,
     DashboardController,
     PositionController,
+    AdSpecController,
   ],
   providers: [
     AuthService,
@@ -72,6 +75,7 @@ import { PositionController } from './controllers/position.controller';
     ReportService,
     AdReportByDayService,
     PositionService,
+    AdSpecService,
   ],
 })
 export class AdminModule {

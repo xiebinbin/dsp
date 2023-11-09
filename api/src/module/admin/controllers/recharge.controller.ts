@@ -60,8 +60,8 @@ export class RechargeController {
 
       if (!advinfo) {
         throw new HttpException(
-          AuthError.USERNAME_IS_SAME.message,
-          AuthError.USERNAME_IS_SAME.code,
+          AuthError.ADV_NOT_FOUND.message,
+          AuthError.ADV_NOT_FOUND.code,
         );
       }
       const res = await this.RechargeService.create(data);

@@ -14,17 +14,25 @@ export class MediaService {
       },
     });
   }
-  async findMedias() {
+  async findMedias(type?: number) {
+    const where: any = {};
+    if (type && type != 0) {
+      console.log('findmediastype', type);
+      where.type = type;
+    }
+    where.enabled = true;
     const medias = await this.prisma.adMedia.findMany({
-      where: { enabled: true }, // 获取可用的
+      where,
       select: {
         id: true,
-        name: true, // 假设代理商有一个用户名字段，你可以根据实际情况选择需要的字段
+        name: true,
+        type: true,
       },
     });
     return medias.map((agent) => ({
       id: agent.id,
-      name: agent.name, // 这里假设代理商的用户名字段为 username
+      name: agent.name,
+      type: agent.type,
     }));
   }
   async findById(id: bigint) {

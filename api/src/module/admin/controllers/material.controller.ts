@@ -148,7 +148,6 @@ export class MaterialController {
   @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async materialstore(@Body() data: MaterialDto) {
-
     try {
       const materialname = await this.MaterialService.findByUsername(data.name);
 

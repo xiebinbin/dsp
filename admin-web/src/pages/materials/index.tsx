@@ -211,7 +211,7 @@ const MaterialsIndexPage = (props: MaterialsPageProps) => {
     {
       title: "更新时间",
       key: "updatedAt",
-      width: 80,
+      width: 100,
       dataIndex: "updatedAt",
       valueType: "dateTime",
       sorter: true,
