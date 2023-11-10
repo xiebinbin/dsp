@@ -11,12 +11,22 @@ export class MaterialDto {
   // 类型 1:图片 2:视频 3:文字
   @IsNotEmpty()
   contentType: number;
+  // specId: number;
   // 广告位置id
   positionId: number;
   adPosition: {
     id: number;
     name: string;
     type: number;
+    adSpec: {
+      id: number;
+      name: string; //规格名称
+      type: number; //规格类型 图片，视频
+    };
+    adMedia: {
+      id: number;
+      name: string;
+    };
   };
   // 广告内容
   @IsNotEmpty()

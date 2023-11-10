@@ -393,7 +393,7 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
                 success: true,
               };
             }}
-            rowKey="name"
+            rowKey="id"
             search={{
               labelWidth: "auto",
             }}

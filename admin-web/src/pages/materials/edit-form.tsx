@@ -22,6 +22,9 @@ import { RcFile } from "antd/es/upload";
 import FileApi from "@/api/file.ts";
 import PositionApi from "@/api/position.ts";
 import { AdpositionOpt } from "@/shims";
+import specApi, { specEditDto } from "@/api/spec.ts";
+import MedialApi, { MediaParams } from "@/api/media.ts";
+
 // eslint-disable-next-line react-refresh/only-export-components
 export const $emit = new Emittery();
 
@@ -36,18 +39,25 @@ const EditForm = () => {
   const [materialurl, setMaterialurl] = useSafeState(""); //http://static-edu-test.leleshuju.com/
   const [fileList, setFileList] = useSafeState<UploadFile[]>([]);
   const [mode, setMode] = useSafeState("add");
-  const [positionOptionsPC, setPositionOptionsPC] = useSafeState<
+  // const [positionOptionsPC, setPositionOptionsPC] = useSafeState<
+  //   { label: string; value: number }[]
+  // >([]);
+  // const [positionOptionsSoft, setPositionOptionsSoft] = useSafeState<
+  //   { label: string; value: number }[]
+  // >([]);
+  // const [positionOptions, setPositionOptions] = useSafeState<
+  //   { label: string; value: number }[]
+  // >([]);
+  const [specOptions, setspecOptions] = useSafeState<
     { label: string; value: number }[]
   >([]);
-  const [positionOptionsSoft, setPositionOptionsSoft] = useSafeState<
+  const [positionOptionsAll, setPositionOptionsAll] = useState<
     { label: string; value: number }[]
   >([]);
-  const [positionOptions, setPositionOptions] = useSafeState<
-    { label: string; value: number }[]
-  >([]);
-  const [positionOptionsAll, setPositionOptionsAll] = useSafeState<
-    { label: string; value: number }[]
-  >([]);
+  const [positionInfo1, setPositionInfo1] = useState<AdpositionOpt[]>([]); //用于存储位置信息
+  const [positionInfo2, setPositionInfo2] = useState<AdpositionOpt[]>([]); //用于存储位置信息
+  const [positionInfo3, setPositionInfo3] = useState<AdpositionOpt[]>([]); //用于存储位置信息
+
   const [agents, setAgents] = useSafeState<{ name: string; id: number }[]>([]);
   const [advertisers, setAdvertisers] = useState<
     { id: number; name: string; agentId: number }[]
@@ -57,19 +67,71 @@ const EditForm = () => {
   >([]);
   const [selectedAgent, setSelectedAgent] = useState<number | string>("");
   const [isUploading, setIsUploading] = useState(false);
+  const [mediasAlllist, setMediasAlllist] = useSafeState<
+    { name: string; id: number }[]
+  >([]);
+  const [mediaInfo1, setMediaInfo1] = useSafeState<{ id: number }[]>([]);
+  const [mediaInfo2, setMediaInfo2] = useSafeState<{ id: number }[]>([]);
+
+  // const handleAgentChange = (e: string | null) => {
+  //   console.log(e);
+  //   formRef.current?.setFieldsValue({
+  //     advertiserId: "",
+  //   });
+  //    loadAgentsRelation();
+  //   // loadAdvertisers("");
+  //   setSelectedAgent
+  // };
 
   const handleMediaTypeChange = (e: RadioChangeEvent) => {
-    if (e.target.value === 2) {
-      setPositionOptionsAll(positionOptionsSoft);
-    } else {
-      setPositionOptionsAll(positionOptionsPC);
-    }
+    const param = { mediatype: Number(e.target.value) };
+    formRef.current?.setFieldsValue({
+      mediaId: "",
+      positionId: "",
+    });
+
+    setMediasAlllist([]);
+    loadMedias(0);
+    loadPositionsOpt(param);
+  };
+  const handleMediaChange = (e: string | null) => {
+    const param = { mediaid: Number(e) };
+    formRef.current?.setFieldsValue({
+      positionId: "",
+    });
+    loadPositionsOpt(param);
+  };
+  const handleContentTypeChange = (e: RadioChangeEvent) => {
+    console.log("handleContentTypeChange");
+    loadSpecOpt(e.target.value);
+  };
+
+  const handleSpecChange = (e: string | null) => {
+    console.log("specchange", e);
+    formRef.current?.setFieldsValue({
+      mediaId: "",
+      positionId: "",
+    });
+    const param = { specid: Number(e) };
+    setMediasAlllist([]);
+    loadMedias(0);
+    setPositionOptionsAll([]);
+    setPositionInfo1([]);
+    setPositionInfo2([]);
+    setPositionInfo3([]);
+    loadPositionsOpt(param);
   };
 
   useEffect(() => {
+    console.log("useEffect");
+
+    // 加载相关数据
     loadAgentsRelation();
     loadAdvertisers("");
-    loadPositionsOpt();
+    loadSpecOpt();
+    // loadMedias(0);
+
+    // 处理广告主
     if (selectedAgent) {
       const filteredAdvertisers = advertisersList.filter(
         (advertiser) => advertiser.agentId === selectedAgent
@@ -81,40 +143,205 @@ const EditForm = () => {
     } else {
       setAdvertisers([]);
     }
-    if (positionOptionsAll) {
-      console.log("positionOptionsAll", positionOptionsAll);
+
+    const positionInfoArrays = [positionInfo1, positionInfo2, positionInfo3];
+
+    const conditions = positionInfoArrays.filter((info) => info.length > 0);
+
+    if (conditions.length > 0) {
+      const intersectionOptions = conditions.reduce(
+        (acc, current) => getPostionInner(acc, current),
+        conditions[0]
+      );
+
+      console.log("useEffect positionInfo", intersectionOptions);
+
+      // 设置位置选项
+      setPositionOptionsAll(
+        intersectionOptions.map((opt) => ({
+          label: opt.name,
+          value: opt.id,
+        }))
+      );
+
+      console.log("effect mediasAlllist", mediasAlllist);
+
+      // }
     }
-  }, [selectedAgent]);
-  const loadPositionsOpt = useCallback(async () => {
-    const positionOpt: AdpositionOpt[] = await PositionApi.getPositionsList();
-    setPositionOptionsAll(
-      positionOpt.map((opt) => ({
-        label: opt.name,
-        value: opt.id,
-      }))
-    );
-    setPositionOptionsPC(
-      positionOpt
-        .filter((opt) => opt.type === 1)
-        .map((opt) => ({
+    console.log("media1", mediaInfo1);
+    console.log("media2", mediaInfo2);
+
+    const uniqueMediaInfo1 = Array.from(
+      new Set(mediaInfo1.map((item) => item.id))
+    ).map((id) => ({ id }));
+    const uniqueMediaInfo2 = Array.from(
+      new Set(mediaInfo2.map((item) => item.id))
+    ).map((id) => ({ id }));
+
+    const mediaInfoArrays = [uniqueMediaInfo1, uniqueMediaInfo2];
+    const mediaConditions = mediaInfoArrays.filter((info) => info.length > 0);
+
+    if (mediaConditions.length > 0) {
+      let mediaOptions: { id: number }[] = [];
+
+      if (mediaConditions.length === 1) {
+        console.log("medicon=1", mediaConditions);
+
+        mediaOptions = mediaConditions[0];
+      } else {
+        console.log("medicon else", mediaConditions);
+
+        mediaOptions = mediaConditions.reduce(
+          (acc, current) => getMediaInner(acc, current),
+          mediaConditions[0]
+        );
+      }
+
+      const filteredMedias = mediasAlllist.filter((media) =>
+        mediaOptions.some((option) => option.id === media.id)
+      );
+      console.log("filteredMedias", filteredMedias);
+
+      setMediasAlllist(filteredMedias);
+    }
+  }, [
+    selectedAgent,
+    positionInfo1,
+    positionInfo2,
+    positionInfo3,
+    mediaInfo1,
+    mediaInfo2,
+    setPositionOptionsAll,
+  ]);
+
+  const getPostionInner = (
+    arr1: AdpositionOpt[],
+    arr2: AdpositionOpt[]
+  ): AdpositionOpt[] => {
+    return arr1.filter((item1) => arr2.some((item2) => item1.id === item2.id));
+  };
+  const getMediaInner = (
+    arr1: { id: number }[],
+    arr2: { id: number }[]
+  ): { id: number }[] => {
+    return arr1.filter((item1) => arr2.some((item2) => item1.id === item2.id));
+  };
+  const loadMedias = useCallback(
+    async (q: number) => {
+      const params: MediaParams = { type: q ?? 0 };
+      const res = await MedialApi.postMediasList(params);
+      console.log("loadMedias res", res);
+      setMediasAlllist(
+        res.map((item) => {
+          return {
+            name: item.name,
+            id: Number(item.id),
+            type: Number(item.type),
+          };
+        })
+      );
+    },
+    [setMediasAlllist]
+  );
+  const loadSpecOpt = useCallback(async (type?: number) => {
+    const specOpt = await specApi.getSpecsList();
+    if (type) {
+      setspecOptions(
+        specOpt
+          .filter((opt) => opt.type === type)
+          .map((opt) => ({
+            label: opt.name,
+            value: opt.id,
+          }))
+      );
+    } else {
+      setspecOptions(
+        specOpt.map((opt) => ({
           label: opt.name,
           value: opt.id,
         }))
-    );
-    setPositionOptionsSoft(
-      positionOpt
-        .filter((opt) => opt.type === 2)
-        .map((opt) => ({
-          label: opt.name,
-          value: opt.id,
-        }))
-    );
+      );
+    }
+
     // return positionOpt.map((opt) => ({
     //   label: opt.name,
     //   value: opt.id,
     //   type: opt.type,
     // }));
   }, []);
+  const loadPositionsOpt = useCallback(
+    async (param?: {
+      specid?: number;
+      mediatype?: number;
+      mediaid?: number;
+    }) => {
+      const positionOpt: AdpositionOpt[] = await PositionApi.getPositionsList();
+
+      if (param) {
+        const filteredOptions = positionOpt.filter((opt) => {
+          if (param.specid && param.mediatype) {
+            return (
+              opt.adSpecId === param.specid && opt.type === param.mediatype
+            );
+          } else if (param.specid) {
+            return opt.adSpecId === param.specid;
+          } else if (param.mediatype) {
+            return opt.type === param.mediatype;
+          } else if (param.mediaid) {
+            return opt.adMediaId === param.mediaid;
+          }
+          return true; // 如果没有任何筛选条件，返回全部选项
+        });
+        if (param.specid) {
+          const op = filteredOptions.map((opt) => ({
+            label: opt.name,
+            value: opt.id,
+          }));
+          setPositionInfo1(filteredOptions);
+          setMediaInfo1(
+            filteredOptions.map((opt) => ({
+              id: opt.adMediaId,
+            }))
+          );
+          setPositionOptionsAll(op);
+        } else if (param.mediatype) {
+          console.log(" else if(param.mediatype)", filteredOptions);
+          setPositionInfo2(filteredOptions);
+          setMediaInfo2(
+            filteredOptions.map((opt) => ({
+              id: opt.adMediaId,
+            }))
+          );
+          setPositionOptionsAll(
+            filteredOptions.map((opt) => ({
+              label: opt.name,
+              value: opt.id,
+            }))
+          );
+        } else if (param.mediaid) {
+          console.log(" else if(param.mediaid)", filteredOptions);
+          setPositionInfo3(filteredOptions);
+          setPositionOptionsAll(
+            filteredOptions.map((opt) => ({
+              label: opt.name,
+              value: opt.id,
+            }))
+          );
+        }
+      } else {
+        // console.log("loadPositionsOpt else");
+        // setPositionInfo1(positionOpt);
+        // setPositionInfo2(positionOpt);
+        setPositionOptionsAll(
+          positionOpt.map((opt) => ({
+            label: opt.name,
+            value: opt.id,
+          }))
+        );
+      }
+    },
+    [setMediaInfo1, setMediaInfo2]
+  );
   const loadAgentsRelation = useCallback(async () => {
     const agentList = await AgentApi.getAgentsList();
     setAgents(agentList);
@@ -158,8 +385,10 @@ const EditForm = () => {
         content: "",
         agent: "",
         advertiser: "",
-        position: "",
+        positionId: "",
+        mediaId: "",
         url: "",
+        spec: "",
         jumpUrl: "",
       });
       // setId(BigInt(0));
@@ -199,12 +428,14 @@ const EditForm = () => {
         enabled: data.enabled,
         agent: data.advertiser.user.id,
         advertiserId: data.advertiser.id,
-        position: data.adPosition.id,
+        positionId: data.adPosition.id,
         materialurl: data.url,
+        mediaId: data.adPosition.adMedia.id,
         jumpUrl: data.jumpUrl,
+        specId: data.adPosition.adSpec.id,
       });
       loadPositionsOpt();
-
+      loadMedias(0);
     }, 500);
     setMaterialurl(data.url);
     setAgents([
@@ -218,14 +449,14 @@ const EditForm = () => {
         agentId: data.advertiser.user.id,
       },
     ]);
-    if (data.adPosition.type == 2) {
-      setPositionOptions(positionOptionsSoft);
-      setPositionOptionsAll(positionOptionsSoft);
-    } else {
-      setPositionOptions(positionOptionsPC);
-      setPositionOptionsAll(positionOptionsPC);
-    }
-    console.log("soft pc", positionOptionsSoft, positionOptionsPC);
+    // if (data.adPosition.type == 2) {
+    //   // setPositionOptions(positionOptionsSoft);
+    //   setPositionOptionsAll(positionOptionsSoft);
+    // } else {
+    //   // setPositionOptions(positionOptionsPC);
+    //   setPositionOptionsAll(positionOptionsPC);
+    // }
+    // console.log("soft pc", positionOptionsSoft, positionOptionsPC);
     // loadPositionsOpt();
   }, []);
   const customRequest = useCallback(
@@ -299,6 +530,7 @@ const EditForm = () => {
       onFinish={async () => {
         if (formRef.current) {
           const data = await formRef.current.validateFields();
+
           console.log("material data", data);
           // data.avatar = avatar;
           data.url = removeImgUrl(materialurl);
@@ -333,7 +565,6 @@ const EditForm = () => {
             onChange: setSelectedAgent,
           }}
         />
-
         <ProFormSelect
           required
           rules={[{ required: true, message: "选择广告主" }]}
@@ -349,17 +580,30 @@ const EditForm = () => {
             })
           )}
         />
-
         <ProFormRadio.Group
           name="contentType"
           label="类型"
           required
           initialValue={true}
-          options={[{ label: "图片", value: 1 }]}
+          options={[
+            { label: "图片", value: 1 },
+            { label: "视频", value: 2 },
+          ]}
           fieldProps={{
-            onChange: handleMediaTypeChange,
+            onChange: handleContentTypeChange,
           }}
         />
+        <ProFormSelect
+          name="specId"
+          label="广告规格"
+          required
+          initialValue={true}
+          options={specOptions}
+          fieldProps={{
+            onChange: handleSpecChange,
+          }}
+        />
+
         <ProFormRadio.Group
           name="mediaType"
           label="媒体类型"
@@ -373,11 +617,26 @@ const EditForm = () => {
             onChange: handleMediaTypeChange,
           }}
         />
-        <ProFormRadio.Group
-          name="position"
+        <ProFormSelect
+          name="mediaId"
+          label="媒体"
+          required
+          initialValue={true}
+          options={mediasAlllist.map(
+            (medias: { name: string; id: number }) => ({
+              label: medias.name,
+              value: medias.id,
+            })
+          )}
+          fieldProps={{
+            onChange: handleMediaChange,
+          }}
+        />
+        <ProFormSelect
+          name="positionId"
           label="广告位置"
           required
-          initialValue={positionOptions.map((val) => val.value)}
+          initialValue={positionOptionsAll.map((val) => val.value)}
           options={positionOptionsAll.map((val) => ({
             label: val.label,
             value: val.value,
@@ -401,7 +660,6 @@ const EditForm = () => {
           label="广告内容"
           placeholder="请输入广告内容"
         />
-
         <ProFormRadio.Group
           name="enabled"
           label="启用状态"

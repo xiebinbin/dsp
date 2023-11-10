@@ -47,6 +47,7 @@ export class MaterialController {
         advertiserId: extra.advid,
         userId: extra.userId,
       });
+      console.log('result', result);
       return result;
     } catch (e) {
       console.log(e);
@@ -136,7 +137,7 @@ export class MaterialController {
     try {
       const userinfo = await this.MaterialService.findById(BigInt(id));
       const res = this.convertAgentInfo(userinfo);
-      console.log('getagentresult', res);
+      console.log('Material detail', res);
 
       return res;
     } catch (e) {
@@ -212,6 +213,15 @@ export class MaterialController {
         id: Number(material.adPosition.id),
         name: material.adPosition.name,
         type: Number(material.adPosition.type),
+        adSpec: {
+          id: Number(material.adPosition.adSpec.id),
+          name: material.adPosition.adSpec.name, //规格名称
+          type: Number(material.adPosition.adSpec.type), //规格类型 图片，视频
+        },
+        adMedia: {
+          id: Number(material.adPosition.adMedia.id),
+          name: material.adPosition.adMedia.name,
+        },
       },
       content: material.content,
       url: this.defaultUrl + material.url,
@@ -244,6 +254,15 @@ export class MaterialController {
         id: Number(material.adPosition.id),
         name: material.adPosition.name,
         type: Number(material.adPosition.type),
+        adSpec: {
+          id: Number(material.adPosition.adSpec.id),
+          name: material.adPosition.adSpec.name, //规格名称
+          type: Number(material.adPosition.adSpec.type), //规格类型 图片，视频
+        },
+        adMedia: {
+          id: Number(material.adPosition.adMedia.id),
+          name: material.adPosition.adMedia.name,
+        },
       },
       content: material.content,
       url: this.defaultUrl + material.url,

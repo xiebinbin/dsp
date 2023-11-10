@@ -287,7 +287,7 @@ import type {
                   success: true,
                 };
               }}
-              rowKey="name"
+              rowKey="id"
               search={{
                 labelWidth: "auto",
               }}

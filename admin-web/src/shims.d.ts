@@ -59,7 +59,17 @@ interface AdMaterial {
     id: number;
     name: string;
     type: number;
+    adSpec: {
+      id: number;
+      name: string;
+      type: number;
+    };
+    adMedia: {
+      id: number;
+      name: string;
+    };
   };
+
   // 广告内容
   content: string;
   // 广告链接
@@ -194,6 +204,7 @@ interface AdspecOpt {
   id: number;
   name: string;
   type: number;
+
 }
 interface Adposition {
   id: number;
@@ -217,6 +228,8 @@ interface AdpositionOpt {
   id: number;
   name: string;
   type: number;
+  adSpecId: number;
+  adMediaId: number;
 }
 interface Tag {
   id: bigint;

@@ -24,7 +24,27 @@ export class MaterialService {
         mediaType: true,
         contentType: true,
         positionId: true,
-        adPosition: { select: { id: true, name: true, type: true } },
+        adPosition: {
+          select: {
+            id: true,
+            name: true,
+            type: true,
+            adSpec: {
+              select: {
+                id: true,
+                name: true, //规格名称
+                type: true, //规格类型 图片，视频
+              },
+            },
+            adMedia: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+
         content: true,
         url: true,
         advertiserId: true,
@@ -87,6 +107,28 @@ export class MaterialService {
             user: {
               select: {
                 nickname: true,
+              },
+            },
+          },
+        },
+
+        adPosition: {
+          select: {
+            id: true,
+            name: true, //位置名称
+            adMedia: {
+              //媒体信息
+              select: {
+                id: true,
+                name: true,
+                type: true, //媒体类型
+              },
+            },
+            adSpec: {
+              select: {
+                id: true,
+                name: true, //规格名称
+                type: true, //规格类型 图片，视频
               },
             },
           },

@@ -21,12 +21,16 @@ export class PositionService {
         id: true,
         name: true,
         type: true,
+        adSpecId: true,
+        adMediaId: true,
       },
     });
     return positions.map((position) => ({
       id: position.id,
       name: position.name,
       type: position.type,
+      adSpecId: position.adSpecId,
+      adMediaId: position.adMediaId,
     }));
   }
   async findById(id: bigint) {

@@ -80,7 +80,7 @@ const MediaIndexPage = (props: MediaPageProps) => {
       render: (_dom, record) => {
         return record.id.toString();
       },
-      width: 200,
+      width: 50,
       hideInSearch: true,
       hideInTable: true,
     },
@@ -226,7 +226,7 @@ const MediaIndexPage = (props: MediaPageProps) => {
                 success: true,
               };
             }}
-            rowKey="name"
+            rowKey="id"
             search={{
               labelWidth: "auto",
             }}

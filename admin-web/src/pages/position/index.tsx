@@ -51,9 +51,7 @@ const PositionIndexPage = (props: PositionPageProps) => {
     actionRef.current?.reload();
   }, []);
 
-  useEffect(() => {
-    // 在组件加载时触发 loadAdvertisers 并设置值给 advertiserSearch
-  }, []);
+  useEffect(() => {}, []);
   useMount(() => {
     $emit.on("reload", () => {
       reload();
@@ -75,10 +73,12 @@ const PositionIndexPage = (props: PositionPageProps) => {
       },
       width: 50,
       hideInSearch: true,
+      hideInTable: true,
     },
     {
       title: "名称",
       dataIndex: "name",
+      key: "id", // 使用数据项的唯一ID作为key值
       ellipsis: true,
       valueType: "text",
       width: 150,
@@ -87,11 +87,11 @@ const PositionIndexPage = (props: PositionPageProps) => {
       },
     },
     {
-      title: "类型", // 类型 1 网站 2pc 软件
+      title: "媒体类型", // 类型 1 网站 2pc 软件
       dataIndex: "type",
       ellipsis: true,
       valueType: "text",
-      width: 150,
+      width: 80,
       valueEnum: types,
       hideInSearch: true,
 
@@ -215,15 +215,15 @@ const PositionIndexPage = (props: PositionPageProps) => {
             cardBordered
             request={async (params = {}, sort, filters) => {
               const orderBy: { [key: string]: "asc" | "desc" } = {};
-              for (const sortKey in sort) {
-                const field = sortKey.replace(
-                  /_(\w)/g,
-                  function (_all, letter) {
-                    return letter.toUpperCase();
-                  }
-                );
-                orderBy[field] = sort[sortKey] === "ascend" ? "asc" : "desc";
-              }
+              // for (const sortKey in sort) {
+              //   const field = sortKey.replace(
+              //     /_(\w)/g,
+              //     function (_all, letter) {
+              //       return letter.toUpperCase();
+              //     }
+              //   );
+              //   orderBy[field] = sort[sortKey] === "ascend" ? "asc" : "desc";
+              // }
               const extra: Record<string, boolean> = {};
               console.log("extra", extra);
               const result = await PositionApi.getList({
@@ -240,7 +240,7 @@ const PositionIndexPage = (props: PositionPageProps) => {
                 success: true,
               };
             }}
-            rowKey="name"
+            rowKey="id"
             search={{
               labelWidth: "auto",
             }}

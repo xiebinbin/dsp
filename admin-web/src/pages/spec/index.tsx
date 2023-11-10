@@ -105,13 +105,13 @@ const SpecIndexPage = (props: SpecPageProps) => {
       dataIndex: "size",
       ellipsis: true,
       valueType: "text",
-      width: 200,
+      width: 100,
       hideInSearch: true,
     },
     {
       title: "更新时间",
       key: "updatedAt",
-      width: 80,
+      width: 100,
       dataIndex: "updatedAt",
       valueType: "dateTime",
       sorter: true,
@@ -214,7 +214,7 @@ const SpecIndexPage = (props: SpecPageProps) => {
                 success: true,
               };
             }}
-            rowKey="name"
+            rowKey="id"
             search={{
               labelWidth: "auto",
             }}
