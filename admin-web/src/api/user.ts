@@ -1,5 +1,5 @@
 import createRequestInstance from "@/api/lib/create-request-instance.ts";
-import { GetListDto, SuperUser, User } from "@/shims";
+import { GetListDto, SuperUser, User, operatorList } from "@/shims";
 
 export interface UserEditDto {
   nickname: string;
@@ -33,7 +33,9 @@ const update = (id: bigint, params: UserEditDto): Promise<SuperUser> => {
 const remove = (id: bigint): Promise<boolean> => {
   return createRequestInstance().delete(`/api/admin/users/${id}`);
 };
-
+const getOptList = (): Promise<operatorList[]> => {
+  return createRequestInstance().get(`/api/admin/users/optlist`);
+};
 export default {
   create,
   getInfo,
@@ -41,4 +43,5 @@ export default {
   getList,
   getAgentsList,
   remove,
+  getOptList,
 };

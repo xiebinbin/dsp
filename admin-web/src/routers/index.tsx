@@ -18,9 +18,8 @@ function hasAccess(route: Route, role: string) {
   return !route.access || route.access.includes(role);
 }
 
-
 function filterRoutes(routes: Route[] | undefined, role: string) {
-  const result: Route[] = [];  
+  const result: Route[] = [];
 
   routes?.forEach((r) => {
     if (hasAccess(r, role)) {
@@ -33,9 +32,7 @@ function filterRoutes(routes: Route[] | undefined, role: string) {
   });
   return result;
 }
-const GetRouter = (userRole:string): Route => {
-
-
+const GetRouter = (userRole: string): Route => {
   const fullRoutes: Route = {
     path: "admin",
     routes: [
@@ -43,8 +40,7 @@ const GetRouter = (userRole:string): Route => {
         path: "/admin/dashboard",
         name: "控制台",
         icon: <DashboardTwoTone />,
-        access: ["Root","Operator","Agent"]
-
+        access: ["Root", "Operator", "Agent"],
       },
       // {
       //   path: "/admin/dashboard/agent",
@@ -57,8 +53,7 @@ const GetRouter = (userRole:string): Route => {
         path: "/admin/dashboard/advertiser",
         name: "控制台",
         icon: <DashboardTwoTone />,
-        access: ["Advertiser"]
-
+        access: ["Advertiser"],
       },
       {
         name: "用户管理",
@@ -67,32 +62,29 @@ const GetRouter = (userRole:string): Route => {
 
         routes: [
           {
-            
             name: "超级管理员",
             path: "/admin/user/supers",
-            access: ["Root"]
+            access: ["Root"],
           },
           {
             name: "运营管理",
             path: "/admin/user/operators",
-            access: ["Root"]
+            access: ["Root"],
           },
           {
             name: "代理商管理",
             path: "/admin/user/creators",
-            access: ["Root","Operator"]
-
+            access: ["Root", "Operator"],
           },
           {
             name: "广告主管理",
             path: "/admin/advertiser/root",
-            access: ["Root","Operator"]
-
+            access: ["Root", "Operator"],
           },
           {
             name: "广告主列表",
             path: "/admin/advertiser/agent",
-            access: ["Agent"]
+            access: ["Agent"],
           },
         ],
       },
@@ -105,28 +97,28 @@ const GetRouter = (userRole:string): Route => {
           {
             path: "/admin/materials/root",
             name: "广告创意管理",
-            access: ["Root","Operator"]
+            access: ["Root", "Operator"],
           },
           {
             path: "/admin/materials/agent",
             name: "广告创意列表",
-            access: ["Agent"]
+            access: ["Agent"],
           },
           // {
           //   path: "/admin/materials/advertiser",
           //   name: "广告主-广告素材列表",
           //   access: ["Advertiser"]
           // },
- 
+
           {
             path: "/admin/placements/root",
             name: "广告投放计划",
-            access: ["Root","Operator"]
+            access: ["Root", "Operator"],
           },
           {
             path: "/admin/placements/agent",
             name: "广告计划列表",
-            access: ["Agent"]
+            access: ["Agent"],
           },
           // {
           //   path: "/admin/placements/advertiser",
@@ -141,22 +133,22 @@ const GetRouter = (userRole:string): Route => {
         name: "媒体管理",
         icon: <VideoCameraTwoTone />,
         path: "/admin/media",
-        access: ["Root","Operator"],
+        access: ["Root", "Operator"],
         routes: [
           {
             path: "/admin/media/manage",
             name: "投放媒体管理",
-            access: ["Root","Operator"]
+            access: ["Root", "Operator"],
           },
           {
             path: "/admin/position/manage",
             name: "广告位置管理",
-            access: ["Root","Operator"]
+            access: ["Root", "Operator"],
           },
           {
             path: "/admin/spec/manage",
             name: "广告规格管理",
-            access: ["Root","Operator"]
+            access: ["Root", "Operator"],
           },
         ],
       },
@@ -167,27 +159,27 @@ const GetRouter = (userRole:string): Route => {
         routes: [
           {
             path: "/admin/report/index",
-            name: "运营报表",
-            access: ["Root","Operator"]
+            name: "运营按天汇总报表",
+            access: ["Root", "Operator"],
           },
           {
             path: "/admin/report/agent",
-            name: "代理商报表",
-            access: ["Agent"]
+            name: "代理商按天汇总报表",
+            access: ["Agent"],
           },
         ],
       },
       // 根据用户角色配置允许访问的路由
     ],
-    name: ""
+    name: "",
   };
- // 根据用户角色过滤路由
- const filteredRoutes = filterRoutes(fullRoutes.routes, userRole);
+  // 根据用户角色过滤路由
+  const filteredRoutes = filterRoutes(fullRoutes.routes, userRole);
 
- return {
-   ...fullRoutes,
-   routes: filteredRoutes,
- };
+  return {
+    ...fullRoutes,
+    routes: filteredRoutes,
+  };
 };
 
 export default GetRouter;

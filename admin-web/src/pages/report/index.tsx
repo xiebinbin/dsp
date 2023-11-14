@@ -17,7 +17,7 @@ import ReportApi, {
 } from "@/api/report.ts";
 import { useMount, useSafeState } from "ahooks";
 import MaterialApi from "@/api/material.ts";
-import AgentApi from "@/api/agent.ts";
+// import AgentApi from "@/api/agent.ts";
 import AdvAPI from "@/api/advertiser.ts";
 import { useRecoilState } from "recoil";
 import { AuthInfo } from "@/stores/auth-info";
@@ -73,7 +73,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
   };
 
   const loadAgentsRelation = useCallback(async () => {
-    const agentList = await AgentApi.getAgentsList();
+    const agentList = await AdvAPI.getreportagentlist();
     setAgents(agentList);
   }, [setAgents]);
 
@@ -210,7 +210,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
               label: {
                 autoRotate: true,
                 rotate: Math.PI / 6,
-                offset: 15,
+                offset: 35,
                 style: {
                   fontSize: 10,
                 },
@@ -480,6 +480,8 @@ const ReportIndexPage = (props: ReportPageProps) => {
                     value: agent.id,
                   }))}
                   fieldProps={{
+                    showSearch: true,
+
                     onChange: setSelectedAgent,
                     style: {
                       width: "200px", // 设置代理商选择框的宽度
@@ -498,6 +500,8 @@ const ReportIndexPage = (props: ReportPageProps) => {
                     })
                   )}
                   fieldProps={{
+                    showSearch: true,
+
                     onChange: handleAdvertiserChange, // 直接传递选中的值
                     style: {
                       width: "200px", // 设置代理商选择框的宽度
@@ -513,6 +517,8 @@ const ReportIndexPage = (props: ReportPageProps) => {
                     value: material.id,
                   }))}
                   fieldProps={{
+                    showSearch: true,
+
                     onChange: handleMaterialChange, // 直接传递选中的值
                     style: {
                       width: "200px", // 设置代理商选择框的宽度
@@ -522,7 +528,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
                 <ProFormSelect
                   initialValue={null}
                   name="adPlacementId"
-                  placeholder="选择广告计划"
+                  placeholder="选择计划备注"
                   options={placements.map((placement) => ({
                     label: placement.name,
                     value: placement.id,

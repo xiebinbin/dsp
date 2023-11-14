@@ -53,6 +53,34 @@ export class AdvController {
       throw new HttpException(e.message, e.status);
     }
   }
+  @Post('reportagentlist')
+  @UseInterceptors(ApiResInterceptor)
+  async getAgentByOperator(@Req() req: Request, @Body() queryParams: any) {
+    console.log('getOptList queryParams', queryParams);
+    console.log('getOptList req', req.user);
+    try {
+      let operatorId;
+      if (req.user.role == 'Operator') {
+        operatorId = req.user.id;
+      }
+      const advs = await this.AdvService.findByOperator(operatorId);
+
+      const result = advs.map((adv) => ({
+        id: adv.user.id,
+        name: adv.user.nickname,
+      }));
+      const uniqueResults = Array.from(
+        new Set(result.map((item) => item.id)),
+      ).map((id) => {
+        return result.find((item) => item.id === id);
+      });
+      //   return response.send(result);
+      return uniqueResults;
+    } catch (e) {
+      console.log(e);
+      throw new HttpException(e.message, e.status);
+    }
+  }
   @Post('list')
   @UseGuards(GuardMiddlewareAll) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
@@ -153,9 +181,11 @@ export class AdvController {
       wallet: { balance: adv.wallet.balance },
       cpmPrice: Number(adv.cpmPrice),
       userId: Number(adv.userId),
+      operatorId: Number(adv.operatorId),
       updatedAt: null,
       enabled: adv.enabled,
       user: { id: Number(adv.user.id), name: adv.user.nickname }, // 使用对象字面量设置 user 属性的值
+      operator: { id: Number(adv.operator.id), name: adv.operator.nickname },
     };
     // Convert the 'id' property to BigInt
 

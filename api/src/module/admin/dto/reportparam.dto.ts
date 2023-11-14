@@ -1,4 +1,3 @@
-
 export class reportParam {
   agentId: bigint;
   advertiserId: bigint;
@@ -6,4 +5,5 @@ export class reportParam {
   adPlacementId: bigint;
   startDate: string;
   endDate: string;
+  advertisers: bigint[];
 }

@@ -3,7 +3,7 @@ import { Advertiser, AdvertiserOpt, GetListDto } from "@/shims";
 export interface AdvEditDto {
   companyName: string;
   username: string;
-  domainName : string;
+  domainName: string;
   cpmPrice: number;
   password?: string;
   confirmPassword?: string;
@@ -11,7 +11,10 @@ export interface AdvEditDto {
   userId: number;
   role: "Advertiser";
 }
-
+export interface reportagentlistDto {
+  id: number;
+  name: string;
+}
 const getList = (
   params: GetListDto
 ): Promise<{
@@ -21,7 +24,7 @@ const getList = (
   return createRequestInstance().post("/api/admin/advertiser/list", params);
 };
 const getOptList = (params: GetListDto): Promise<AdvertiserOpt[]> => {
-  return createRequestInstance().post("/api/admin/advertiser/optlist",params);
+  return createRequestInstance().post("/api/admin/advertiser/optlist", params);
 };
 const getInfo = (id: bigint): Promise<Advertiser> => {
   return createRequestInstance().get(`/api/admin/advertiser/${id}`);
@@ -35,6 +38,10 @@ const update = (id: bigint, params: AdvEditDto): Promise<AdvEditDto> => {
     ...params,
   });
 };
+const getreportagentlist = (): Promise<reportagentlistDto[]> => {
+  return createRequestInstance().post("/api/admin/advertiser/reportagentlist");
+};
+
 const remove = (id: bigint): Promise<boolean> => {
   return createRequestInstance().delete(`/api/admin/advertiser/${id}`);
 };
@@ -45,4 +52,5 @@ export default {
   create,
   remove,
   getOptList,
+  getreportagentlist,
 };

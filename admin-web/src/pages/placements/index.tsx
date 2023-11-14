@@ -49,9 +49,7 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
   const [advertisers, setAdvertisers] = useSafeState<
     { id: number; name: string; agentId: number }[]
   >([]);
-  const [, setAgents] = useSafeState<{ label: string; value: number }[]>(
-    []
-  );
+  const [, setAgents] = useSafeState<{ label: string; value: number }[]>([]);
   const [advertisersList, setadvertisersList] = useSafeState<
     { id: number; name: string; agentId: number }[]
   >([]);
@@ -66,7 +64,7 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
     try {
       const agentslist = await AgentApi.getAgentsList();
       // console.log("agentslist", agentslist);
-
+      console.log("advertisers", advertisers);
       setAgents(
         agentslist.map((agent) => {
           return {

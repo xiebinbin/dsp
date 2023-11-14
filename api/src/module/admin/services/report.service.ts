@@ -14,7 +14,7 @@ export class ReportService {
     const medias = await this.prisma.adMedia.findMany({
       select: {
         id: true,
-        name: true, // 假设代理商有一个用户名字段，你可以根据实际情况选择需要的字段
+        name: true,
       },
     });
     return medias.map((media) => ({
@@ -37,6 +37,11 @@ export class ReportService {
       name: placement.adPlacementName,
     }));
   }
+  async findAgents() {
+    const agents = await this.prisma.reportDaily.groupBy({
+      by: ['agentId', 'agentName'],
+    });
+  }
   async getReportsByDateRange(param: reportParam) {
     const {
       agentId,
@@ -45,6 +50,7 @@ export class ReportService {
       startDate,
       endDate,
       adPlacementId,
+      advertisers,
     } = param;
     const formattedStartDate = dayjs(startDate).startOf('day').format(); // 将日期转换为 ISO 8601 字符串
     const formattedEndDate = dayjs(endDate).endOf('day').format();
@@ -60,13 +66,25 @@ export class ReportService {
       where.adPlacementId = adPlacementId;
     }
     if (advertiserId !== null) {
-      where.advertiserId = advertiserId;
+      where.advertiserId = {
+        ...(where.advertiserId || {}),
+        equals: advertiserId,
+      };
     }
 
     if (adMaterialId !== null) {
       where.adMaterialId = adMaterialId;
     }
+    if (advertisers !== null && advertisers !== undefined) {
+      where.advertiserId = {
+        ...(where.advertiserId || {}),
+        in: advertisers,
+      };
+    }
     console.log('report where : ', where);
+    const prismalog = new PrismaClient({
+      log: ['query'],
+    });
 
     const reports = await this.prisma.reportDaily.groupBy({
       by: ['date'],
@@ -80,6 +98,7 @@ export class ReportService {
         date: 'asc',
       },
     });
+
     const reportSummary: ReportDto[] = reports.map((report) => ({
       date: dayjs(report.date).toDate(),
       displayCount: Number(report._sum.displayCount),

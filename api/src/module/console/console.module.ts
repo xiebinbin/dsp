@@ -16,6 +16,7 @@ import {
   // CalculateReportDailyQuestions,
 } from './commands/calculate-report-daily.command';
 import { ReportService } from './services/report.service';
+import { CalculateReportPlacementCommand } from './commands/calculate-report-placement.command';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { ReportService } from './services/report.service';
     UpdateRootUserPasswordQuestions,
     UpdateUserPasswordCommand,
     CalculateReportDailyCommand,
-    // CalculateReportDailyQuestions,
+    CalculateReportPlacementCommand,
     ReportService,
   ],
 })

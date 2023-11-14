@@ -74,9 +74,11 @@ const SpecIndexPage: React.LazyExoticComponent<React.FC<SpecPageProps>> = lazy(
 );
 const ReportIndexPage: React.LazyExoticComponent<React.FC<ReportPageProps>> =
   lazy(() => import("@/pages/report"));
+
 const ReportAgentIndexPage: React.LazyExoticComponent<
   React.FC<ReportPageProps>
 > = lazy(() => import("@/pages/report/index-agent"));
+
 const UserAgreementPage: React.LazyExoticComponent<React.FC> = lazy(
   () => import("@/pages/policy/user")
 );

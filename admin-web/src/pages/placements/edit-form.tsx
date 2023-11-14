@@ -241,7 +241,7 @@ const EditForm = () => {
           id: val.mediaId,
         })) || []
       );
-      console.log('mediaslist',mediaslist)
+      console.log("mediaslist", mediaslist);
 
       setAgents([
         { name: data.advertiser.user.nickname, id: data.advertiser.user.id },
@@ -326,9 +326,9 @@ const EditForm = () => {
       onOpenChange={setShow}
     >
       <div>
-   
         <ProFormSelect
           required
+          disabled={mode == "update"}
           rules={[{ required: true, message: "选择代理商" }]}
           initialValue=""
           width="xl"
@@ -345,6 +345,7 @@ const EditForm = () => {
         />
         <ProFormSelect
           required
+          disabled={mode == "update"}
           rules={[{ required: true, message: "选择广告主" }]}
           initialValue=""
           width="xl"
@@ -363,6 +364,7 @@ const EditForm = () => {
         />
         <ProFormSelect
           required
+          disabled={mode == "update"}
           rules={[{ required: true, message: "选择广告创意" }]}
           initialValue={""}
           width="xl"

@@ -45,14 +45,42 @@ const getChartData = (req: ChartDataRequest): Promise<ChartDataResponse[]> => {
 const getPlacementOptlist = (
   req: placementOptRequest
 ): Promise<{
-  data: { id: number; name: string }[]
+  data: { id: number; name: string }[];
 }> => {
   return createRequestInstance().post(
     `/api/admin/report/placementOptlist`,
     req
   );
 };
+// const getPlacementChartData = (
+//   req: ChartDataRequest
+// ): Promise<ChartDataResponse[]> => {
+//   return createRequestInstance().post(
+//     `/api/admin/report/placement/getReportsByPlacement`,
+//     req
+//   );
+// };
+// const getPlacementOptlistByPlace = (
+//   req: placementOptRequest
+// ): Promise<{
+//   data: { id: number; name: string }[];
+// }> => {
+//   return createRequestInstance().post(
+//     `/api/admin/report/placement/placementOptlist`,
+//     req
+//   );
+// };
+// const AgentsByReportPlacement = (): Promise<{
+//   data: { id: number; name: string }[];
+// }> => {
+//   return createRequestInstance().post(
+//     `/api/admin/report/placement/AgentsByReportPlacement`
+//   );
+// };
 export default {
   getChartData,
   getPlacementOptlist,
+  // getPlacementChartData,
+  // getPlacementOptlistByPlace,
+  // AgentsByReportPlacement,
 };

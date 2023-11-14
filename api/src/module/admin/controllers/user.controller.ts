@@ -44,6 +44,21 @@ export class UserController {
       throw new HttpException(e.message, e.status);
     }
   }
+
+  @Get('optlist')
+  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
+  @UseInterceptors(ApiResInterceptor)
+  async getOptList() {
+    try {
+      const operatorinfo = await this.UserService.findOperators();
+      console.log('operatorinfo', operatorinfo);
+      // const userInfoconvert = this.convertReturnInfo(userinfo);
+      return operatorinfo;
+    } catch (e) {
+      console.log(e);
+      throw new HttpException(e.message, e.status);
+    }
+  }
   @Post('list')
   @UseInterceptors(ApiResInterceptor)
   @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫

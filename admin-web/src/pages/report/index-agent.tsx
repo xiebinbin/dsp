@@ -397,7 +397,7 @@ const ReportAgentIndexPage = (props: ReportPageProps) => {
                   //   width="xl"
                   name="adPlacementId"
                   label="选择广告计划"
-                  placeholder="选择广告计划"
+                  placeholder="选择计划备注"
                   options={placements.map((placement) => ({
                     label: placement.name,
                     value: placement.id,

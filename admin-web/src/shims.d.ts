@@ -14,6 +14,10 @@ interface AuthUser {
   username: string;
   role: string;
 }
+interface operatorList {
+  id: number;
+  name: string;
+}
 interface SuperUser {
   id: bigint;
   nickname: string;
@@ -123,6 +127,11 @@ interface Advertiser {
     id: number;
     name: string;
   };
+  operatorId: Record<number, string>[];
+  operator: {
+    id: number;
+    name: string;
+  };
 }
 interface AgentOpt {
   id: number;
@@ -204,7 +213,6 @@ interface AdspecOpt {
   id: number;
   name: string;
   type: number;
-
 }
 interface Adposition {
   id: number;

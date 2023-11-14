@@ -22,6 +22,22 @@ export class UserService {
       name: agent.nickname, // 这里假设代理商的用户名字段为 username
     }));
   }
+
+  async findOperators() {
+    const operators = await this.prisma.user.findMany({
+      where: {
+        role: 'Operator',
+      },
+      select: {
+        id: true,
+        nickname: true, // 假设代理商有一个用户名字段，你可以根据实际情况选择需要的字段
+      },
+    });
+    return operators.map((operator) => ({
+      id: Number(operator.id),
+      name: operator.nickname, // 这里假设代理商的用户名字段为 username
+    }));
+  }
   async findByUsername(username: string): Promise<User | null> {
     return await this.prisma.user.findFirst({
       where: {

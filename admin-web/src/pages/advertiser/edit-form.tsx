@@ -13,7 +13,7 @@ import AdvAPI, { AdvEditDto } from "@/api/advertiser.ts";
 import AgentApi from "@/api/agent.ts";
 
 import { message } from "antd";
-
+import UserApi from "@/api/user.ts";
 export const $emit = new Emittery();
 
 const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
@@ -23,6 +23,9 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
   const [id, setId] = useSafeState<bigint>(BigInt(0));
 
   const [userId, setUserId] = useSafeState<{ id: number; name: string }[]>();
+  const [operators, setOperators] =
+    useSafeState<{ id: number; name: string }[]>();
+
   const formRef = useRef<ProFormInstance>();
   const positiveNumberPattern = /^(?:[1-9]\d*|0)(?:\.\d+)?$/;
   const getAgentList = useCallback(async () => {
@@ -35,14 +38,25 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
       console.error("Error fetching agent options:", error);
     }
   }, [setUserId]);
+  const getOperatorList = useCallback(async () => {
+    const operatorlist = await UserApi.getOptList();
+    console.log("operatorlist", operatorlist);
+    setOperators(operatorlist);
+  }, [setOperators]);
   const handleSelectAgent = () => {
     // 在这里执行点击事件处理逻辑
     // 假设 agentOptList 是点击事件后要设置的值
     getAgentList();
   };
+  const handleSelectOperator = () => {
+    // 在这里执行点击事件处理逻辑
+    // 假设 agentOptList 是点击事件后要设置的值
+    getOperatorList();
+  };
   useEffect(() => {
     getAgentList();
-  }, [getAgentList]);
+    getOperatorList();
+  }, [getAgentList,getOperatorList]);
   useMount(() => {
     $emit.on("add", () => {
       setMode("add");
@@ -75,6 +89,7 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
     $emit.clearListeners();
   });
 
+
   // formRef.current?.resetFields();
   const loadInfo = useCallback(
     async (val: bigint) => {
@@ -88,7 +103,7 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
       // const agentInfoArray: { id: bigint; name: string }[] =
       // (user.agents as { id: bigint; name: string }[]).map(agent => ({ id: agent.id, name: agent.name }));
       console.log("user.user", user.user);
-      setUserId([user.user]);
+      // setUserId([user.user]);
       console.log("edit user", user);
 
       setTimeout(() => {
@@ -101,10 +116,11 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
           userId: user.userId,
           enabled: user.enabled,
           cpmPrice: user.cpmPrice / 100,
+          operatorId: user.operatorId,
         });
       }, 500);
     },
-    [setUserId]
+    [setUserId,setOperators]
   );
   const create = useCallback(
     async (data: AdvEditDto) => {
@@ -268,6 +284,20 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
           required
           rules={[{ required: true, message: "请选择代理商" }]}
           onChange={handleSelectAgent}
+        />
+      </ProForm.Group>
+      <ProForm.Group>
+        <ProFormSelect
+          name="operatorId"
+          label="运营者"
+          placeholder="请选择运营者"
+          options={operators?.map((operator) => ({
+            label: operator.name,
+            value: operator.id,
+          }))}
+          required
+          rules={[{ required: true, message: "请选择运营者" }]}
+          onChange={handleSelectOperator}
         />
       </ProForm.Group>
       <ProForm.Group></ProForm.Group>

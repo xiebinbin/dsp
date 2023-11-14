@@ -12,8 +12,10 @@ export class AdvDto {
   password: string;
   cpmPrice: number;
   userId: number;
+  operatorId: number;
   updatedAt: string;
   @IsNotEmpty()
   enabled: boolean;
   user: { id: number; name: string };
+  operator: { id: number; name: string };
 }

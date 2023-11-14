@@ -34,6 +34,16 @@ export class AdvService {
 
     return advertisersArray;
   }
+  async findByOperator(id: bigint) {
+    const where: any = {};
+    if (id) {
+      where.operatorId = id;
+    }
+    return await this.prisma.advertiser.findMany({
+      where,
+      select: { id: true, user: { select: { id: true, nickname: true } } },
+    });
+  }
   async findByUsername(username: string): Promise<Advertiser | null> {
     return await this.prisma.advertiser.findFirst({
       where: {
@@ -52,9 +62,16 @@ export class AdvService {
         password: true,
         cpmPrice: true,
         userId: true,
+        operatorId: true,
         updatedAt: true,
         enabled: true,
         user: {
+          select: {
+            id: true,
+            nickname: true,
+          },
+        },
+        operator: {
           select: {
             id: true,
             nickname: true,
@@ -204,6 +221,7 @@ export class AdvService {
           domainName: advDto.domainName,
           password: advDto.password,
           userId: advDto.userId,
+          operatorId: advDto.operatorId,
           cpmPrice: advDto.cpmPrice,
           enabled: advDto.enabled,
           updatedAt: new Date(),

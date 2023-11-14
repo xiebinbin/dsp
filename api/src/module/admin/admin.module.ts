@@ -33,6 +33,7 @@ import { PositionService } from './services/position.service';
 import { PositionController } from './controllers/position.controller';
 import { AdSpecService } from './services/adspec.service';
 import { AdSpecController } from './controllers/adspec.controller';
+// import { ReportPlacementService } from './services/reportplacment.service';
 
 @Module({
   imports: [
@@ -76,6 +77,7 @@ import { AdSpecController } from './controllers/adspec.controller';
     AdReportByDayService,
     PositionService,
     AdSpecService,
+    // ReportPlacementService,
   ],
 })
 export class AdminModule {
