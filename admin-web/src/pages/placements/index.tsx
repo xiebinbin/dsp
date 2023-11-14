@@ -64,7 +64,6 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
     try {
       const agentslist = await AgentApi.getAgentsList();
       // console.log("agentslist", agentslist);
-      console.log("advertisers", advertisers);
       setAgents(
         agentslist.map((agent) => {
           return {
@@ -94,6 +93,7 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
         extra,
       });
       // console.log("advlist res", res);
+      console.log("advertisers", advertisers);
 
       setadvertisersList(
         res.map((item) => {
