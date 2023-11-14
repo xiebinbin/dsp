@@ -1,19 +1,27 @@
 import { useCallback, useEffect, useRef } from "react";
 import {
+  ActionType,
   PageContainer,
   ProCard,
+  ProColumns,
   ProForm,
   ProFormDateTimePicker,
   ProFormInstance,
   ProFormSelect,
+  ProTable,
 } from "@ant-design/pro-components";
 import { Line } from "@antv/g2plot";
-import ReportApi, { ChartDataRequest } from "@/api/report.ts";
+import ReportApi, {
+  ChartDataRequest,
+  ChartDataResponse,
+} from "@/api/report.ts";
 import { useMount, useSafeState } from "ahooks";
 import MaterialApi from "@/api/material.ts";
 import App from "@/App.tsx";
 
 import AdvAPI from "@/api/advertiser.ts";
+import { Tag } from "antd";
+import { CloseCircleOutlined } from "@ant-design/icons";
 export interface ReportPageProps {
   role: "Root" | "Agent" | "Advertiser";
   roleName: string;
@@ -37,6 +45,9 @@ const ReportAgentIndexPage = (props: ReportPageProps) => {
   const [advertisersList, setadvertisersList] = useSafeState<
     { id: number; name: string; agentId: number }[]
   >([]);
+  const [detailData, setDetailData] = useSafeState<ChartDataResponse[]>([]); // 用于保存明细数据
+  const actionRef = useRef<ActionType>();
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleAdvertiserChange = (e: string | null) => {
     setSelectedAgent;
@@ -142,6 +153,8 @@ const ReportAgentIndexPage = (props: ReportPageProps) => {
 
       const response = await ReportApi.getChartData(data);
       if (response && response.length > 0) {
+        setDetailData(response); // 设置明细表数据
+
         const transformedData: {
           date: string;
           value: number;
@@ -162,7 +175,7 @@ const ReportAgentIndexPage = (props: ReportPageProps) => {
             },
             {
               date: item.date,
-              value: (Number(item.usedBudget / 100)),
+              value: Number(item.usedBudget / 100),
               category: "消耗金额",
             }
           );
@@ -203,8 +216,8 @@ const ReportAgentIndexPage = (props: ReportPageProps) => {
             style: { color: "#d62728", textAlign: "center" },
             formatter: (item) => {
               if (item.category === "消耗金额") {
-                console.log('消耗金额',(Number(item.value) / 100).toFixed(2))
-                return (Number(item.value)).toFixed(2);
+                console.log("消耗金额", (Number(item.value) / 100).toFixed(2));
+                return Number(item.value).toFixed(2);
               } else {
                 return item.value.toString();
               }
@@ -247,6 +260,8 @@ const ReportAgentIndexPage = (props: ReportPageProps) => {
         }
         return transformedData; // 表示成功
       } else {
+        setDetailData([]);
+
         return false; // 表示失败
       }
       // 保存 G2Plot 实例的引用
@@ -254,7 +269,7 @@ const ReportAgentIndexPage = (props: ReportPageProps) => {
       console.error("获取数据失败：", error);
       return false; // 表示失败
     }
-  }, []);
+  }, [setDetailData]);
   console.log("roleName", roleName);
   useEffect(() => {
     loadAdvertisers("");
@@ -310,7 +325,66 @@ const ReportAgentIndexPage = (props: ReportPageProps) => {
       });
     }, 500);
   });
+  const rootcolumns: ProColumns<ChartDataResponse>[] = [
+    {
+      title: "日期",
+      key: "date",
+      dataIndex: "date",
+      ellipsis: true,
+      valueType: "date",
+      width: 200,
+      hideInSearch: true,
+    },
+    {
+      title: "展现量",
+      key: "displayCount",
+      dataIndex: "displayCount",
+      ellipsis: true,
+      valueType: "select",
+      width: 200,
+      hideInSearch: true,
+    },
+    {
+      title: "点击数",
+      key: "clickCount",
+      dataIndex: "clickCount",
+      ellipsis: true,
+      valueType: "select",
+      width: 200,
+      hideInSearch: true,
+    },
+    {
+      title: "点击率",
+      key: "clickrate",
+      dataIndex: "clickrate",
+      ellipsis: true,
+      valueType: "text",
+      width: 200,
 
+      render: (_, record) => {
+        // 自定义渲染函数，将 AdMaterial 中的 companyName 放到 agentname 处
+        const clickRate = (record.clickCount / record.displayCount) * 100;
+        return clickRate.toFixed(2) + "%";
+      },
+      hideInSearch: true,
+    },
+
+    {
+      title: "消耗金额",
+      key: "usedBudget",
+      width: 100,
+      dataIndex: "usedBudget",
+      valueType: "money",
+      hideInSearch: true,
+      render: (_, entity) => {
+        // 假设 budget 字段以分为单位
+        const text = entity.usedBudget; // 获取实体对象中的 budget 属性
+
+        const usedBudgetYuan = Number(text) / 100; // 将分转换为元
+        return `¥ ${usedBudgetYuan.toFixed(2)}`; // 显示为元并保留两位小数
+      },
+    },
+  ];
   const renderContent = () => {
     if (role === "Agent") {
       return (
@@ -406,6 +480,24 @@ const ReportAgentIndexPage = (props: ReportPageProps) => {
               </ProForm.Group>
             </ProForm>
             <div id="chart-container"></div>
+          </ProCard>
+          <ProCard>
+            {detailData.length > 0 ? (
+              <ProTable<ChartDataResponse>
+                columns={rootcolumns}
+                dataSource={detailData}
+                search={false}
+                scroll={{ x: 1000 }}
+                actionRef={actionRef}
+                pagination={false}
+              />
+            ) : (
+              <div>
+                <Tag icon={<CloseCircleOutlined />} color="error">
+                  暂无数据
+                </Tag>
+              </div>
+            )}
           </ProCard>
         </div>
       );

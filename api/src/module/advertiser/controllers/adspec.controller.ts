@@ -16,11 +16,10 @@ import {
 import { ApiResInterceptor } from '../interceptors/api-res.interceptor';
 import { AuthError } from 'src/utils/err_types';
 import { Request } from 'express';
-import { GuardMiddlewareRoot } from '../middlewares/guard.middleware';
 import { AdSpecDto } from '../dto/AdSpec.dto';
 import { AdSpecService } from '../services/adspec.service';
 
-@Controller('/api/admin/adspec')
+@Controller('/api/advertiser/adspec')
 export class AdSpecController {
   constructor(private readonly AdSpecService: AdSpecService) {}
   private readonly logger = new Logger(AdSpecController.name);
@@ -38,7 +37,6 @@ export class AdSpecController {
     }
   }
   @Post('list')
-  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async getList(@Req() req: Request, @Body() queryParams: any) {
     const { page, limit, q, filters, orderBy, extra } = queryParams;
@@ -71,54 +69,6 @@ export class AdSpecController {
     }
   }
 
-  @Post('store')
-  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
-  @UseInterceptors(ApiResInterceptor)
-  async materialstore(@Body() data: AdSpecDto) {
-    const name = data.name;
-
-    try {
-      const AdSpecname = await this.AdSpecService.findByUsername(
-        data.name,
-        data.type,
-      );
-
-      if (AdSpecname) {
-        throw new HttpException(
-          AuthError.ADSPEC_IS_SAME.message,
-          AuthError.ADSPEC_IS_SAME.code,
-        );
-      }
-      const res = await this.AdSpecService.createAdSpec(data);
-      // console.log('res', res);
-      if (!res.id) {
-        return false;
-      }
-      return true;
-    } catch (e) {
-      console.log(e);
-      throw new HttpException(e.message, e.status);
-    }
-  }
-  @Put(':id')
-  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
-  async updateMaterial(
-    @Param('id') id: bigint,
-    @Body()
-    AdSpecDto: AdSpecDto,
-    @Res() response,
-  ) {
-    const result = this.AdSpecService.updateAdSpec(id, AdSpecDto);
-
-    return response.send(result);
-  }
-  @Delete(':id')
-  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
-  @UseInterceptors(ApiResInterceptor)
-  async removeUser(@Param('id') id: bigint): Promise<boolean> {
-    console.log('id', id);
-    return this.AdSpecService.removeAdSpec(id);
-  }
   convertAdSpecnfo(adSpec: any): any {
     // Make a shallow copy of the user object
 

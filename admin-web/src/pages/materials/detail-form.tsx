@@ -3,15 +3,19 @@ import {
   ProForm,
   ProFormInstance,
   ProFormRadio,
+  ProFormSelect,
   ProFormText,
 } from "@ant-design/pro-components";
 import { useMount, useSafeState, useUnmount } from "ahooks";
+import PositionApi from "@/api/position.ts";
 
 import Emittery from "emittery";
 import { useCallback, useRef } from "react";
 import { message } from "antd";
 import MaterialApi from "@/api/material.ts";
 import { getImgUrl } from "@/utils/file";
+import { AdpositionOpt } from "@/shims";
+import specApi from "@/api/spec.ts";
 
 export const $detailemit = new Emittery();
 
@@ -21,16 +25,48 @@ const MaterialDetail = (props: {
 }) => {
   const { role } = props;
   const [materialurl, setMaterialurl] = useSafeState(""); //http://static-edu-test.leleshuju.com/
-
+  const [positionOptionsAll, setPositionOptionsAll] = useSafeState<
+    { label: string; value: number }[]
+  >([]);
+  const [specOptions, setspecOptions] = useSafeState<
+    { label: string; value: number }[]
+  >([]);
   const [show, setShow] = useSafeState(false);
   const [mode, setMode] = useSafeState("detail");
   const formRef = useRef<ProFormInstance>();
-  const [positionOptions, setPositionOptions] = useSafeState([
-    { label: "列表页", value: 1 },
-    { label: "详情页", value: 2 },
-    { label: "侧边栏", value: 3 },
-  ]);
+  const loadSpecOpt = useCallback(async (type?: number) => {
+    const specOpt = await specApi.getSpecsList();
+    if (type) {
+      setspecOptions(
+        specOpt
+          .filter((opt) => opt.type === type)
+          .map((opt) => ({
+            label: opt.name,
+            value: opt.id,
+          }))
+      );
+    } else {
+      setspecOptions(
+        specOpt.map((opt) => ({
+          label: opt.name,
+          value: opt.id,
+        }))
+      );
+    }
+  }, []);
+  const loadPositionsOpt = useCallback(async () => {
+    const positionOpt: AdpositionOpt[] = await PositionApi.getPositionsList();
+
+    setPositionOptionsAll(
+      positionOpt.map((opt) => ({
+        label: opt.name,
+        value: opt.id,
+      }))
+    );
+  }, []);
   useMount(() => {
+    loadSpecOpt();
+    loadPositionsOpt();
     $detailemit.on("detail", (val) => {
       setMode("detail");
       loadInfo(val)
@@ -47,40 +83,30 @@ const MaterialDetail = (props: {
   useUnmount(() => {
     $detailemit.clearListeners();
   });
-  const loadInfo = useCallback(
-    async (id: bigint) => {
-      console.log("role", role);
-      // const user = await AdvAPI.getInfo(val);
-      const data = await MaterialApi.getDetailInfo(id);
-      formRef.current?.resetFields();
-      setTimeout(() => {
-        formRef.current?.setFieldsValue({
-          companyName: data.advertiser.companyName,
-          domainName: data.advertiser.domainName,
-          mediaType: data.mediaType,
-          position: data.position,
-          url: data.url,
-          jumpUrl: data.jumpUrl,
-        });
-      }, 500);
-      setMaterialurl(data.url);
-      if (data.mediaType === 2) {
-        setPositionOptions([
-          { label: "列表页", value: 1 },
-          { label: "详情页", value: 2 },
-          { label: "侧边栏", value: 3 },
-          { label: "全屏弹窗", value: 4 },
-        ]);
-      } else {
-        setPositionOptions([
-          { label: "列表页", value: 1 },
-          { label: "详情页", value: 2 },
-          { label: "侧边栏", value: 3 },
-        ]);
-      }
-    },
-    [setPositionOptions]
-  );
+  const loadInfo = useCallback(async (id: bigint) => {
+    console.log("role", role);
+    // const user = await AdvAPI.getInfo(val);
+    const data = await MaterialApi.getDetailInfo(id);
+    formRef.current?.resetFields();
+    setTimeout(() => {
+      formRef.current?.setFieldsValue({
+        name: data.name,
+        mediaType: data.adPosition.type,
+        content: data.content,
+        contentType: data.contentType,
+        enabled: data.enabled,
+        advertiserId: data.advertiser.id,
+        positionId: data.adPosition.id,
+        materialurl: data.url,
+        mediaId: data.adPosition.adMedia.id,
+        jumpUrl: data.jumpUrl,
+        specId: data.adPosition.adSpec.id,
+        domainName: data.advertiser.domainName,
+        companyName: data.advertiser.companyName,
+      });
+    }, 500);
+    setMaterialurl(data.url);
+  }, []);
 
   return (
     <ModalForm
@@ -126,7 +152,14 @@ const MaterialDetail = (props: {
               width="md"
             />
           </ProForm.Group>
-
+          <ProFormSelect
+            name="specId"
+            label="广告规格"
+            required
+            disabled
+            initialValue={true}
+            options={specOptions}
+          />
           <ProFormRadio.Group
             name="mediaType"
             label="媒体类型"
@@ -138,13 +171,32 @@ const MaterialDetail = (props: {
               { label: "pc软件", value: 2 },
             ]}
           />
-          <ProFormRadio.Group
-            name="position"
+          <ProFormSelect
+            name="positionId"
             label="广告位置"
             required
             disabled
-            initialValue={true}
-            options={positionOptions}
+            initialValue={positionOptionsAll.map((val) => val.value)}
+            options={positionOptionsAll.map((val) => ({
+              label: val.label,
+              value: val.value,
+            }))}
+          />
+          <ProFormText
+            disabled
+            required
+            initialValue={""}
+            width="xl"
+            name="name"
+            label="广告创意名称"
+          />
+          <ProFormText
+            disabled
+            required
+            initialValue={""}
+            width="xl"
+            name="content"
+            label="广告内容"
           />
           <ProFormText
             // required
@@ -165,31 +217,6 @@ const MaterialDetail = (props: {
               />
             ) : null}{" "}
           </ProForm.Item>
-        </>
-      )}
-      {mode === "detail" && role === "Advertiser" && (
-        <>
-          <ProFormRadio.Group
-            name="mediaType"
-            label="媒体类型"
-            required
-            disabled
-            initialValue={true}
-            options={[
-              { label: "网站", value: 1 },
-              { label: "pc软件", value: 2 },
-            ]}
-          />
-          <div className="custom-radio-group">
-            <ProFormRadio.Group
-              name="position"
-              label="广告位置"
-              required
-              disabled
-              initialValue={true}
-              options={positionOptions}
-            />
-          </div>
         </>
       )}
     </ModalForm>

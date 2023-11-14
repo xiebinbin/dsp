@@ -18,6 +18,12 @@ import { PrismaClient } from '@prisma/client';
 import { ReportController } from './controllers/report.controller';
 import { ReportService } from './services/report.service';
 import { AdReportByDayService } from './services/adreportbyday.service';
+import { AdSpecController } from './controllers/adspec.controller';
+import { AdSpecService } from './services/adspec.service';
+import { MediaController } from './controllers/media.controller';
+import { MediaService } from './services/media.service';
+import { PositionService } from './services/position.service';
+import { PositionController } from './controllers/position.controller';
 
 @Module({
   imports: [
@@ -33,6 +39,9 @@ import { AdReportByDayService } from './services/adreportbyday.service';
     MaterialController,
     PlacementController,
     ReportController,
+    AdSpecController,
+    MediaController,
+    PositionController,
   ],
   providers: [
     AuthService,
@@ -46,6 +55,9 @@ import { AdReportByDayService } from './services/adreportbyday.service';
     PlacementService,
     ReportService,
     AdReportByDayService,
+    AdSpecService,
+    MediaService,
+    PositionService,
   ],
 })
 export class AdvertiserModule {

@@ -22,7 +22,7 @@ import { RcFile } from "antd/es/upload";
 import FileApi from "@/api/file.ts";
 import PositionApi from "@/api/position.ts";
 import { AdpositionOpt } from "@/shims";
-import specApi, { specEditDto } from "@/api/spec.ts";
+import specApi, { } from "@/api/spec.ts";
 import MedialApi, { MediaParams } from "@/api/media.ts";
 
 // eslint-disable-next-line react-refresh/only-export-components

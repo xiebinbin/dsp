@@ -17,7 +17,6 @@ import { ApiResInterceptor } from '../interceptors/api-res.interceptor';
 import { AuthError } from 'src/utils/err_types';
 import { Request } from 'express';
 import { PositionService } from '../services/position.service';
-import { GuardMiddlewareRoot } from '../middlewares/guard.middleware';
 import { PositionDto } from '../dto/position.dto';
 import { AdSpecService } from '../services/adspec.service';
 @Controller('/api/admin/position')
@@ -41,7 +40,6 @@ export class PositionController {
     }
   }
   @Post('list')
-  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async getList(@Req() req: Request, @Body() queryParams: any) {
     const { page, limit, q, filters, orderBy, extra } = queryParams;
@@ -74,55 +72,6 @@ export class PositionController {
     }
   }
 
-  @Post('store')
-  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
-  @UseInterceptors(ApiResInterceptor)
-  async materialstore(@Body() data: PositionDto) {
-    const name = data.name;
-
-    try {
-      const positionname = await this.PositionService.findByUsername(
-        data.name,
-        data.type,
-      );
-
-      if (positionname) {
-        throw new HttpException(
-          AuthError.Position_IS_SAME.message,
-          AuthError.Position_IS_SAME.code,
-        );
-      }
-      console.log('create position', data);
-      const res = await this.PositionService.createPosition(data);
-      // console.log('res', res);
-      if (!res.id) {
-        return false;
-      }
-      return true;
-    } catch (e) {
-      console.log(e);
-      throw new HttpException(e.message, e.status);
-    }
-  }
-  @Put(':id')
-  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
-  async updateMaterial(
-    @Param('id') id: bigint,
-    @Body()
-    positionDto: PositionDto,
-    @Res() response,
-  ) {
-    const result = this.PositionService.updatePosition(id, positionDto);
-
-    return response.send(result);
-  }
-  @Delete(':id')
-  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
-  @UseInterceptors(ApiResInterceptor)
-  async removeUser(@Param('id') id: bigint): Promise<boolean> {
-    console.log('id', id);
-    return this.PositionService.removePosition(id);
-  }
   convertPositionnfo(positon: any): any {
     // Make a shallow copy of the user object
 

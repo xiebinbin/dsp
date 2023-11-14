@@ -94,24 +94,38 @@ export class MaterialController {
 
     const materialDto: MaterialDto = {
       id: Number(material.id),
-      name: material.name,
+      name: null,
       mediaType: material.mediaType,
       contentType: material.contentType,
-      enabled: material.enabled,
-      position: material.position,
+      enabled: null,
+      adPosition: {
+        id: Number(material.adPosition.id),
+        name: material.adPosition.name,
+        type: Number(material.adPosition.type),
+        adSpec: {
+          id: Number(material.adPosition.adSpec.id),
+          name: material.adPosition.adSpec.name, //规格名称
+          type: Number(material.adPosition.adSpec.type), //规格类型 图片，视频
+        },
+        adMedia: {
+          id: Number(material.adPosition.adMedia.id),
+          name: material.adPosition.adMedia.name,
+        },
+      },
       content: material.content,
       url: this.defaultUrl + material.url,
-      advertiserId: Number(material.advertiserId),
-
+      jumpUrl: material.jumpUrl,
       advertiser: {
-        domainName: material.advertiser.domainName,
-        id: Number(material.advertiser.id), // 将 bigint 转换为 number
+        id: Number(material.advertiser.id),
         companyName: material.advertiser.companyName,
+        domainName: material.advertiser.domainName,
         user: {
-          id: Number(material.advertiser.user.id), // 将 bigint 转换为 number
-          nickname: material.advertiser.user.nickname,
+          id: null,
+
+          nickname: null,
         }, // 使用对象字面量设置 user 属性的值
       },
+      positionId: Number(material.adPosition.id),
     };
     // Convert the 'id' property to BigInt
 

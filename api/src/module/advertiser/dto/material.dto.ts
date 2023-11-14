@@ -11,17 +11,32 @@ export class MaterialDto {
   // 类型 1:图片 2:视频 3:文字
   @IsNotEmpty()
   contentType: number;
-  // 广告位置 1.列表页 2.详情页 3.侧边栏 4.全屏弹窗(仅 pc 有)
-  @IsNotEmpty()
-  position: number;
+  // specId: number;
+  // 广告位置id
+  positionId: number;
+  adPosition: {
+    id: number;
+    name: string;
+    type: number;
+    adSpec: {
+      id: number;
+      name: string; //规格名称
+      type: number; //规格类型 图片，视频
+    };
+    adMedia: {
+      id: number;
+      name: string;
+    };
+  };
   // 广告内容
   @IsNotEmpty()
   content: string;
-  // 广告链接
+  // 图片链接
   url: string;
+  // 跳转链接
+  jumpUrl: string;
   enabled: boolean;
   @IsNotEmpty()
-  advertiserId: number;
   advertiser: {
     id: number;
     companyName: string;

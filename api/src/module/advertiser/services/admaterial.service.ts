@@ -25,9 +25,31 @@ export class AdMaterialService {
         mediaType: true,
         contentType: true,
         positionId: true,
+        adPosition: {
+          select: {
+            id: true,
+            name: true,
+            type: true,
+            adSpec: {
+              select: {
+                id: true,
+                name: true, //规格名称
+                type: true, //规格类型 图片，视频
+              },
+            },
+            adMedia: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+
         content: true,
         url: true,
         advertiserId: true,
+        jumpUrl: true,
         advertiser: {
           select: {
             id: true,
@@ -49,6 +71,7 @@ export class AdMaterialService {
     console.log('Materialinfo', Materialinfo);
     return Materialinfo;
   }
+
   async getList(queryParams: any) {
     const { page, limit, name, orderBy, advertiserId } = queryParams;
     const where: any = {};

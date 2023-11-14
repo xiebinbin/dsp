@@ -79,6 +79,7 @@ interface AdMaterial {
   // 广告链接
   url: string;
   enabled: boolean;
+  dd;
   // 广告主id
   advertiserId: bigInt;
   createdAt: DateTime;
@@ -89,22 +90,44 @@ interface AdMaterial {
     user: { id: number; nickname: string };
   };
 }
+
 interface AdMaterialAgent {
+  jumpUrl: string;
   id: bigint;
+  name: string;
   // 媒体类型 1网站 2pc软件
-  mediaType: Int;
+  mediaType: number;
   // 类型 1:图片 2:视频 3:文字
-  contentType: Int;
+  contentType: number;
   // 广告位置 1.列表页 2.详情页 3.侧边栏 4.全屏弹窗(仅 pc 有)
-  position: Int;
+  positionId: number;
+  adPosition: {
+    id: number;
+    name: string;
+    type: number;
+    adSpec: {
+      id: number;
+      name: string; //规格名称
+      type: number; //规格类型 图片，视频
+    };
+    adMedia: {
+      id: number;
+      name: string;
+    };
+  };
+  // 广告链接
+  updatedAt: DateTime;
+  // 广告内容
+  content: string;
   // 广告链接
   url: string;
-  updatedAt: DateTime;
-  jumpUrl: string;
+  enabled: boolean;
+  // 广告主id
   advertiser: {
     id: number;
     companyName: string;
     domainName: string;
+    user: { id: number; nickname: string };
   };
 }
 interface Advertiser {
