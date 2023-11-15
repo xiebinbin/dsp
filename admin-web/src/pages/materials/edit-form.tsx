@@ -22,7 +22,7 @@ import { RcFile } from "antd/es/upload";
 import FileApi from "@/api/file.ts";
 import PositionApi from "@/api/position.ts";
 import { AdpositionOpt } from "@/shims";
-import specApi, { } from "@/api/spec.ts";
+import specApi from "@/api/spec.ts";
 import MedialApi, { MediaParams } from "@/api/media.ts";
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -73,15 +73,20 @@ const EditForm = () => {
   const [mediaInfo1, setMediaInfo1] = useSafeState<{ id: number }[]>([]);
   const [mediaInfo2, setMediaInfo2] = useSafeState<{ id: number }[]>([]);
 
-  // const handleAgentChange = (e: string | null) => {
-  //   console.log(e);
-  //   formRef.current?.setFieldsValue({
-  //     advertiserId: "",
-  //   });
-  //    loadAgentsRelation();
-  //   // loadAdvertisers("");
-  //   setSelectedAgent
-  // };
+  const handleAgentChange = (e: string) => {
+    console.log("handleAgentChange", e);
+    formRef.current?.setFieldsValue({
+      advertiserId: "",
+    });
+    setSelectedAgent(e);
+    loadAgentsRelation();
+    // loadAdvertisers("");
+  };
+  const handleAdvChange = (e: string | null) => {
+    console.log("handleAdvChange", e);
+
+    // loadAdvertisers("");
+  };
 
   const handleMediaTypeChange = (e: RadioChangeEvent) => {
     const param = { mediatype: Number(e.target.value) };
@@ -103,6 +108,9 @@ const EditForm = () => {
   };
   const handleContentTypeChange = (e: RadioChangeEvent) => {
     console.log("handleContentTypeChange");
+    formRef.current?.setFieldsValue({
+      specId: "",
+    });
     loadSpecOpt(e.target.value);
   };
 
@@ -130,17 +138,18 @@ const EditForm = () => {
     loadAdvertisers("");
     loadSpecOpt();
     // loadMedias(0);
-
+    console.log("selectedAgent", selectedAgent);
     // 处理广告主
     if (selectedAgent) {
       const filteredAdvertisers = advertisersList.filter(
         (advertiser) => advertiser.agentId === selectedAgent
       );
       setAdvertisers(filteredAdvertisers);
-      formRef.current?.setFieldsValue({
-        advertiserId: "",
-      });
+      // formRef.current?.setFieldsValue({
+      //   advertiserId: "",
+      // });
     } else {
+      console.log("setAdvertisers([])");
       setAdvertisers([]);
     }
 
@@ -352,13 +361,13 @@ const EditForm = () => {
       const orderBy: { [key: string]: "asc" | "desc" } = {};
       const res = await AdvAPI.getOptList({
         page: 1,
-        limit: 1000,
+        limit: 2000,
         q: q ?? "",
         filters,
         orderBy,
         extra: {},
       });
-
+      console.log("loadAdvertisers res", res);
       setadvertisersList(
         res.map((item) => {
           return {
@@ -368,6 +377,15 @@ const EditForm = () => {
           };
         })
       );
+      // setAdvertisers(
+      //   res.map((item) => {
+      //     return {
+      //       name: item.name,
+      //       id: Number(item.id),
+      //       agentId: Number(item.agentId),
+      //     };
+      //   })
+      // );
     },
     [setadvertisersList]
   );
@@ -562,7 +580,7 @@ const EditForm = () => {
             value: agent.id,
           }))}
           fieldProps={{
-            onChange: setSelectedAgent,
+            onChange: handleAgentChange,
           }}
         />
         <ProFormSelect
@@ -579,6 +597,9 @@ const EditForm = () => {
               value: advertiser.id,
             })
           )}
+          fieldProps={{
+            onChange: handleAdvChange,
+          }}
         />
         <ProFormRadio.Group
           name="contentType"

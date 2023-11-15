@@ -466,17 +466,17 @@ const ReportAgentIndexPage = (props: ReportPageProps) => {
                     onChange: handleMaterialChange, // 直接传递选中的值
                   }}
                 />
-                <ProFormSelect
+                {/* <ProFormSelect
                   initialValue={""}
                   //   width="xl"
                   name="adPlacementId"
                   label="选择广告计划"
-                  placeholder="选择计划备注"
+                  placeholder="选择计划备注(开始时间-结束时间)"
                   options={placements.map((placement) => ({
                     label: placement.name,
                     value: placement.id,
                   }))}
-                />
+                /> */}
               </ProForm.Group>
             </ProForm>
             <div id="chart-container"></div>

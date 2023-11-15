@@ -369,7 +369,7 @@ const ReportAdvertiserIndexPage = (props: ReportAdvPageProps) => {
                     onChange: handleMaterialChange, // 直接传递选中的值
                   }}
                 />
-                <ProFormSelect
+                {/* <ProFormSelect
                   initialValue={""}
                   //   width="xl"
                   name="adPlacementId"
@@ -379,7 +379,7 @@ const ReportAdvertiserIndexPage = (props: ReportAdvPageProps) => {
                     label: placement.name,
                     value: placement.id,
                   }))}
-                />
+                /> */}
               </ProForm.Group>
             </ProForm>
             <div id="chart-container"></div>
