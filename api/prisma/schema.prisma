@@ -178,10 +178,10 @@ model AdPosition {
   id         BigInt       @id @default(autoincrement()) @db.UnsignedBigInt
   name       String
   enabled    Boolean      @default(true)
-  adSpecId   BigInt       @default(0) @map("ad_spec_id")
-  adSpec     AdSpec       @relation(fields: [adSpecId], references: [id])
-  adMediaId  BigInt       @default(0) @map("ad_media_id")
-  adMedia    AdMedia      @relation(fields: [adMediaId], references: [id])
+  adSpecId   BigInt?       @default(0) @map("ad_spec_id")
+  adSpec     AdSpec?       @relation(fields: [adSpecId], references: [id])
+  adMediaId  BigInt?       @default(0) @map("ad_media_id")
+  adMedia    AdMedia?      @relation(fields: [adMediaId], references: [id])
   type       Int          @default(1) // 类型 1 网站 2pc 软件
   cpmPrice   Int          @default(3000) @map("cpm_price")
   createdAt  DateTime     @default(now()) @map("created_at")

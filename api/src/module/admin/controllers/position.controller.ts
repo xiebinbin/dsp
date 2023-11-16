@@ -25,7 +25,7 @@ export class PositionController {
   constructor(
     private readonly PositionService: PositionService,
     private readonly AdSpecService: AdSpecService,
-  ) {}
+  ) { }
   private readonly logger = new Logger(PositionController.name);
   @Get('positionoptlist')
   @UseInterceptors(ApiResInterceptor)
@@ -134,17 +134,17 @@ export class PositionController {
       type: positon.type,
       createdAt: positon.createdAt,
       updatedAt: positon.updatedAt,
-      adSpecId: positon.adSpecId,
-      adMediaId: positon.adMediaId,
+      adSpecId: positon?.adSpecId ?? null,
+      adMediaId: positon?.adMediaId ?? null,
       cpmPrice: positon.cpmPrice,
-      adSpec: {
+      adSpec: positon?.adSpec ? {
         id: positon.adSpec.id,
         name: positon.adSpec.name,
-      },
-      adMedia: {
+      } : null,
+      adMedia: positon?.adMedia ? {
         id: positon.adMedia.id,
         name: positon.adMedia.name,
-      },
+      } : null,
     };
 
     return positonDto;
