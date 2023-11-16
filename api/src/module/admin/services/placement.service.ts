@@ -106,7 +106,9 @@ export class PlacementService {
     const adPlacements = await this.prisma.adPlacement.findMany({
       where,
       //   select: selectFields,
-      orderBy: orderBy,
+      orderBy: orderBy ?? {
+        started_at: 'desc',
+      },
       skip: (page - 1) * limit,
       take: limit,
       include: {
