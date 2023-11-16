@@ -16,7 +16,10 @@ import { DashboardDto } from '../dto/dashboard.dto';
 import { AdvService } from '../services/adv.service';
 import { MaterialService } from '../services/material.service';
 import { PlacementService } from '../services/placement.service';
-import { GuardMiddlewareAll } from '../middlewares/guard.middleware';
+import {
+  GuardMiddlewareRoot,
+  GuardMiddlewareAgent,
+} from '../middlewares/guard.middleware';
 import { AdReportByDayService } from '../services/adreportbyday.service';
 import { RedisCacheService } from '../../cache/services/redis-cache.service';
 
@@ -33,14 +36,14 @@ export class DashboardController {
   private readonly logger = new Logger(DashboardController.name);
   @UseInterceptors(ApiResInterceptor)
   @Post('/getData')
-  @UseGuards(GuardMiddlewareAll) // 使用 RootGuard 守卫
+  @UseGuards(GuardMiddlewareRoot || GuardMiddlewareAgent) // 使用 RootGuard 守卫
   async getData(@Req() req: Request, @Res() response): Promise<DashboardDto> {
     let agentId = null;
     const role = req.user.role;
     let root = true;
     let Dashboardcachekey = 'DashbaordAdm:';
 
-    if (role != 'Root' && role != 'Operator') {
+    if (role != 'Root') {
       agentId = req.user.id;
       root = false;
       console.log('agentId', agentId);

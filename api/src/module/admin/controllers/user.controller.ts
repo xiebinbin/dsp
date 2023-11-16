@@ -19,6 +19,7 @@ import { UserDto } from '../dto/user.dto';
 import { AuthError } from 'src/utils/err_types';
 import { Request } from 'express';
 import { GuardMiddlewareRoot } from '../middlewares/guard.middleware';
+import { GuardMiddlewareOperator } from '../middlewares/guard.middleware';
 
 @Controller('/api/admin/users')
 export class UserController {
@@ -31,7 +32,7 @@ export class UserController {
   //   );
   // }
   @Get('agentslist')
-  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
+  @UseGuards(GuardMiddlewareRoot || GuardMiddlewareOperator) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async getAgent() {
     try {
@@ -123,7 +124,7 @@ export class UserController {
 
     try {
       const userinfo = await this.UserService.findById(BigInt(req.user.id));
-      if (userinfo.role != 'Root' && userinfo.role != 'Operator') {
+      if (userinfo.role != 'Root') {
         throw new HttpException(
           AuthError.USER_NOT_Permission.message,
           AuthError.USER_NOT_Permission.code,
@@ -168,7 +169,7 @@ export class UserController {
   ): Promise<boolean> {
     console.log('id', id);
     const userinfo = await this.UserService.findById(BigInt(req.user.id));
-    if (userinfo.role != 'Root' && userinfo.role != 'Operator') {
+    if (userinfo.role != 'Root') {
       throw new HttpException(
         AuthError.USER_NOT_Permission.message,
         AuthError.USER_NOT_Permission.code,

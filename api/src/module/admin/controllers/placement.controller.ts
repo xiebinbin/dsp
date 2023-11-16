@@ -20,7 +20,10 @@ import { PlacementDto } from '../dto/placement.dto';
 import { AuthError } from 'src/utils/err_types';
 import { Request } from 'express';
 import { AdvService } from '../services/adv.service';
-import { GuardMiddlewareRoot } from '../middlewares/guard.middleware';
+import {
+  GuardMiddlewareRoot,
+  GuardMiddlewareAgent,
+} from '../middlewares/guard.middleware';
 import dayjs from 'dayjs';
 import moment from 'moment';
 import 'moment-timezone';
@@ -49,6 +52,7 @@ export class PlacementController {
     }
   }
   @Post('list')
+  @UseGuards(GuardMiddlewareRoot || GuardMiddlewareAgent) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async getList(@Req() req: Request, @Body() queryParams: any) {
     const { page, limit, orderBy, extra } = queryParams;
@@ -225,7 +229,7 @@ export class PlacementController {
     try {
       console.log('req.user.id', req.user.id);
       let Advinfo;
-      if (req.user.role != 'Root' && req.user.role != 'Operator') {
+      if (req.user.role != 'Root') {
         Advinfo = await this.AdvService.findById(BigInt(req.user.id));
         if (!Advinfo) {
           throw new HttpException(

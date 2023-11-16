@@ -212,8 +212,7 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
       </ProForm.Group>
       <ProForm.Group>
         <ProFormText
-          required
-          rules={[{ required: true, message: "请输入域名" }]}
+          
           initialValue={""}
           width="xl"
           name="domainName"

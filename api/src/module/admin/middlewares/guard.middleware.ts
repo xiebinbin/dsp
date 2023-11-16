@@ -5,7 +5,7 @@ export class GuardMiddlewareRoot implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
     const user = request.user; // 假设你的用户信息存储在请求中的 user 属性中
-    if (user.role === 'Root' || user.role === 'Operator') {
+    if (user.role === 'Root') {
       return true; // 允许访问
     }
 
@@ -19,6 +19,18 @@ export class GuardMiddlewareAgent implements CanActivate {
     const user = request.user; // 假设你的用户信息存储在请求中的 user 属性中
     console.log('user guard', user);
     if (user.role === 'Agent') {
+      return true; // 允许访问
+    }
+
+    return false; // 禁止访问
+  }
+}
+@Injectable()
+export class GuardMiddlewareOperator implements CanActivate {
+  canActivate(context: ExecutionContext): boolean {
+    const request = context.switchToHttp().getRequest();
+    const user = request.user; // 假设你的用户信息存储在请求中的 user 属性中
+    if (user.role === 'Operator') {
       return true; // 允许访问
     }
 

@@ -19,8 +19,8 @@ import { AuthError } from 'src/utils/err_types';
 import { Request } from 'express';
 import { AdvDto } from '../dto/adv.dto';
 import {
-  GuardMiddlewareAll,
   GuardMiddlewareRoot,
+  GuardMiddlewareAgent,
 } from '../middlewares/guard.middleware';
 
 @Controller('/api/admin/advertiser')
@@ -34,7 +34,7 @@ export class AdvController {
     console.log('getOptList req', req.user);
     const { page, limit, q, filters, orderBy, extra } = queryParams;
     try {
-      if (req.user.role == 'Root' || req.user.role == 'Operator') {
+      if (req.user.role == 'Root' ) {
         req.user.role = 'Root';
       }
       const result = await this.AdvService.findAdvertisers({
@@ -82,7 +82,7 @@ export class AdvController {
     }
   }
   @Post('list')
-  @UseGuards(GuardMiddlewareAll) // 使用 RootGuard 守卫
+  @UseGuards(GuardMiddlewareAgent || GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async getList(@Req() req: Request, @Body() queryParams: any) {
     const { page, limit, q, filters, orderBy, extra } = queryParams;
@@ -102,6 +102,7 @@ export class AdvController {
     }
   }
   @Get(':id')
+  @UseGuards(GuardMiddlewareAgent || GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async getUser(@Param('id') id: number) {
     try {
@@ -185,7 +186,9 @@ export class AdvController {
       updatedAt: null,
       enabled: adv.enabled,
       user: { id: Number(adv.user.id), name: adv.user.nickname }, // 使用对象字面量设置 user 属性的值
-      operator: adv?.operator ? { id: Number(adv.operator.id), name: adv.operator.nickname } : null,
+      operator: adv?.operator
+        ? { id: Number(adv.operator.id), name: adv.operator.nickname }
+        : null,
     };
     // Convert the 'id' property to BigInt
 

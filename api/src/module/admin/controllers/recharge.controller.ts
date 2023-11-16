@@ -48,7 +48,7 @@ export class RechargeController {
 
     try {
       const userinfo = await this.UserService.findById(BigInt(req.user.id));
-      if (userinfo.role != 'Root' && userinfo.role != 'Operator') {
+      if (userinfo.role != 'Root') {
         throw new HttpException(
           AuthError.USER_NOT_Permission.message,
           AuthError.USER_NOT_Permission.code,

@@ -19,7 +19,10 @@ import { AuthError } from 'src/utils/err_types';
 import { Request } from 'express';
 import { MaterialDto } from '../dto/material.dto';
 import { AdvService } from '../services/adv.service';
-import { GuardMiddlewareRoot } from '../middlewares/guard.middleware';
+import {
+  GuardMiddlewareRoot,
+  GuardMiddlewareAgent,
+} from '../middlewares/guard.middleware';
 
 @Controller('/api/admin/material')
 export class MaterialController {
@@ -31,11 +34,12 @@ export class MaterialController {
   defaultUrl = 'http://static-edu-test.leleshuju.com/';
 
   @Post('list')
+  @UseGuards(GuardMiddlewareRoot || GuardMiddlewareAgent) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async getList(@Req() req: Request, @Body() queryParams: any) {
     const { page, limit, q, filters, orderBy, extra } = queryParams;
     try {
-      if (req.user.role != 'Root' && req.user.role != 'Operator') {
+      if (req.user.role != 'Root') {
         extra.userId = req.user.id;
       }
       const result = await this.MaterialService.getList({
@@ -59,7 +63,7 @@ export class MaterialController {
   async getOptionList(@Req() req: Request, @Body() queryParams: any) {
     const { page, limit, q, filters, orderBy, extra } = queryParams;
     try {
-      if (req.user.role != 'Root' && req.user.role != 'Operator') {
+      if (req.user.role != 'Root') {
         extra.agentid = req.user.id;
       }
       extra.role = req.user.role;
@@ -118,6 +122,7 @@ export class MaterialController {
   }
 
   @Get(':id')
+  @UseGuards(GuardMiddlewareRoot || GuardMiddlewareAgent) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async getMaterial(@Param('id') id: number) {
     try {
@@ -132,6 +137,7 @@ export class MaterialController {
     }
   }
   @Get('detail/:id')
+  @UseGuards(GuardMiddlewareRoot || GuardMiddlewareAgent) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async getDetail(@Param('id') id: number) {
     try {
@@ -209,20 +215,22 @@ export class MaterialController {
       contentType: material.contentType,
       enabled: material.enabled,
       positionId: material.positionId,
-      adPosition: material?.adPosition ? {
-        id: Number(material.adPosition.id),
-        name: material.adPosition.name,
-        type: Number(material.adPosition.type),
-        adSpec: {
-          id: Number(material.adPosition.adSpec.id),
-          name: material.adPosition.adSpec.name, //规格名称
-          type: Number(material.adPosition.adSpec.type), //规格类型 图片，视频
-        },
-        adMedia: {
-          id: Number(material.adPosition.adMedia.id),
-          name: material.adPosition.adMedia.name,
-        },
-      } : null,
+      adPosition: material?.adPosition
+        ? {
+            id: Number(material.adPosition.id),
+            name: material.adPosition.name,
+            type: Number(material.adPosition.type),
+            adSpec: {
+              id: Number(material.adPosition.adSpec.id),
+              name: material.adPosition.adSpec.name, //规格名称
+              type: Number(material.adPosition.adSpec.type), //规格类型 图片，视频
+            },
+            adMedia: {
+              id: Number(material.adPosition.adMedia.id),
+              name: material.adPosition.adMedia.name,
+            },
+          }
+        : null,
       content: material.content,
       url: this.defaultUrl + material.url,
       advertiserId: Number(material.advertiserId),

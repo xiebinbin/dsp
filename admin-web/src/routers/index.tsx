@@ -40,7 +40,7 @@ const GetRouter = (userRole: string): Route => {
         path: "/admin/dashboard",
         name: "控制台",
         icon: <DashboardTwoTone />,
-        access: ["Root", "Operator", "Agent"],
+        access: ["Root", "Agent"],
       },
       // {
       //   path: "/admin/dashboard/agent",
@@ -59,6 +59,7 @@ const GetRouter = (userRole: string): Route => {
         name: "用户管理",
         path: "/admin/user",
         icon: <IdcardTwoTone />,
+        access: ["Root", "Agent"],
 
         routes: [
           {
@@ -74,12 +75,12 @@ const GetRouter = (userRole: string): Route => {
           {
             name: "代理商管理",
             path: "/admin/user/creators",
-            access: ["Root", "Operator"],
+            access: ["Root"],
           },
           {
             name: "广告主管理",
             path: "/admin/advertiser/root",
-            access: ["Root", "Operator"],
+            access: ["Root"],
           },
           {
             name: "广告主列表",
@@ -93,11 +94,12 @@ const GetRouter = (userRole: string): Route => {
         name: "广告管理",
         icon: <ScheduleTwoTone />,
         component: "./Admin",
+        access: ["Root", "Agent"],
         routes: [
           {
             path: "/admin/materials/root",
             name: "广告创意管理",
-            access: ["Root", "Operator"],
+            access: ["Root"],
           },
           {
             path: "/admin/materials/agent",
@@ -113,7 +115,7 @@ const GetRouter = (userRole: string): Route => {
           {
             path: "/admin/placements/root",
             name: "广告投放计划",
-            access: ["Root", "Operator"],
+            access: ["Root"],
           },
           {
             path: "/admin/placements/agent",
@@ -133,22 +135,22 @@ const GetRouter = (userRole: string): Route => {
         name: "媒体管理",
         icon: <VideoCameraTwoTone />,
         path: "/admin/media",
-        access: ["Root", "Operator"],
+        access: ["Root"],
         routes: [
           {
             path: "/admin/media/manage",
             name: "投放媒体管理",
-            access: ["Root", "Operator"],
+            access: ["Root"],
           },
           {
             path: "/admin/position/manage",
             name: "广告位置管理",
-            access: ["Root", "Operator"],
+            access: ["Root"],
           },
           {
             path: "/admin/spec/manage",
             name: "广告规格管理",
-            access: ["Root", "Operator"],
+            access: ["Root"],
           },
         ],
       },
