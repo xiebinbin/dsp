@@ -46,7 +46,6 @@ const EditForm = () => {
     { id: number; name: string; agentId: number }[]
   >([]);
   const [selectedAgent, setSelectedAgent] = useState<number | string>("");
-  //   const [selectedMaterial, setselectedMaterial] = useSafeState<{ name: string; id: number }[]>([]);
   const [materials, setMaterials] = useSafeState<
     { name: string; id: number }[]
   >([]); // 使用 useState 初始化为空数组

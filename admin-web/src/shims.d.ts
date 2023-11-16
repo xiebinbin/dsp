@@ -136,18 +136,12 @@ interface Advertiser {
   password: string;
   wallet: {
     balance: number;
-  }; //余额
-  //bill   :     Bill[] //流水
+  };
   companyName: string;
   domainName: string;
   address: string;
   enabled: boolean;
-<<<<<<< HEAD
-  cpmPrice: Int;
   userId: number;
-=======
-  userId: Record<number, string>[];
->>>>>>> a505c72 (x)
   createdAt: DateTime;
   updatedAt: DateTime;
   user: {
