@@ -7,16 +7,11 @@ import {
   Req,
   UseInterceptors,
   Logger,
-  Res,
   Param,
-  Put,
-  Delete,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiResInterceptor } from '../interceptors/api-res.interceptor';
-import { AuthError } from 'src/utils/err_types';
 import { Request } from 'express';
-import { AdSpecDto } from '../dto/AdSpec.dto';
+import { AdSpecDto } from '../dto/adspec.dto';
 import { AdSpecService } from '../services/adspec.service';
 
 @Controller('/api/advertiser/adspec')
