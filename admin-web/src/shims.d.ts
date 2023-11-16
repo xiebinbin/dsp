@@ -246,11 +246,11 @@ interface Adposition {
   cpmPrice: number;
   createdAt: string;
   updatedAt: string;
-  adSpec: {
+  adSpec?: {
     id: number;
     name: string;
   };
-  adMedia: {
+  adMedia?: {
     id: number;
     name: string;
   };

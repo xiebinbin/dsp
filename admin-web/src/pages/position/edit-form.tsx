@@ -103,8 +103,8 @@ const EditForm = () => {
         name: data.name,
         enabled: data.enabled,
         type: data.type,
-        adSpecId: data.adSpec.id,
-        adMediaId: data.adMedia.id,
+        adSpecId: data.adSpec?.id,
+        adMediaId: data.adMedia?.id,
         cpmPrice: data.cpmPrice / 100,
       });
     }, 500);
