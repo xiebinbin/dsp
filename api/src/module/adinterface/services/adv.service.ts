@@ -9,25 +9,6 @@ export class AdvService {
     const advinfo = await this.prisma.advertiser.findFirst({
       select: {
         id: true,
-        // username: true,
-        // companyName: true,
-        // taxNumber: true,
-        // password: true,
-        cpmPrice: true,
-        // userId: true,
-        // updatedAt: true,
-        // enabled: true,
-        // user: {
-        //   select: {
-        //     id: true,
-        //     nickname: true,
-        //   },
-        // },
-        // wallet: {
-        //   select: {
-        //     balance: true,
-        //   },
-        // },
       },
       where: {
         id,

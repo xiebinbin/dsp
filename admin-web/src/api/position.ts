@@ -16,7 +16,6 @@ export interface PositionEditDto {
     id: number;
     name: string;
   };
-  cpmPrice: number;
   createdAt: string;
   updatedAt: string;
 }

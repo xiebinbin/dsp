@@ -25,7 +25,6 @@ import {
   GuardMiddlewareAgent,
 } from '../middlewares/guard.middleware';
 import dayjs from 'dayjs';
-import moment from 'moment';
 import 'moment-timezone';
 @Controller('/api/admin/placement/')
 export class PlacementController {
@@ -78,20 +77,13 @@ export class PlacementController {
   async getUser(@Param('id') id: number, @Res() response) {
     try {
       const placementinfo = await this.PlacementService.findById(BigInt(id));
-      console.log('Get placementinfo', placementinfo);
       const convertdata = this.convertPlacementInfo(placementinfo);
-      console.log('convertdata', convertdata);
       const responseData = {
         data: convertdata,
         code: 200,
       };
       return response.send(responseData);
-      // return result;
-      console.log('responseData', responseData);
-
-      // return response.send(responseData);
     } catch (e) {
-      console.log(e);
       throw new HttpException(e.message, e.status);
     }
   }
@@ -100,7 +92,7 @@ export class PlacementController {
   @UseInterceptors(ApiResInterceptor)
   async userstore(@Body() data: PlacementDto) {
     console.log('data,data', data);
-
+    data.cpmPrice = Number(data.cpmPrice)*100;
     try {
       const name = await this.PlacementService.findByname(data.name);
       if (name) {
@@ -124,7 +116,6 @@ export class PlacementController {
         enabled: true,
       }));
       await this.MediaRelationService.createMediaRelation(mediarelation);
-      // console.log('res', res);
       if (!res.id) {
         return false;
       }
@@ -143,15 +134,6 @@ export class PlacementController {
     data: PlacementDto,
     @Res() response,
   ) {
-    console.log('placement Putdata', data);
-    const advres = await this.AdvService.findById(data.advertiserId);
-    // if (advres.wallet == null || advres.wallet.balance < data.budget) {
-    //   throw new HttpException(
-    //     AuthError.BALANCE_NOTENOUGH.message,
-    //     AuthError.BALANCE_NOTENOUGH.code,
-    //   );
-    // }
-
     const endedAtDate = new Date(data.endedAt);
     const currentDate = new Date();
     const timeDifference = Number(endedAtDate) - Number(currentDate);
@@ -160,7 +142,7 @@ export class PlacementController {
     } else {
       data.enabled = 2;
     }
-
+    data.cpmPrice = Number(data.cpmPrice)*100;
     data.startedAt = dayjs(data.startedAt).format();
     data.endedAt = dayjs(data.endedAt).format();
 
@@ -225,7 +207,7 @@ export class PlacementController {
     @Body() queryParams: any,
     @Res() response,
   ) {
-    const { page, limit, q, filters, orderBy, extra } = queryParams;
+    const { page, limit, orderBy, extra } = queryParams;
     try {
       console.log('req.user.id', req.user.id);
       let Advinfo;
@@ -272,6 +254,7 @@ export class PlacementController {
       mediaId: Number(val.mediaId),
       mediaName: val.adMedia.name,
     }));
+    newPlacement.cpmPrice = Number(placement.cpmPrice);
     newPlacement.advertiser.id = Number(placement.advertiser.id);
     newPlacement.advertiser.user.id = Number(placement.advertiser.user.id);
     newPlacement.name = placement.name;

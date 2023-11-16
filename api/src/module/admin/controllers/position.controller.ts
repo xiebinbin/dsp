@@ -136,7 +136,6 @@ export class PositionController {
       updatedAt: positon.updatedAt,
       adSpecId: positon?.adSpecId ?? null,
       adMediaId: positon?.adMediaId ?? null,
-      cpmPrice: positon.cpmPrice,
       adSpec: positon?.adSpec ? {
         id: positon.adSpec.id,
         name: positon.adSpec.name,

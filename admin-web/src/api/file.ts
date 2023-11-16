@@ -29,7 +29,6 @@ const upload = async (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const ext = mime.getExtension(file.type);
     const contentType = mime.getType(file.name) ?? null;
-    console.log(ext, contentType);
     getPutObjectUrl(ext as string)
       .then((val) => {
         axios

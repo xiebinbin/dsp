@@ -27,7 +27,6 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(localizedFormat);
 dayjs.extend(advancedFormat);
-// eslint-disable-next-line react-refresh/only-export-components
 export const $emit = new Emittery();
 
 const countriesMaps = new Map<string, string>();
@@ -179,22 +178,18 @@ const EditForm = () => {
         budget: "",
         mediaType: "",
         usedBudget: "",
+        cpmPrice: 30,
         displayCount: "",
         clickCount: "",
         agent: "",
         advertiserId: "",
         medias: [],
       });
-      // setId(BigInt(0));
       setShow(true);
     });
     $emit.on("update", (val: bigint) => {
       setMode("update");
-      // console.log("update id", val);
       setId(val);
-      //   setShow(true);
-
-      //   setDefaultFileList([]);
       loadInfo(val)
         .then(() => {
           setShow(true);
@@ -221,6 +216,7 @@ const EditForm = () => {
           enabled: data.enabled,
           adMaterialId: data.adMaterialId,
           budget: Number(data.budget) / 100,
+          cpmPrice: data.cpmPrice/100,  
           mediaType: data.mediaType,
           startedAt: data.startedAt,
           endedAt: data.endedAt,
@@ -267,7 +263,6 @@ const EditForm = () => {
   );
   const create = useCallback(
     async (data: PlacementEditDto) => {
-      // console.log("create data", data);
       try {
         const res = await PlacementApi.create(data);
         if (!res) {
@@ -275,8 +270,6 @@ const EditForm = () => {
         } else {
           window.Message.success("新建成功");
           formRef.current?.resetFields();
-
-          //   $emit.emit('update', res.id);
           $emit.emit("reload");
           setShow(false);
         }
@@ -302,22 +295,13 @@ const EditForm = () => {
           data.endedAt = dayjs(data.endedAt)
             .utcOffset(8)
             .format("YYYY-MM-DD HH:mm:ss");
-          console.log("validateFields data", data);
-          // data.avatar = avatar;
           data.budget = Math.round(data.budget * 100); //转换成分
-          console.log("validateFields data", data);
-
           data.medias = data.medias.map(Number); // 将媒体 id 转换为数字
-          console.log("validateFields medias data", data);
 
           if (mode === "add") {
-            // data.role = role;
-
             await create(data);
           }
           if (mode === "update") {
-            // console.log("update data", data);
-
             await update(id, data);
           }
         }
@@ -375,9 +359,6 @@ const EditForm = () => {
             label: material.name,
             value: material.id,
           }))}
-          // fieldProps={{
-          //   onChange: handleMaterialChange,
-          // }}
         />
         <ProFormDigit
           name="budget"
@@ -394,6 +375,25 @@ const EditForm = () => {
               validator: async (_, value) => {
                 if (value < 1 || value === null) {
                   throw new Error("预算必须大于等于1元");
+                }
+              },
+            },
+          ]}
+        />
+        <ProFormDigit
+          name="cpmPrice"
+          label="cpm"
+          required
+          width="md"
+          fieldProps={{
+            type: "number",
+            precision: 0,
+          }}
+          rules={[
+            {
+              validator: async (_, value) => {
+                if(!Number.isInteger(value)){
+                  throw new Error("预算必须为正整数");
                 }
               },
             },

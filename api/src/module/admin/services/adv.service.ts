@@ -11,13 +11,11 @@ export class AdvService {
     queryParams: any,
   ): Promise<{ id: number; name: string; agentId: number }[]> {
     const { page, limit, username, orderBy, role, userId } = queryParams;
-    console.log('userId', userId, 'role', role);
     const where: any = {};
 
     if (role != 'Root' && role != 'Operator' && userId) {
       where.userId = userId;
     }
-    console.log('where ', where);
     const advertisers = await this.prisma.advertiser.findMany({
       where,
       select: {
@@ -61,7 +59,6 @@ export class AdvService {
         companyName: true,
         domainName: true,
         password: true,
-        cpmPrice: true,
         userId: true,
         operatorId: true,
         updatedAt: true,
@@ -98,7 +95,6 @@ export class AdvService {
       companyName: boolean;
       username: boolean;
       domainName: boolean;
-      cpmPrice: boolean;
       createdAt: boolean;
       enabled: boolean;
       updatedAt?: boolean;
@@ -115,7 +111,6 @@ export class AdvService {
       companyName: true,
       username: true,
       domainName: true,
-      cpmPrice: true,
       createdAt: true,
       updatedAt: true,
       enabled: true,
@@ -176,7 +171,6 @@ export class AdvService {
         password,
         enabled,
         domainName,
-        cpmPrice,
         userId,
       } = advDto;
 
@@ -187,7 +181,6 @@ export class AdvService {
           domainName,
           password,
           userId,
-          cpmPrice: Number(cpmPrice),
           enabled,
           wallet: {
             create: {
@@ -223,7 +216,6 @@ export class AdvService {
           password: advDto.password,
           userId: advDto.userId,
           operatorId: advDto.operatorId,
-          cpmPrice: advDto.cpmPrice,
           enabled: advDto.enabled,
           updatedAt: new Date(),
         },

@@ -125,20 +125,6 @@ const PositionIndexPage = (props: PositionPageProps) => {
       },
     },
     {
-      title: "千次展现价格",
-      dataIndex: "cpmPrice",
-      ellipsis: true,
-      valueType: "text",
-      width: 100,
-      hideInSearch: true,
-
-      render: (_, record) => {
-        const balanceYuan = Number(record.cpmPrice) / 100; // 将分转换为元
-        return `¥ ${balanceYuan.toFixed(2)}`;
-        // return `¥ $(record.cpmPrice / 100).toFixed(2)`;
-      },
-    },
-    {
       title: "更新时间",
       width: 100,
       dataIndex: "updatedAt",

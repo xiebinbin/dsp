@@ -90,7 +90,6 @@ export class AdCountController {
         placementinfoEndedAt,
         60,
       );
-      console.log('timeDiff', timeDiff);
 
       // 组合键
       const countcacheKey = `impression:${adUsedCountdata.placementId}-${adUsedCountdata.adMaterialId}-${adUsedCountdata.countType}`;
@@ -120,14 +119,13 @@ export class AdCountController {
         );
       }
 
-      const prePrice = userinfo.cpmPrice / 1000;
+      const prePrice = placementinfo.cpmPrice / 1000;
 
       const adConsumeData: AdConsumeDto = {
         advertiserId: Materialinfo.advertiserId,
         adMaterialId: getRedis.adMaterialId,
         placementId: getRedis.placementId,
         amount: prePrice,
-        cpmPrice: userinfo.cpmPrice,
       };
       //消耗的数据进入缓存
       const rechargecacheKey = `recharge:${adConsumeData.advertiserId}-${adConsumeData.adMaterialId}-${adConsumeData.placementId}`;

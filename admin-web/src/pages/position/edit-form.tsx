@@ -17,7 +17,6 @@ import specApi from "@/api/spec.ts";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const $emit = new Emittery();
-const positiveNumberPattern = /^(?:[1-9]\d*|0)(?:\.\d+)?$/;
 
 const countriesMaps = new Map<string, string>();
 getCountryList().forEach((item) => {
@@ -65,7 +64,6 @@ const EditForm = () => {
         adSpecId: "",
         adMediaId: "",
         type: "",
-        cpmPrice: "",
         positions: [],
       });
       // setId(BigInt(0));
@@ -105,7 +103,6 @@ const EditForm = () => {
         type: data.type,
         adSpecId: data.adSpec?.id,
         adMediaId: data.adMedia?.id,
-        cpmPrice: data.cpmPrice / 100,
       });
     }, 500);
 
@@ -180,13 +177,7 @@ const EditForm = () => {
       onFinish={async () => {
         if (formRef.current) {
           const data = await formRef.current.validateFields();
-          // data.avatar = avatar;
-          data.cpmPrice = data.cpmPrice * 100; //存储为分
-
-          console.log("validateFields data", data);
           if (mode === "add") {
-            // data.role = role;
-
             await create(data);
           }
           if (mode === "update") {
@@ -248,21 +239,6 @@ const EditForm = () => {
           //   { label: "网站", value: 1 },
           //   { label: "pc软件", value: 2 },
           // ]}
-        />
-        <ProFormText
-          required
-          rules={[
-            { required: true, message: "千次展现价格" },
-            {
-              pattern: positiveNumberPattern,
-              message: "千次展现价格必须为正数",
-            },
-          ]}
-          initialValue={""}
-          width="xl"
-          name="cpmPrice"
-          label="千次展现价格(元)"
-          placeholder="请输入"
         />
         <ProFormRadio.Group
           name="enabled"

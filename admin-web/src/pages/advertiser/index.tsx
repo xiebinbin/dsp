@@ -218,7 +218,6 @@ const agentcolumns: ProColumns<Advertiser>[] = [
           $detailemit.emit("detail", {
             val: record.id,
             companyName: record.companyName,
-            cpmPrice: record.cpmPrice,
             domainName: record.domainName,
           });
         }}

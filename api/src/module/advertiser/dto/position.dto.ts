@@ -4,10 +4,9 @@ export class PositionDto {
   type: number;
   enabled: boolean;
   adSpecId: bigint;
-  adSpec: { id: number; name: string };
+  adSpec?: { id: number; name: string };
   adMediaId: bigint;
-  adMedia: { id: number; name: string };
-  cpmPrice: number;
+  adMedia?: { id: number; name: string };
   createdAt: string;
   updatedAt: string;
 }

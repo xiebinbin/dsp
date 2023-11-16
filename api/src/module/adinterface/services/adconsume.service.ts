@@ -25,6 +25,11 @@ export class AdConsumeService {
     const increment = 1;
     if (!data) {
       //如果缓存数据没有，查询数据库
+      const placement = await this.prisma.adPlacement.findFirst({
+        where: {
+          id: value.placementId,
+        },
+      });
       const databaseinfo = await this.findByIds(
         value.advertiserId,
         value.adMaterialId,
@@ -35,11 +40,10 @@ export class AdConsumeService {
         //如果数据库有数值，用数据库
         // console.log('increaseAdConsumeCache', databaseinfo);
 
-        value.amount =
-          (increment * value.cpmPrice) / 1000 + Number(databaseinfo.amount);
+        value.amount = (increment * placement.cpmPrice) / 1000 + Number(databaseinfo.amount);
       } else {
         // 如果数据库不存在，创建一个新的数据对象
-        value.amount = (increment * value.cpmPrice) / 1000;
+        value.amount = (increment * placement.cpmPrice) / 1000;
       }
     } else {
       // 如果缓存数据存在，增加 adCount 字段的值
@@ -50,7 +54,6 @@ export class AdConsumeService {
       adMaterialId: Number(value.adMaterialId),
       placementId: Number(value.placementId),
       amount: Number(value.amount),
-      cpmPrice: Number(value.cpmPrice),
     };
     // console.log('increaseAdConsumeCache value', redisvalue);
 
@@ -78,7 +81,6 @@ export class AdConsumeService {
         },
         data: {
           amount: data.amount,
-          cpmPrice: data.cpmPrice,
           createdAt: existingRecord.createdAt, // 设置为原始值
         },
       });

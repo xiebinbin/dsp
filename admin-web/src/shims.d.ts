@@ -142,8 +142,12 @@ interface Advertiser {
   domainName: string;
   address: string;
   enabled: boolean;
+<<<<<<< HEAD
   cpmPrice: Int;
   userId: number;
+=======
+  userId: Record<number, string>[];
+>>>>>>> a505c72 (x)
   createdAt: DateTime;
   updatedAt: DateTime;
   user: {
@@ -185,6 +189,7 @@ interface AdPlacement {
   };
   // 预算金额上限
   budget: bigint;
+  cpmPrice: number;
   // 媒体类型
   mediaType: Int;
   // 开始日期
@@ -243,7 +248,6 @@ interface Adposition {
   enabled: number;
   // 类型 1 网站 2pc 软件
   type: number;
-  cpmPrice: number;
   createdAt: string;
   updatedAt: string;
   adSpec?: {

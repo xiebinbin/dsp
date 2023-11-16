@@ -12,11 +12,7 @@ import { message } from "antd";
 
 export const $detailemit = new Emittery();
 
-const AdvertiserDetail = (props: {
-  role: "Root" | "Agent";
-  roleName: string;
-}) => {
-  const { role, roleName } = props;
+const AdvertiserDetail = () => {
 
   const [show, setShow] = useSafeState(false);
   const [mode, setMode] = useSafeState("add");
@@ -24,20 +20,12 @@ const AdvertiserDetail = (props: {
   const companyNameRef = useRef<string | undefined>();
 
   const domainNameRef = useRef<string | undefined>();
-  const cpmPriceRef = useRef<number | undefined>();
 
   useMount(() => {
-    $detailemit.on("detail", ({ val, companyName, domainName, cpmPrice }) => {
+    $detailemit.on("detail", ({ companyName, domainName }) => {
       setMode("detail");
-      
-    // setCompanyName(companyName);
-    // settaxNumber(taxNumber);
-    // setcpmPrice(cpmPrice);
-    console.log(role,roleName)
-      console.log('val',val,'domainName',domainName,'cpmPrice',cpmPrice)
       companyNameRef.current = companyName;
       domainNameRef.current = domainName;
-      cpmPriceRef.current = cpmPrice/100;
       loadInfo()
         .then(() => {
         //   setTimeout(() => {
@@ -59,7 +47,6 @@ const AdvertiserDetail = (props: {
       formRef.current?.setFieldsValue({
         domainName: domainNameRef.current,
         companyName: companyNameRef.current,
-        cpmPrice: Number(cpmPriceRef.current).toFixed(2)+'(元)'||'0.00(元)',
       });
     }, 500);
   }, []);
@@ -103,15 +90,6 @@ const AdvertiserDetail = (props: {
             <ProFormText
               name="domainName"
               label="域名"
-              placeholder=""
-              disabled
-              width="md"
-            />
-          </ProForm.Group>
-          <ProForm.Group>
-            <ProFormText
-              name="cpmPrice"
-              label="千次展现价格"
               placeholder=""
               disabled
               width="md"

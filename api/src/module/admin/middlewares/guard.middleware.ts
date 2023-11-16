@@ -1,4 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { match } from 'assert';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class GuardMiddlewareRoot implements CanActivate {
@@ -51,5 +54,22 @@ export class GuardMiddlewareAll implements CanActivate {
     }
 
     return false; // 禁止访问
+  }
+}
+
+export const Roles = Reflector.createDecorator<string[]>();
+const matchRoles = (roles, userRole) => {
+  return roles.includes(userRole);
+}
+@Injectable()
+export class RolesGuard implements CanActivate{
+  constructor(private readonly reflector: Reflector) {}
+  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+    const roles = this.reflector.get<string[]>(Roles, context.getHandler());
+    if (!roles) {
+      return true;
+    }
+    const request = context.switchToHttp().getRequest();
+    return matchRoles(roles, request.user.role);
   }
 }

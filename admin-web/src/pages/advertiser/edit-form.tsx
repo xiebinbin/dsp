@@ -27,7 +27,6 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
     useSafeState<{ id: number; name: string }[]>();
 
   const formRef = useRef<ProFormInstance>();
-  const positiveNumberPattern = /^(?:[1-9]\d*|0)(?:\.\d+)?$/;
   const getAgentList = useCallback(async () => {
     try {
       const agentOptList = await AgentApi.getAgentsList();
@@ -67,7 +66,6 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
         password: "",
         domainName: "",
         enabled: "",
-        cpmPrice: "",
       });
       // setId(BigInt(0));
       setShow(true);
@@ -115,7 +113,6 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
           confirmPassword: user.password,
           userId: user.userId,
           enabled: user.enabled,
-          cpmPrice: user.cpmPrice / 100,
           operatorId: user.operatorId,
         });
       }, 500);
@@ -169,9 +166,6 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
       onFinish={async () => {
         if (formRef.current) {
           const data = await formRef.current.validateFields();
-          // data.avatar = avatar;
-          data.cpmPrice = data.cpmPrice * 100;
-          console.log("validateFields data", data);
           if (mode === "add") {
             data.role = role;
             // if(role!='Root')
@@ -230,23 +224,6 @@ const EditForm = (props: { role: "Root" | "Agent"; roleName: string }) => {
           name="username"
           label="用户名"
           placeholder="请输入用户名"
-        />
-      </ProForm.Group>
-      <ProForm.Group>
-        <ProFormText
-          required
-          rules={[
-            { required: true, message: "千次展现价格" },
-            {
-              pattern: positiveNumberPattern,
-              message: "千次展现价格必须为正数",
-            },
-          ]}
-          initialValue={0} // 设置初始值为字符串 "0"
-          width="xl"
-          name="cpmPrice"
-          label="千次展现价格(元)"
-          placeholder="请输入千次展现价格"
         />
       </ProForm.Group>
 

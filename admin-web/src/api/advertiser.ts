@@ -4,7 +4,6 @@ export interface AdvEditDto {
   companyName: string;
   username: string;
   domainName: string;
-  cpmPrice: number;
   password?: string;
   confirmPassword?: string;
   enabled: boolean;

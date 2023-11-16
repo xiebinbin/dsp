@@ -7,7 +7,6 @@ export class PositionDto {
   adSpec: { id: number; name: string };
   adMediaId: bigint;
   adMedia: { id: number; name: string };
-  cpmPrice: number;
   createdAt: string;
   updatedAt: string;
 }

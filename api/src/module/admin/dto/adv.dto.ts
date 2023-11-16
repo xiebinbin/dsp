@@ -10,7 +10,6 @@ export class AdvDto {
   @IsNotEmpty()
   username: string;
   password: string;
-  cpmPrice: number;
   userId: number;
   operatorId: number;
   updatedAt: string;

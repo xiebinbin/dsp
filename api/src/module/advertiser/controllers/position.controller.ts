@@ -85,7 +85,6 @@ export class PositionController {
       updatedAt: positon.updatedAt,
       adSpecId: positon.adSpecId,
       adMediaId: positon.adMediaId,
-      cpmPrice: positon.cpmPrice,
       adSpec: {
         id: positon.adSpec.id,
         name: positon.adSpec.name,

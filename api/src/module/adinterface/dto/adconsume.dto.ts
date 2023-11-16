@@ -9,5 +9,4 @@ export class AdConsumeDto {
   placementId: bigint;
   @IsNotEmpty()
   amount: number;
-  cpmPrice: number;
 }

@@ -11,6 +11,7 @@ export class PlacementDto {
 
   // 预算金额上限
   budget: bigint;
+  cpmPrice: number;
   // 媒体类型:
   mediaType: number;
   @IsNotEmpty()

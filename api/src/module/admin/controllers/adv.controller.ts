@@ -15,12 +15,11 @@ import {
 } from '@nestjs/common';
 import { ApiResInterceptor } from '../interceptors/api-res.interceptor';
 import { AdvService } from '../services/adv.service';
-import { AuthError } from 'src/utils/err_types';
 import { Request } from 'express';
 import { AdvDto } from '../dto/adv.dto';
 import {
-  GuardMiddlewareRoot,
-  GuardMiddlewareAgent,
+  RolesGuard,
+  Roles,
 } from '../middlewares/guard.middleware';
 
 @Controller('/api/admin/advertiser')
@@ -82,10 +81,11 @@ export class AdvController {
     }
   }
   @Post('list')
-  @UseGuards(GuardMiddlewareAgent || GuardMiddlewareRoot) // 使用 RootGuard 守卫
+  @Roles(['Root', 'Agent'])
+  @UseGuards(RolesGuard)
   @UseInterceptors(ApiResInterceptor)
   async getList(@Req() req: Request, @Body() queryParams: any) {
-    const { page, limit, q, filters, orderBy, extra } = queryParams;
+    const { page, limit, orderBy, extra } = queryParams;
     try {
       return await this.AdvService.getList({
         page,
@@ -102,7 +102,8 @@ export class AdvController {
     }
   }
   @Get(':id')
-  @UseGuards(GuardMiddlewareAgent || GuardMiddlewareRoot) // 使用 RootGuard 守卫
+  @Roles(['Root', 'Agent'])
+  @UseGuards(RolesGuard)
   @UseInterceptors(ApiResInterceptor)
   async getUser(@Param('id') id: number) {
     try {
@@ -122,7 +123,8 @@ export class AdvController {
     }
   }
   @Post('store')
-  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
+  @Roles(['Root'])
+  @UseGuards(RolesGuard)
   @UseInterceptors(ApiResInterceptor)
   async userstore(@Body() data: AdvDto) {
     console.log('data,data', data);
@@ -152,7 +154,8 @@ export class AdvController {
     }
   }
   @Put(':id')
-  @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
+  @Roles(['Root'])
+  @UseGuards(RolesGuard)
   async updateUser(
     @Param('id') id: bigint,
     @Body()
@@ -171,8 +174,6 @@ export class AdvController {
     return this.AdvService.removeUser(id);
   }
   convertAdvInfo(adv: any): any {
-    // Make a shallow copy of the user object
-
     const advDto: AdvDto = {
       id: Number(adv.id),
       companyName: adv.companyName,
@@ -180,7 +181,6 @@ export class AdvController {
       username: adv.username,
       password: '',
       wallet: { balance: adv.wallet.balance },
-      cpmPrice: Number(adv.cpmPrice),
       userId: Number(adv.userId),
       operatorId: adv?.operator ? Number(adv.operatorId) : null,
       updatedAt: null,

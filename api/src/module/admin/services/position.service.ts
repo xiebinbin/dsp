@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { AuthError } from 'src/utils/err_types';
-import { PrismaClient, AdMedia, AdPosition } from '@prisma/client';
+import { PrismaClient, AdPosition } from '@prisma/client';
 import { PositionDto } from '../dto/position.dto';
 
 @Injectable()
@@ -54,7 +54,6 @@ export class PositionService {
             name: true,
           },
         },
-        cpmPrice: true,
         type: true,
         createdAt: true,
         updatedAt: true,
@@ -98,7 +97,6 @@ export class PositionService {
             name: true,
           },
         },
-        cpmPrice: true,
         type: true,
         createdAt: true,
         updatedAt: true,
@@ -122,7 +120,6 @@ export class PositionService {
         // 类型 1 网站 2pc 软件
         adSpecId,
         adMediaId,
-        cpmPrice,
         type,
       } = positionDto;
       console.log('create positionDto', positionDto);
@@ -134,7 +131,6 @@ export class PositionService {
           // 类型 1 网站 2pc 软件
           adSpecId,
           adMediaId,
-          cpmPrice,
           type,
         },
       });
@@ -153,7 +149,6 @@ export class PositionService {
           // 类型 1 网站 2pc 软件
           adSpecId: positionDto.adSpecId,
           adMediaId: positionDto.adMediaId,
-          cpmPrice: positionDto.cpmPrice,
           type: positionDto.type,
         },
       });

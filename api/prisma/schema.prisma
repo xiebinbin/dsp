@@ -46,7 +46,6 @@ model Advertiser {
   domainName  String?       @map("domain_name") //域名
   address     String?
   enabled     Boolean       @default(true)
-  cpmPrice    Int           @default(3000) @map("cpm_price")
   user        User          @relation("UserRelation", fields: [userId], references: [id]) // Updated relation name and fields
   userId      BigInt        @map("user_id")
   operator    User?          @relation("operatorRelation", fields: [operatorId], references: [id])
@@ -183,7 +182,6 @@ model AdPosition {
   adMediaId  BigInt?       @default(0) @map("ad_media_id")
   adMedia    AdMedia?      @relation(fields: [adMediaId], references: [id])
   type       Int          @default(1) // 类型 1 网站 2pc 软件
-  cpmPrice   Int          @default(3000) @map("cpm_price")
   createdAt  DateTime     @default(now()) @map("created_at")
   updatedAt  DateTime     @updatedAt @map("updated_at")
   deletedAt  DateTime?    @map("deleted_at")
@@ -239,6 +237,7 @@ model AdPlacement {
   advertiserId     BigInt            @map("advertiser_id")
   advertiser       Advertiser        @relation(fields: [advertiserId], references: [id])
   createdAt        DateTime          @default(now()) @map("created_at")
+  cpmPrice     Int         @default(3000) @map("cpm_price")
   updatedAt        DateTime          @updatedAt @map("updated_at")
   deletedAt        DateTime?         @map("deleted_at")
   adMediaRelations AdMediaRelation[]
@@ -314,7 +313,6 @@ model AdConsume {
   amount       BigInt      @default(0) @map("amount") @db.UnsignedBigInt //分
   createdAt    DateTime    @default(now()) @map("created_at")
   updatedAt    DateTime    @updatedAt @map("updated_at")
-  cpmPrice     Int         @default(3000) @map("cpm_price")
   status       Int         @default(0) @db.SmallInt
   remark       String?     @default("") @db.Text
 

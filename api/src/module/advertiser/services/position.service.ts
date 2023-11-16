@@ -1,7 +1,5 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { AuthError } from 'src/utils/err_types';
-import { PrismaClient, AdMedia, AdPosition } from '@prisma/client';
-import { PositionDto } from '../dto/position.dto';
+import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class PositionService {
@@ -54,7 +52,6 @@ export class PositionService {
             name: true,
           },
         },
-        cpmPrice: true,
         type: true,
         createdAt: true,
         updatedAt: true,
@@ -98,7 +95,6 @@ export class PositionService {
             name: true,
           },
         },
-        cpmPrice: true,
         type: true,
         createdAt: true,
         updatedAt: true,

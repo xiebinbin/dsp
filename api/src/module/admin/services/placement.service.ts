@@ -33,6 +33,7 @@ export class PlacementService {
             url: true,
           },
         },
+        cpmPrice: true,
         mediaType: true,
         advertiserId: true,
         budget: true,
@@ -151,6 +152,7 @@ export class PlacementService {
         displayCount,
         clickCount,
         advertiserId,
+        cpmPrice,
       } = placementDto;
       console.log('create  placementDto', placementDto);
       return await this.prisma.adPlacement.create({
@@ -166,6 +168,7 @@ export class PlacementService {
           displayCount,
           clickCount,
           advertiserId,
+          cpmPrice
         },
       });
     } catch (error) {
@@ -190,6 +193,7 @@ export class PlacementService {
           advertiserId: PlacementDto.advertiserId,
           name: PlacementDto.name,
           updatedAt: new Date(),
+          cpmPrice: PlacementDto.cpmPrice
         },
       });
       console.log('res', res);
