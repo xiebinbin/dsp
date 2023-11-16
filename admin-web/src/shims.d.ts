@@ -143,14 +143,14 @@ interface Advertiser {
   address: string;
   enabled: boolean;
   cpmPrice: Int;
-  userId: Record<number, string>[];
+  userId: number;
   createdAt: DateTime;
   updatedAt: DateTime;
   user: {
     id: number;
     name: string;
   };
-  operatorId?: Record<number, string>[];
+  operatorId?: number;
   operator?: {
     id: number;
     name: string;
