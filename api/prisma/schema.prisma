@@ -313,6 +313,7 @@ model AdConsume {
   amount       BigInt      @default(0) @map("amount") @db.UnsignedBigInt //分
   createdAt    DateTime    @default(now()) @map("created_at")
   updatedAt    DateTime    @updatedAt @map("updated_at")
+  cpmPrice     Int         @default(3000) @map("cpm_price")
   status       Int         @default(0) @db.SmallInt
   remark       String?     @default("") @db.Text
 
