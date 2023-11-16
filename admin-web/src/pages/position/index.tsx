@@ -213,7 +213,7 @@ const PositionIndexPage = (props: PositionPageProps) => {
             scroll={{ x: 1000 }}
             actionRef={actionRef}
             cardBordered
-            request={async (params = {}, sort, filters) => {
+            request={async (params = {}, _, filters) => {
               const orderBy: { [key: string]: "asc" | "desc" } = {};
               // for (const sortKey in sort) {
               //   const field = sortKey.replace(

@@ -34,7 +34,7 @@ const ReportAgentIndexPage = (props: ReportPageProps) => {
   const [materials, setMaterials] = useSafeState<
     { name: string; id: number }[]
   >([]); // 使用 useState 初始化为空数组
-  const [placements, setPlacements] = useSafeState<
+  const [_, setPlacements] = useSafeState<
     { name: string; id: number }[]
   >([]); // 使用 useState 初始化为空数组
   const [selectedAgent, setSelectedAgent] = useSafeState<number | string>("");
