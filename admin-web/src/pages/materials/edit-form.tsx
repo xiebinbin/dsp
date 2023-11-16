@@ -440,17 +440,17 @@ const EditForm = () => {
     setTimeout(() => {
       formRef.current?.setFieldsValue({
         name: data.name,
-        mediaType: data.adPosition.type,
+        mediaType: data.adPosition?.type,
         content: data.content,
         contentType: data.contentType,
         enabled: data.enabled,
         agent: data.advertiser.user.id,
         advertiserId: data.advertiser.id,
-        positionId: data.adPosition.id,
+        positionId: data.adPosition?.id,
         materialurl: data.url,
-        mediaId: data.adPosition.adMedia.id,
+        mediaId: data.adPosition?.adMedia.id,
         jumpUrl: data.jumpUrl,
-        specId: data.adPosition.adSpec.id,
+        specId: data.adPosition?.adSpec.id,
       });
       loadPositionsOpt();
       loadMedias(0);

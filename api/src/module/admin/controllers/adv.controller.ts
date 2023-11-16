@@ -181,11 +181,11 @@ export class AdvController {
       wallet: { balance: adv.wallet.balance },
       cpmPrice: Number(adv.cpmPrice),
       userId: Number(adv.userId),
-      operatorId: Number(adv.operatorId),
+      operatorId: adv?.operator ? Number(adv.operatorId) : null,
       updatedAt: null,
       enabled: adv.enabled,
       user: { id: Number(adv.user.id), name: adv.user.nickname }, // 使用对象字面量设置 user 属性的值
-      operator: { id: Number(adv.operator.id), name: adv.operator.nickname },
+      operator: adv?.operator ? { id: Number(adv.operator.id), name: adv.operator.nickname } : null,
     };
     // Convert the 'id' property to BigInt
 

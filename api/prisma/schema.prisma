@@ -49,8 +49,8 @@ model Advertiser {
   cpmPrice    Int           @default(3000) @map("cpm_price")
   user        User          @relation("UserRelation", fields: [userId], references: [id]) // Updated relation name and fields
   userId      BigInt        @map("user_id")
-  operator    User          @relation("operatorRelation", fields: [operatorId], references: [id])
-  operatorId  BigInt        @default(0) @map("operator_id")
+  operator    User?          @relation("operatorRelation", fields: [operatorId], references: [id])
+  operatorId  BigInt?        @default(0) @map("operator_id")
   field       Int?          @map("filed")
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
@@ -110,8 +110,8 @@ model AdMaterial {
   // 类型 1:图片 2:视频 3:文字
   contentType  Int           @default(1) @map("content_type")
   // 广告位置 1.列表页 2.详情页 3.侧边栏 4.全屏弹窗(仅 pc 有)
-  positionId   BigInt        @default(1) @map("position_id") @db.UnsignedBigInt
-  adPosition   AdPosition    @relation(fields: [positionId], references: [id])
+  positionId   BigInt?        @default(0) @map("position_id") @db.UnsignedBigInt
+  adPosition   AdPosition?    @relation(fields: [positionId], references: [id])
   // 广告内容
   content      String
   // 图片链接

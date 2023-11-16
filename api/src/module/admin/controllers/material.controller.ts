@@ -209,7 +209,7 @@ export class MaterialController {
       contentType: material.contentType,
       enabled: material.enabled,
       positionId: material.positionId,
-      adPosition: {
+      adPosition: material?.adPosition ? {
         id: Number(material.adPosition.id),
         name: material.adPosition.name,
         type: Number(material.adPosition.type),
@@ -222,7 +222,7 @@ export class MaterialController {
           id: Number(material.adPosition.adMedia.id),
           name: material.adPosition.adMedia.name,
         },
-      },
+      } : null,
       content: material.content,
       url: this.defaultUrl + material.url,
       advertiserId: Number(material.advertiserId),

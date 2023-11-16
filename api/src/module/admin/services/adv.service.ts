@@ -53,6 +53,7 @@ export class AdvService {
   }
 
   async findById(id: bigint) {
+    console.log('id', id);
     const advinfo = await this.prisma.advertiser.findFirst({
       select: {
         id: true,
