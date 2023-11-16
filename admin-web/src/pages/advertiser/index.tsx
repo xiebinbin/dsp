@@ -421,7 +421,7 @@ const AdvertiserIndexPage = (props: AdvIndexPageProps) => {
             }}
             dateFormatter="string"
           />
-          <AdvertiserDetail {...props} />
+          <AdvertiserDetail/>
         </div>
       );
     } else {
