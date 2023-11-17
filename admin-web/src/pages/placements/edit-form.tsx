@@ -56,7 +56,11 @@ const EditForm = () => {
   const [mediasAlllist, setMediasAlllist] = useSafeState<
     { name: string; id: number }[]
   >([]); // 使用 useState 初始化为空数组
-
+  const initialValues = [
+    {
+      range: [dayjs("00:00:00", "HH:mm:ss"), dayjs("23:59:59", "HH:mm:ss")],
+    },
+  ];
   useEffect(() => {
     loadAgentsRelation();
     loadAdvertisers("");
@@ -305,6 +309,35 @@ const EditForm = () => {
             .format("YYYY-MM-DD HH:mm:ss");
           data.budget = Math.round(data.budget * 100); //转换成分
           data.medias = data.medias.map(Number); // 将媒体 id 转换为数字
+          // if (
+          //   data.timerange &&
+          //   data.timerange.length &&
+          //   data.timerange.every(
+          //     (item: { range?: dayjs.Dayjs[] }, index: number) => {
+          //       if (item.range && item.range.length > 1) {
+          //         return item.range.every((rangeItem, rangeIndex) => {
+          //           return (
+          //             rangeItem &&
+          //             rangeItem.isSame(
+          //               initialValues[index]?.range?.[rangeIndex] ||
+          //                 dayjs("00:00:00", "HH:mm:ss")
+          //             )
+          //           );
+          //         });
+          //       } else {
+          //         return false;
+          //       }
+          //     }
+          //   )
+          // ) {
+          //   data.timerange = initialValues;
+          //   console.log("data.timerange successfully updated:", data.timerange);
+          // } else {
+          //   console.log("data.timerange not updated");
+          // }
+
+          console.log("initialValues", initialValues);
+
           console.log("placement data", data);
           if (mode === "add") {
             await create(data);
@@ -444,17 +477,7 @@ const EditForm = () => {
             }}
           />
         </div>
-        <Form.List
-          name="timerange"
-          initialValue={[
-            {
-              range: [
-                dayjs("00:00:00", "HH:mm:ss"),
-                dayjs("23:59:59", "HH:mm:ss"),
-              ],
-            },
-          ]}
-        >
+        <Form.List name="timerange">
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...restField }) => (
@@ -467,13 +490,17 @@ const EditForm = () => {
                     {...restField}
                     name={[name, "range"]}
                     label="选择时间段"
+                    initialValue={[
+                      dayjs("00:00:00", "HH:mm:ss"),
+                      dayjs("23:59:59", "HH:mm:ss"),
+                    ]}
                   >
                     <TimePicker.RangePicker
                       format="HH:mm:ss"
-                      defaultValue={[
-                        dayjs("00:00:00", "HH:mm:ss"),
-                        dayjs("23:59:59", "HH:mm:ss"),
-                      ]}
+                      // defaultValue={[
+                      //   dayjs("00:00:00", "HH:mm:ss"),
+                      //   dayjs("23:59:59", "HH:mm:ss"),
+                      // ]}
                     />
                   </Form.Item>
                   <MinusCircleOutlined onClick={() => remove(name)} />
