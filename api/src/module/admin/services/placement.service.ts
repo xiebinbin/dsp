@@ -6,10 +6,22 @@ import { utcToZonedTime } from 'date-fns-tz';
 import { PrismaService } from 'src/services/prisma.service';
 import * as fs from 'fs';
 import dayjs from 'dayjs';
-
+import path from 'path';
+interface ConvertedData {
+  placementId: number;
+  timerange: { range: string[] }[];
+}
 @Injectable()
 export class PlacementService {
   constructor(private prisma: PrismaService) {}
+  // private filePath: string = path.join(
+  //   __dirname,
+  //   '..',
+  //   'savejson',
+  //   'placementtimerange.json',
+  // ); //生产路径 多了个dist。 dist/module/admin/savejson/placementtimerange.json
+  private filePath =
+    '/Users/a/Documents/git/github/dsp/api/src/module/admin/savejson/placementtimerange.json'; //测试路径
   async findByname(name: string): Promise<AdPlacement | null> {
     return await this.prisma.adPlacement.findFirst({
       where: {
@@ -158,7 +170,8 @@ export class PlacementService {
         cpmPrice,
       } = placementDto;
       console.log('create  placementDto', placementDto);
-      return await this.prisma.adPlacement.create({
+
+      const placementcreate = await this.prisma.adPlacement.create({
         data: {
           name,
           enabled,
@@ -174,6 +187,26 @@ export class PlacementService {
           cpmPrice,
         },
       });
+      if (placementDto.timerange && placementDto.timerange.length > 0) {
+        const filteredTimerange = placementDto.timerange.filter(
+          (item) => Object.keys(item).length > 0,
+        );
+        if (filteredTimerange.length > 0) {
+          const convertedData: ConvertedData = {
+            placementId: Number(placementcreate.id),
+            timerange: filteredTimerange.map(({ range }) => ({
+              range: range.map((date) => dayjs(date).format()),
+            })),
+          };
+          console.log('convertedData ', convertedData);
+
+          const savejson = await this.updateOrAddPlacementData(
+            convertedData,
+            convertedData.placementId,
+          );
+        }
+      }
+      return placementcreate;
     } catch (error) {
       throw new HttpException(error.message, error.code);
     }
@@ -181,32 +214,24 @@ export class PlacementService {
   async updatePlacement(id: bigint, PlacementDto: PlacementDto) {
     try {
       console.log('PlacementDtox', PlacementDto);
-      console.log('PlacementDtox', PlacementDto.timerange.length);
-
       if (PlacementDto.timerange && PlacementDto.timerange.length > 0) {
         const filteredTimerange = PlacementDto.timerange.filter(
           (item) => Object.keys(item).length > 0,
         );
         if (filteredTimerange.length > 0) {
-          const convertedData: any = {
+          const convertedData: ConvertedData = {
             placementId: Number(id),
             timerange: filteredTimerange.map(({ range }) => ({
               range: range.map((date) => dayjs(date).format()),
             })),
           };
           console.log('convertedData ', convertedData);
-          const filePath =
-            '/Users/a/Documents/git/github/dsp/api/src/module/admin/savejson/placementtimerange.json';
+
           const savejson = await this.updateOrAddPlacementData(
-            filePath,
             convertedData,
             convertedData.placementId,
           );
-        } else {
-          // 处理 timerange 中只包含空对象的情况
         }
-      } else {
-        // 处理 timerange 为空的情况
       }
 
       // const json = JSON.stringify(convertedData);
@@ -303,11 +328,20 @@ export class PlacementService {
       completed: completedPlanCount,
     };
   }
+  async placementTimeRange(placementId: number): Promise<any> {
+    const data = await this.readJsonData();
+    const jsonData = data.filter((item: any) => {
+      const parsedItem = JSON.parse(item);
+      return parsedItem.placementId === placementId;
+    });
+    console.log('jsonData', jsonData);
+    return jsonData;
+  }
   // 读取 JSON 文件内容
 
-  async readJsonData(filePath: string): Promise<any> {
+  async readJsonData(): Promise<any> {
     try {
-      const jsonData = await fs.promises.readFile(filePath, 'utf8');
+      const jsonData = await fs.promises.readFile(this.filePath, 'utf8');
       console.log('readJsonData jsonData', jsonData);
       return JSON.parse(jsonData) || []; // 如果jsonData为null，则返回空数组
     } catch (error) {
@@ -317,20 +351,18 @@ export class PlacementService {
   }
 
   // 写入 JSON 文件内容
-  async writeJsonData(filePath: string, data: any): Promise<void> {
+  async writeJsonData(data: any): Promise<void> {
     const jsonData = JSON.stringify(data);
     console.log('writejson', jsonData);
-    await fs.promises.writeFile(filePath, jsonData, 'utf8');
+    await fs.promises.writeFile(this.filePath, jsonData, 'utf8');
   }
 
   // 更新或添加数据项
   async updateOrAddPlacementData(
-    filePath: string,
-    convertedData: any,
+    convertedData: ConvertedData,
     placementId: number,
   ): Promise<void> {
-    console.log('data placementId', placementId);
-    let data = await this.readJsonData(filePath);
+    let data = await this.readJsonData();
     console.log('data', data);
 
     if (data && data.length > 0) {
@@ -350,6 +382,6 @@ export class PlacementService {
     data.push(JSON.stringify(convertedData));
 
     console.log('updateOrAddPlacementData data', data);
-    await this.writeJsonData(filePath, data);
+    await this.writeJsonData(data);
   }
 }

@@ -205,6 +205,7 @@ interface AdPlacement {
     user: { id: number; nickname: string };
   };
   adMediaRelations: [{ mediaId: number; mediaName: string }];
+  timerange: [{ range: [] }];
 }
 interface Admedia {
   id: number;

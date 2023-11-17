@@ -77,7 +77,18 @@ export class PlacementController {
   async getUser(@Param('id') id: number, @Res() response) {
     try {
       const placementinfo = await this.PlacementService.findById(BigInt(id));
+      const timeInfo = await this.PlacementService.placementTimeRange(
+        Number(placementinfo.id),
+      );
+      console.log('timeInfo', timeInfo);
       const convertdata = this.convertPlacementInfo(placementinfo);
+      if (timeInfo.length > 0) {
+        const parsedTimeInfo = JSON.parse(timeInfo[0]);
+        if (parsedTimeInfo.timerange) {
+          convertdata.timerange = parsedTimeInfo.timerange;
+        }
+      }
+      console.log('convertdata', convertdata);
       const responseData = {
         data: convertdata,
         code: 200,
@@ -92,15 +103,15 @@ export class PlacementController {
   @UseInterceptors(ApiResInterceptor)
   async userstore(@Body() data: PlacementDto) {
     console.log('data,data', data);
-    data.cpmPrice = Number(data.cpmPrice)*100;
+    data.cpmPrice = Number(data.cpmPrice) * 100;
     try {
-      const name = await this.PlacementService.findByname(data.name);
-      if (name) {
-        throw new HttpException(
-          AuthError.PLACEMENTNAME_IS_SAME.message,
-          AuthError.PLACEMENTNAME_IS_SAME.code,
-        );
-      }
+      // const name = await this.PlacementService.findByname(data.name);
+      // if (name) {
+      //   throw new HttpException(
+      //     AuthError.PLACEMENTNAME_IS_SAME.message,
+      //     AuthError.PLACEMENTNAME_IS_SAME.code,
+      //   );
+      // }
       const advres = await this.AdvService.findById(data.advertiserId);
       // if (advres.wallet == null || advres.wallet.balance < data.budget) {
       //   throw new HttpException(
@@ -142,7 +153,7 @@ export class PlacementController {
     } else {
       data.enabled = 2;
     }
-    data.cpmPrice = Number(data.cpmPrice)*100;
+    data.cpmPrice = Number(data.cpmPrice) * 100;
     data.startedAt = dayjs(data.startedAt).format();
     data.endedAt = dayjs(data.endedAt).format();
 

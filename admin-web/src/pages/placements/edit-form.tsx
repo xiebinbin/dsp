@@ -210,7 +210,10 @@ const EditForm = () => {
   const loadInfo = useCallback(
     async (val: bigint) => {
       const data = await PlacementApi.getInfo(val);
-
+      const timerangeWithDayjs = data.timerange.map((item) => ({
+        range: item.range.map((dateString) => dayjs(dateString)),
+      }));
+      console.log("timerangeWithDayjs", timerangeWithDayjs);
       setTimeout(() => {
         formRef.current?.setFieldsValue({
           name: data.name,
@@ -227,9 +230,10 @@ const EditForm = () => {
           agent: data.advertiser.user.id,
           advertiserId: data.advertiser.id,
           medias: data.adMediaRelations.map((val) => val.mediaId),
-          timerange: [],
+          timerange: timerangeWithDayjs || [],
         });
       }, 500);
+      console.log("data.timerange,", data.timerange);
       setMaterials([
         { id: Number(data.adMaterialId), name: data.adMaterial.name },
       ]);
