@@ -32,4 +32,7 @@ export class PlacementDto {
   advertiserId: bigint;
   // mediarelation: mediarelationDto[];
   medias: [];
+  timerange: {
+    range: Date[];
+  }[];
 }

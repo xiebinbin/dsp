@@ -6,7 +6,7 @@ import {
   ProFormSelect,
   ProFormText,
 } from "@ant-design/pro-components";
-import { Checkbox, message } from "antd";
+import { Button, Checkbox, Form, Space, TimePicker, message } from "antd";
 import { useMount, useSafeState, useUnmount } from "ahooks";
 import Emittery from "emittery";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -23,6 +23,7 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import advancedFormat from "dayjs/plugin/advancedFormat";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(localizedFormat);
@@ -183,6 +184,7 @@ const EditForm = () => {
         agent: "",
         advertiserId: "",
         medias: [],
+        timerange: [],
       });
       setShow(true);
     });
@@ -215,7 +217,7 @@ const EditForm = () => {
           enabled: data.enabled,
           adMaterialId: data.adMaterialId,
           budget: Number(data.budget) / 100,
-          cpmPrice: data.cpmPrice/100,  
+          cpmPrice: data.cpmPrice / 100,
           mediaType: data.mediaType,
           startedAt: data.startedAt,
           endedAt: data.endedAt,
@@ -225,6 +227,7 @@ const EditForm = () => {
           agent: data.advertiser.user.id,
           advertiserId: data.advertiser.id,
           medias: data.adMediaRelations.map((val) => val.mediaId),
+          timerange: [],
         });
       }, 500);
       setMaterials([
@@ -296,7 +299,7 @@ const EditForm = () => {
             .format("YYYY-MM-DD HH:mm:ss");
           data.budget = Math.round(data.budget * 100); //转换成分
           data.medias = data.medias.map(Number); // 将媒体 id 转换为数字
-
+          console.log("placement data", data);
           if (mode === "add") {
             await create(data);
           }
@@ -391,7 +394,7 @@ const EditForm = () => {
           rules={[
             {
               validator: async (_, value) => {
-                if(!Number.isInteger(value)){
+                if (!Number.isInteger(value)) {
                   throw new Error("预算必须为正整数");
                 }
               },
@@ -435,6 +438,43 @@ const EditForm = () => {
             }}
           />
         </div>
+        <Form.List name="timerange">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map(({ key, name, ...restField }) => (
+                <Space
+                  key={key}
+                  style={{ display: "flex", marginBottom: 8 }}
+                  align="baseline"
+                >
+                  <Form.Item
+                    {...restField}
+                    name={[name, "range"]}
+                    label="选择时间段"
+                  >
+                    <TimePicker.RangePicker
+                      format="HH:mm:ss"
+                      defaultValue={[
+                        dayjs("00:00:00", "HH:mm:ss"),
+                        dayjs("23:59:59", "HH:mm:ss"),
+                      ]}
+                    />
+                  </Form.Item>
+                  <MinusCircleOutlined onClick={() => remove(name)} />
+                </Space>
+              ))}
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  icon={<PlusOutlined />}
+                >
+                  添加时间段
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
         <ProFormText
           initialValue={""}
           width="xl"

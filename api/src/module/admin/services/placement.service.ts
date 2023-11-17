@@ -4,6 +4,9 @@ import { AdPlacement } from '@prisma/client';
 import { PlacementDto } from '../dto/placement.dto';
 import { utcToZonedTime } from 'date-fns-tz';
 import { PrismaService } from 'src/services/prisma.service';
+import * as fs from 'fs';
+import dayjs from 'dayjs';
+
 @Injectable()
 export class PlacementService {
   constructor(private prisma: PrismaService) {}
@@ -168,7 +171,7 @@ export class PlacementService {
           displayCount,
           clickCount,
           advertiserId,
-          cpmPrice
+          cpmPrice,
         },
       });
     } catch (error) {
@@ -178,6 +181,37 @@ export class PlacementService {
   async updatePlacement(id: bigint, PlacementDto: PlacementDto) {
     try {
       console.log('PlacementDtox', PlacementDto);
+      console.log('PlacementDtox', PlacementDto.timerange.length);
+
+      if (PlacementDto.timerange && PlacementDto.timerange.length > 0) {
+        const filteredTimerange = PlacementDto.timerange.filter(
+          (item) => Object.keys(item).length > 0,
+        );
+        if (filteredTimerange.length > 0) {
+          const convertedData: any = {
+            placementId: Number(id),
+            timerange: filteredTimerange.map(({ range }) => ({
+              range: range.map((date) => dayjs(date).format()),
+            })),
+          };
+          console.log('convertedData ', convertedData);
+          const filePath =
+            '/Users/a/Documents/git/github/dsp/api/src/module/admin/savejson/placementtimerange.json';
+          const savejson = await this.updateOrAddPlacementData(
+            filePath,
+            convertedData,
+            convertedData.placementId,
+          );
+        } else {
+          // 处理 timerange 中只包含空对象的情况
+        }
+      } else {
+        // 处理 timerange 为空的情况
+      }
+
+      // const json = JSON.stringify(convertedData);
+      // console.log('json ', json);
+
       const res = await this.prisma.adPlacement.update({
         where: { id },
         data: {
@@ -193,7 +227,7 @@ export class PlacementService {
           advertiserId: PlacementDto.advertiserId,
           name: PlacementDto.name,
           updatedAt: new Date(),
-          cpmPrice: PlacementDto.cpmPrice
+          cpmPrice: PlacementDto.cpmPrice,
         },
       });
       console.log('res', res);
@@ -268,5 +302,54 @@ export class PlacementService {
       ongoing: ongoingPlanCount,
       completed: completedPlanCount,
     };
+  }
+  // 读取 JSON 文件内容
+
+  async readJsonData(filePath: string): Promise<any> {
+    try {
+      const jsonData = await fs.promises.readFile(filePath, 'utf8');
+      console.log('readJsonData jsonData', jsonData);
+      return JSON.parse(jsonData) || []; // 如果jsonData为null，则返回空数组
+    } catch (error) {
+      console.error('Error reading JSON data:', error);
+      return []; // 或者根据实际需求返回其他默认值
+    }
+  }
+
+  // 写入 JSON 文件内容
+  async writeJsonData(filePath: string, data: any): Promise<void> {
+    const jsonData = JSON.stringify(data);
+    console.log('writejson', jsonData);
+    await fs.promises.writeFile(filePath, jsonData, 'utf8');
+  }
+
+  // 更新或添加数据项
+  async updateOrAddPlacementData(
+    filePath: string,
+    convertedData: any,
+    placementId: number,
+  ): Promise<void> {
+    console.log('data placementId', placementId);
+    let data = await this.readJsonData(filePath);
+    console.log('data', data);
+
+    if (data && data.length > 0) {
+      data = data.reduce((accumulator: any[], item: any) => {
+        const parsedItem = JSON.parse(item);
+        if (Number(parsedItem.placementId) === placementId) {
+          return accumulator;
+        } else {
+          accumulator.push(item);
+          return accumulator;
+        }
+      }, []);
+    }
+
+    // 添加操作
+    console.log('updateOrAddPlacementData convertedData', convertedData);
+    data.push(JSON.stringify(convertedData));
+
+    console.log('updateOrAddPlacementData data', data);
+    await this.writeJsonData(filePath, data);
   }
 }
