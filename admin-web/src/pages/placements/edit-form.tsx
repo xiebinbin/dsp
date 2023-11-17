@@ -18,7 +18,7 @@ import AdvAPI from "@/api/advertiser.ts";
 import error from "xgplayer/es/error";
 import MedialApi from "@/api/media.ts";
 import PlacementApi, { PlacementEditDto } from "@/api/placement.ts";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -210,9 +210,11 @@ const EditForm = () => {
   const loadInfo = useCallback(
     async (val: bigint) => {
       const data = await PlacementApi.getInfo(val);
-      const timerangeWithDayjs = data.timerange.map((item) => ({
-        range: item.range.map((dateString) => dayjs(dateString)),
-      }));
+      console.log(" data.timerange", data.timerange);
+      const timerangeWithDayjs =
+        data?.timerange?.map((item) => ({
+          range: item.range.map((dateString) => dayjs(dateString)),
+        })) || [];
       console.log("timerangeWithDayjs", timerangeWithDayjs);
       setTimeout(() => {
         formRef.current?.setFieldsValue({
@@ -442,7 +444,17 @@ const EditForm = () => {
             }}
           />
         </div>
-        <Form.List name="timerange">
+        <Form.List
+          name="timerange"
+          initialValue={[
+            {
+              range: [
+                dayjs("00:00:00", "HH:mm:ss"),
+                dayjs("23:59:59", "HH:mm:ss"),
+              ],
+            },
+          ]}
+        >
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...restField }) => (
