@@ -17,7 +17,6 @@ import { AdvertiserService } from '../services/advertiser.service';
 import { AuthError } from 'src/utils/err_types';
 
 @Controller('/api/advertiser/placement/')
-@UseInterceptors(ApiResInterceptor)
 export class PlacementController {
   constructor(
     private readonly PlacementService: PlacementService,
@@ -27,18 +26,15 @@ export class PlacementController {
 
   @Get('detail/:id')
   @UseInterceptors(ApiResInterceptor)
-  async getDetail(@Param('id') id: number, @Res() response) {
+  async getDetail(@Param('id') id: number) {
     try {
       const userinfo = await this.PlacementService.findById(BigInt(id));
       const res = this.convertPlacementInfo(userinfo);
       console.log('convertPlacementInfo', res);
-      const responseData = {
+      return {
         data: res,
         total: res.total,
       };
-      return response.send(responseData);
-
-      return res;
     } catch (e) {
       console.log(e);
       throw new HttpException(e.message, e.status);
@@ -50,9 +46,8 @@ export class PlacementController {
   async getListByAdvertiser(
     @Req() req: Request,
     @Body() queryParams: any,
-    @Res() response,
   ) {
-    const { page, limit, q, filters, orderBy, extra } = queryParams;
+    const { page, limit, orderBy, extra } = queryParams;
     try {
       console.log('req.advertiser.id', req.advertiser.id);
       const Advinfo = await this.AdvertiserService.findById(
@@ -65,7 +60,7 @@ export class PlacementController {
         );
       }
 
-      const result = await this.PlacementService.getList({
+      return await this.PlacementService.getList({
         page,
         limit,
         orderBy,
@@ -75,10 +70,6 @@ export class PlacementController {
         userId: '',
         materialname: extra.materialname || '',
       });
-      return {
-        data: result,
-        total: result.total,
-      };
     } catch (e) {
       console.log(e);
       throw new HttpException(e.message, e.status);

@@ -48,8 +48,8 @@ model Advertiser {
   enabled     Boolean       @default(true)
   user        User          @relation("UserRelation", fields: [userId], references: [id]) // Updated relation name and fields
   userId      BigInt        @map("user_id")
-  operator    User?          @relation("operatorRelation", fields: [operatorId], references: [id])
-  operatorId  BigInt?        @default(0) @map("operator_id")
+  operator    User?         @relation("operatorRelation", fields: [operatorId], references: [id])
+  operatorId  BigInt?       @default(0) @map("operator_id")
   field       Int?          @map("filed")
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
@@ -109,8 +109,8 @@ model AdMaterial {
   // 类型 1:图片 2:视频 3:文字
   contentType  Int           @default(1) @map("content_type")
   // 广告位置 1.列表页 2.详情页 3.侧边栏 4.全屏弹窗(仅 pc 有)
-  positionId   BigInt?        @default(0) @map("position_id") @db.UnsignedBigInt
-  adPosition   AdPosition?    @relation(fields: [positionId], references: [id])
+  positionId   BigInt?       @default(0) @map("position_id") @db.UnsignedBigInt
+  adPosition   AdPosition?   @relation(fields: [positionId], references: [id])
   // 广告内容
   content      String
   // 图片链接
@@ -177,10 +177,10 @@ model AdPosition {
   id         BigInt       @id @default(autoincrement()) @db.UnsignedBigInt
   name       String
   enabled    Boolean      @default(true)
-  adSpecId   BigInt?       @default(0) @map("ad_spec_id")
-  adSpec     AdSpec?       @relation(fields: [adSpecId], references: [id])
-  adMediaId  BigInt?       @default(0) @map("ad_media_id")
-  adMedia    AdMedia?      @relation(fields: [adMediaId], references: [id])
+  adSpecId   BigInt?      @default(0) @map("ad_spec_id")
+  adSpec     AdSpec?      @relation(fields: [adSpecId], references: [id])
+  adMediaId  BigInt?      @default(0) @map("ad_media_id")
+  adMedia    AdMedia?     @relation(fields: [adMediaId], references: [id])
   type       Int          @default(1) // 类型 1 网站 2pc 软件
   createdAt  DateTime     @default(now()) @map("created_at")
   updatedAt  DateTime     @updatedAt @map("updated_at")
@@ -237,13 +237,14 @@ model AdPlacement {
   advertiserId     BigInt            @map("advertiser_id")
   advertiser       Advertiser        @relation(fields: [advertiserId], references: [id])
   createdAt        DateTime          @default(now()) @map("created_at")
-  cpmPrice     Int         @default(3000) @map("cpm_price")
+  cpmPrice         Int               @default(3000) @map("cpm_price")
   updatedAt        DateTime          @updatedAt @map("updated_at")
   deletedAt        DateTime?         @map("deleted_at")
   adMediaRelations AdMediaRelation[]
   adUsedCounts     AdUsedCount[] // 添加与 adUsedCount 模型的关联字段
   adConsume        AdConsume[]
   AdReportByDay    AdReportByDay[]
+  availableTime    Json?            @default("[]") @map("available_time") @db.Json
 
   @@index([adMaterialId], name: "ad_material_id")
   @@index([enabled], name: "enabled")
