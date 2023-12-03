@@ -71,6 +71,9 @@ export class AdController{
     @Get('/demo')
     @Render('demo')
     async demo() {
-        return {}
+        const appUrl = this.configService.get<string>('APP_URL');
+        return {
+            appUrl
+        }
     }
 }
