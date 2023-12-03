@@ -60,7 +60,7 @@ export class PlacementController {
   }
   @Get(':id')
   @UseInterceptors(ApiResInterceptor)
-  async getUser(@Param('id') id: number, @Res() response) {
+  async getUser(@Param('id') id: number) {
     const placementinfo = await this.PlacementService.findById(BigInt(id));
     const timeInfo = await this.PlacementService.placementTimeRange(
       Number(placementinfo.id),
@@ -72,6 +72,7 @@ export class PlacementController {
         convertdata.timerange = parsedTimeInfo.timerange;
       }
     }
+    console.log(convertdata, 'convertdata');
     return convertdata;
   }
   @Post('store')

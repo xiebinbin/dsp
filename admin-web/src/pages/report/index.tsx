@@ -196,7 +196,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
               {
                 date: item.date,
                 value: item.displayCount,
-                category: "展现量",
+                category: "PV数",
               },
               {
                 date: item.date,
@@ -335,7 +335,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
     console.log("useMount");
     // 发起 POST 请求来获取数据
     setTimeout(() => {
-      const currentDate = dayjs('2023-08-05').toDate();
+      const currentDate = dayjs('2023-01-15').toDate();
 
       // 获取七天前的日期
       const sevenDaysAgo = new Date(currentDate);
@@ -377,7 +377,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
       dataIndex: "date",
       ellipsis: true,
       valueType: "text",
-      width: 200,
+      width: 120,
       hideInSearch: true,
       render: (_, record) => {
         if (record.date == "汇总") {
@@ -389,21 +389,21 @@ const ReportIndexPage = (props: ReportPageProps) => {
       }
     },
     {
+      title: "PV数",
+      key: "displayCount",
+      dataIndex: "displayCount",
+      ellipsis: true,
+      valueType: "select",
+      width: 120,
+      hideInSearch: true,
+    },
+    {
       title: "UV数",
       key: "uvCount",
       dataIndex: "uvCount",
       ellipsis: true,
       valueType: "select",
-      width: 200,
-      hideInSearch: true,
-    },
-    {
-      title: "展现量",
-      key: "displayCount",
-      dataIndex: "displayCount",
-      ellipsis: true,
-      valueType: "select",
-      width: 200,
+      width: 120,
       hideInSearch: true,
     },
     {
@@ -412,7 +412,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
       dataIndex: "clickCount",
       ellipsis: true,
       valueType: "select",
-      width: 200,
+      width: 120,
       hideInSearch: true,
     },
     {
@@ -421,7 +421,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
       dataIndex: "clickrate",
       ellipsis: true,
       valueType: "text",
-      width: 200,
+      width: 100,
 
       render: (_, record) => {
         if (record.date == '汇总') {

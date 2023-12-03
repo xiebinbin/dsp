@@ -161,12 +161,12 @@ const GetRouter = (userRole: string): Route => {
         routes: [
           {
             path: "/admin/report/index",
-            name: "运营按天汇总报表",
+            name: "运营日报表",
             access: ["Root", "Operator"],
           },
           {
             path: "/admin/report/agent",
-            name: "代理商按天汇总报表",
+            name: "代理商日报表",
             access: ["Agent"],
           },
         ],
