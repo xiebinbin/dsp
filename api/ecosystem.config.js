@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'app',
+      name: 'hotline-app',
       script: 'dist/main.js',
     },
   ],
