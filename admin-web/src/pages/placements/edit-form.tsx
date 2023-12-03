@@ -18,7 +18,7 @@ import AdvAPI from "@/api/advertiser.ts";
 import error from "xgplayer/es/error";
 import MedialApi from "@/api/media.ts";
 import PlacementApi, { PlacementEditDto } from "@/api/placement.ts";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import localizedFormat from "dayjs/plugin/localizedFormat";
