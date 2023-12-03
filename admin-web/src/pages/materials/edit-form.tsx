@@ -710,6 +710,9 @@ const EditForm = () => {
           <ProForm.Item label="上传素材">
             {materialurl != "" ? (
               <img
+                onLoad={(e) => {
+                  console.log('img load',e);
+                }}
                 className="w-200px h-200px mr-1rem"
                 src={getImgUrl(materialurl)}
                 alt=""

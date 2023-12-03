@@ -10,10 +10,7 @@ export class ApiResInterceptor implements NestInterceptor {
   intercept(_: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       map((data) => {
-        // console.log('ApiResInterceptor', data);
-        // 将所有的bigint转换为number
-        console.log(next.handle());
-        // console.log('data', '来来');
+        console.log('data', data);
         return {
           data,
           code: 200,

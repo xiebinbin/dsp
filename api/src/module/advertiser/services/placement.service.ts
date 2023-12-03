@@ -171,4 +171,17 @@ export class PlacementService {
       completed: completedPlanCount,
     };
   }
+  findManyByMaterialIds(ids: bigint[]) {
+    return this.prisma.adPlacement.findMany({
+      select: {
+        adMaterialId: true,
+      },
+      where: {
+        adMaterialId: {
+          in: ids,
+        },
+        enabled: 1,
+      },
+    });
+  }
 }

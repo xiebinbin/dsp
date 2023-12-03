@@ -70,7 +70,7 @@ model Wallet {
   id           BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
   totalAmount  BigInt     @default(0) @map("total_amount") @db.BigInt //分
   totalUsed    BigInt     @default(0) @map("total_used") @db.BigInt //分
-  balance      BigInt     @default(0) //分
+  balance      BigInt     @default(0) @db.BigInt
   advertiserId BigInt     @unique @map("advertiser_id") @db.UnsignedBigInt
   advertiser   Advertiser @relation(fields: [advertiserId], references: [id])
   createdAt    DateTime   @default(now()) @map("created_at")
@@ -220,7 +220,7 @@ model AdPlacement {
   adMaterialId BigInt     @map("ad_material_id")
   adMaterial   AdMaterial @relation(fields: [adMaterialId], references: [id])
   // 预算金额上限
-  budget       BigInt     @default(0) @db.UnsignedBigInt //分
+  budget       BigInt     @default(0) @db.BigInt //分
   // 媒体类型
   mediaType    Int        @default(1) @map("media_type")
   // 开始日期
@@ -229,7 +229,9 @@ model AdPlacement {
   // 结束日期
   endedAt          DateTime?         @default(now()) @map("ended_at") @db.DateTime
   // 已消耗预算
-  usedBudget       BigInt            @default(0) @map("used_budget") @db.UnsignedBigInt //分
+  usedBudget       BigInt            @default(0) @map("used_budget") @db.BigInt
+  // uv次数
+  uvCount          BigInt            @default(0) @map("uv_count") @db.UnsignedBigInt
   // 展现次数
   displayCount     BigInt            @default(0) @map("display_count") @db.UnsignedBigInt
   // 点击次数
@@ -267,6 +269,7 @@ model ReportDaily {
   adMaterialName  String   @map("ad_material_name")
   adPlacementId   BigInt   @map("ad_placement_id") // 注意修正字段名大小写
   adPlacementName String   @map("ad_placement_name") // 此字段为备注填充startAt-EndedAt
+  uvCount         BigInt   @default(0) @map("uv_count") @db.UnsignedBigInt
   displayCount    BigInt   @default(0) @map("display_count") @db.UnsignedBigInt
   clickCount      BigInt   @default(0) @map("click_count") @db.UnsignedBigInt
   usedBudget      BigInt   @default(0) @map("used_budget") @db.UnsignedBigInt //分
@@ -332,6 +335,7 @@ model AdReportByDay {
   adPlacement  AdPlacement @relation(fields: [placementId], references: [id])
   // 已消耗预算
   usedBudget   BigInt      @default(0) @map("used_budget") @db.UnsignedBigInt //分
+  uvCount      BigInt      @default(0) @map("uv_count") @db.UnsignedBigInt
   // 展现次数
   displayCount BigInt      @default(0) @map("display_count") @db.UnsignedBigInt
   // 点击次数
@@ -355,6 +359,7 @@ model ReportPlacement {
   adMaterialName  String    @map("ad_material_name")
   adPlacementId   BigInt    @map("ad_placement_id") // 注意修正字段名大小写
   adPlacementName String    @map("ad_placement_name") // 同样，修正字段名大小写
+  uvCount  BigInt    @default(0) @map("uv_count") @db.UnsignedBigInt 
   displayCount    BigInt    @default(0) @map("display_count") @db.UnsignedBigInt
   clickCount      BigInt    @default(0) @map("click_count") @db.UnsignedBigInt
   usedBudget      BigInt    @default(0) @map("used_budget") @db.UnsignedBigInt //分

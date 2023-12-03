@@ -3,7 +3,6 @@ import {
   Post,
   UploadedFile,
   UseInterceptors,
-  Param,
   Logger,
   Res,
 } from '@nestjs/common';
@@ -20,7 +19,7 @@ import { v4 } from 'uuid';
 export class UploadController {
   private readonly logger = new Logger(UploadController.name);
   constructor(private readonly fileService: FileService) {}
-  defaultUrl = 'http://static-edu-test.leleshuju.com/';
+  defaultUrl = 'https://cdn.adbaba.net/';
   @UseInterceptors(ApiResInterceptor)
   @UseInterceptors(
     FileInterceptor('file', {
@@ -29,7 +28,6 @@ export class UploadController {
           const date = moment().format('YYYY-MM-DD');
           const uploadPath = `../uploads/${date}/`;
           fs.mkdirSync(uploadPath, { recursive: true });
-          console.log('uploadPath', uploadPath);
           callback(null, uploadPath);
         },
         filename: (req, file, callback) => {
@@ -48,7 +46,6 @@ export class UploadController {
   async uploadFile(
     @Res() response,
     @UploadedFile() file: Express.Multer.File,
-    @Param('filename') filename: string,
   ): Promise<{ filename: string; fileurl: string; mimetype: string }> {
     if (file) {
       console.log(
@@ -63,7 +60,7 @@ export class UploadController {
         key + ext,
       ].join('/');
       const res = await this.fileService.getToken(fileName);
-      const sendfile = await this.fileService.upload(
+      await this.fileService.upload(
         res,
         file.destination + file.filename,
       );
@@ -73,14 +70,6 @@ export class UploadController {
       };
       console.log('gettoken', responseData);
       return response.send(responseData);
-      return response.send({
-        data: {
-          filename: file.fieldname,
-          fileurl: file.destination,
-          mimetype: file.mimetype,
-        },
-        code: 200,
-      });
     } else {
       throw new Error('File upload failed.');
     }

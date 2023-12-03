@@ -25,7 +25,7 @@ export class RechargeController {
     private readonly RechargeService: RechargeService,
     private readonly AdvService: AdvService,
     private readonly UserService: UserService,
-  ) {}
+  ) { }
   private readonly logger = new Logger(RechargeController.name);
 
   @Get('list')
@@ -44,53 +44,34 @@ export class RechargeController {
   @UseGuards(GuardMiddlewareRoot) // 使用 RootGuard 守卫
   @UseInterceptors(ApiResInterceptor)
   async userstore(@Body() data: RechargeDto, @Req() req: Request) {
-    console.log('data,data', data);
-
-    try {
-      const userinfo = await this.UserService.findById(BigInt(req.user.id));
-      if (userinfo.role != 'Root') {
-        throw new HttpException(
-          AuthError.USER_NOT_Permission.message,
-          AuthError.USER_NOT_Permission.code,
-        );
-      }
-      const advinfo = await this.AdvService.findById(BigInt(data.id));
-
-      console.log('data,username', userinfo);
-
-      if (!advinfo) {
-        throw new HttpException(
-          AuthError.ADV_NOT_FOUND.message,
-          AuthError.ADV_NOT_FOUND.code,
-        );
-      }
-      const res = await this.RechargeService.create(data);
-      return true;
-    } catch (e) {
-      console.log(e);
-      throw new HttpException(e.message, e.status);
+    const userinfo = await this.UserService.findById(BigInt(req.user.id));
+    if (userinfo.role != 'Root') {
+      throw new HttpException(
+        AuthError.USER_NOT_Permission.message,
+        AuthError.USER_NOT_Permission.code,
+      );
     }
+    const advinfo = await this.AdvService.findById(BigInt(data.id));
+
+    if (!advinfo) {
+      throw new HttpException(
+        AuthError.ADV_NOT_FOUND.message,
+        AuthError.ADV_NOT_FOUND.code,
+      );
+    }
+    await this.RechargeService.create(data);
+    return true;
   }
   @Post('rechargehistlist')
   @UseInterceptors(ApiResInterceptor)
   async rechargehist(@Body() queryParams: any) {
-    console.log('rechargehist queryParams', queryParams);
-    const { page, limit, q, filters, orderBy, extra } = queryParams;
-    try {
-      const result = await this.RechargeService.getHistList({
-        page,
-        limit,
-        orderBy,
-        // nickname: queryParams.nickname || '',
-        advertiserId: queryParams.extra.advertiserId || '',
-        createdAt: queryParams.q || '',
-        // choserole: queryParams.extra.choserole,
-        // role: queryParams.role || '',
-        // updatedAt: queryParams.updatedAt || '',
-        // enabled: queryParams.enabled || false,
-      });
-      //   return response.send(result);
-      return result;
-    } catch (error) {}
+    const { page, limit, orderBy } = queryParams;
+    return await this.RechargeService.getHistList({
+      page,
+      limit,
+      orderBy,
+      advertiserId: queryParams.extra.advertiserId || '',
+      createdAt: queryParams.q || '',
+    });
   }
 }

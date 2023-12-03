@@ -82,14 +82,12 @@ export class ReportService {
       };
     }
     console.log('report where : ', where);
-    const prismalog = new PrismaClient({
-      log: ['query'],
-    });
 
     const reports = await this.prisma.reportDaily.groupBy({
       by: ['date'],
       where,
       _sum: {
+        uvCount: true,
         displayCount: true,
         clickCount: true,
         usedBudget: true,
@@ -101,9 +99,10 @@ export class ReportService {
 
     const reportSummary: ReportDto[] = reports.map((report) => ({
       date: dayjs(report.date).toDate(),
-      displayCount: Number(report._sum.displayCount),
-      clickCount: Number(report._sum.clickCount),
-      usedBudget: Number(report._sum.usedBudget),
+      uvCount: report._sum.uvCount,
+      displayCount: report._sum.displayCount,
+      clickCount: report._sum.clickCount,
+      usedBudget: report._sum.usedBudget,
     }));
     return reportSummary;
   }

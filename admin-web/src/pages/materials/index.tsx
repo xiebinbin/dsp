@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthInfo } from "@/stores/auth-info.ts";
 import { useRecoilState } from "recoil";
 import App from "@/App.tsx";
+import { useCopyToClipboard } from "usehooks-ts";
 
 export interface MaterialsPageProps {
   role: "Root" | "Agent" | "Advertiser";
@@ -96,7 +97,7 @@ const MaterialsIndexPage = (props: MaterialsPageProps) => {
     },
     [setadvertisersList, role]
   );
-
+  const [_, copy] = useCopyToClipboard()
   useEffect(() => {
     // 在组件加载时触发 loadAdvertisers 并设置值给 advertiserSearch
     loadAgents();
@@ -132,6 +133,20 @@ const MaterialsIndexPage = (props: MaterialsPageProps) => {
       width: 200,
       hideInSearch: true,
       hideInTable: true,
+    },
+    {
+      title: "广告位页",
+      key: "pageUrl",
+      dataIndex: "pageUrl",
+      copyable: true,
+      render: (_dom, record) => {
+        return <span className="text-blue-500 cursor-pointer" onClick={() => {
+          copy(record.pageUrl ?? '')
+          window.Message.success("复制成功");
+        }}>复制链接</span>;
+      },
+      width: 100,
+      hideInSearch: true,
     },
     {
       title: "代理商",

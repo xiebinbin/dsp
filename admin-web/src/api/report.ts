@@ -21,6 +21,7 @@ export interface ChartDataResponse {
   adMaterialName: string; // 广告素材名称
   adPlacementId: number; // 广告计划
   adPlacementName: string; // 广告计划名称
+  uvCount: number; // uv
   displayCount: number; // 展示次数
   clickCount: number; // 点击次数
   usedBudget: number; // 使用预算

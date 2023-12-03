@@ -23,7 +23,7 @@ export class MaterialController {
     private readonly AdvertiserService: AdvertiserService,
   ) {}
   private readonly logger = new Logger(MaterialController.name);
-  defaultUrl = 'http://static-edu-test.leleshuju.com/';
+  defaultUrl = 'https://cdn.adbaba.net/';
   @Get('detail/:id')
   @UseInterceptors(ApiResInterceptor)
   async getDetail(@Param('id') id: number) {

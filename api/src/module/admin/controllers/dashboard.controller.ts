@@ -2,7 +2,6 @@
 
 import {
   Controller,
-  Logger,
   Post,
   Req,
   Res,
@@ -33,11 +32,12 @@ export class DashboardController {
     private readonly AdReportByDayService: AdReportByDayService,
     private readonly RedisCacheService: RedisCacheService,
   ) {}
-  private readonly logger = new Logger(DashboardController.name);
-  @UseInterceptors(ApiResInterceptor)
+
   @Post('/getData')
   @UseGuards(GuardMiddlewareRoot || GuardMiddlewareAgent) // 使用 RootGuard 守卫
-  async getData(@Req() req: Request, @Res() response): Promise<DashboardDto> {
+
+  @UseInterceptors(ApiResInterceptor)
+  async getData(@Req() req: Request) {
     let agentId = null;
     const role = req.user.role;
     let root = true;
@@ -46,17 +46,9 @@ export class DashboardController {
     if (role != 'Root') {
       agentId = req.user.id;
       root = false;
-      console.log('agentId', agentId);
       Dashboardcachekey = 'DashbaordAdm' + agentId + ':';
     }
-    console.log('Dashboardcachekey', Dashboardcachekey);
-    const res = await this.getDashData(Dashboardcachekey, agentId, root, role);
-
-    const responseData = {
-      data: res,
-      code: 200,
-    };
-    return response.send(responseData);
+    return await this.getDashData(Dashboardcachekey, agentId, root, role);
   }
   private async getDashData(
     cachekey: string,
@@ -69,7 +61,6 @@ export class DashboardController {
     let cacheres = new DashboardDto();
 
     cacheres = await this.RedisCacheService.get(cachekey);
-    console.log('cacheres', cacheres);
     if (cacheres === null) {
       function getDateISO(offset: number): string {
         const date = new Date();
@@ -81,12 +72,8 @@ export class DashboardController {
       const agenttotal = await this.UserService.countByAgent();
       dashboardres.agentNumber = agenttotal;
       if (role != 'Root' && role != 'Operator') {
-        // agentId = req.user.id;
         dashboardres.agentNumber = 0;
         root = false;
-        // console.log('agentId', agentId);
-        // Dashboardcachekey = 'Dashbaord' + agentId + ':';
-
         const advertisersArray = await this.AdvService.findAdvertisers({
           role: role,
           userId: agentId,
@@ -121,7 +108,7 @@ export class DashboardController {
       await this.RedisCacheService.set(cachekey, dashboardres, 5 * 60 * 1000);
       cacheres = dashboardres;
     }
-
+    console.log('cacheres', cacheres);
     return cacheres;
   }
 }

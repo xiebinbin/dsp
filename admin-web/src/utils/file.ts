@@ -1,11 +1,12 @@
 
 export const getImgUrl = (url: string): string => {
-    if (url.startsWith("http")) {
+    console.log("getImgUrl", url);
+    if (url.startsWith("https")) {
         return url;
     }
-    return "http://static-edu-test.leleshuju.com" + url;
+    return "https://cdn.adbaba.net" + url;
 }
 export const removeImgUrl = (url: string): string => {
-    return url.replace(/^http:\/\/static-edu-test\.leleshuju\.com\//, '');
+    return url.replace(/^https:\/\/cdn\.adbaba\.net\//, '');
 
 }

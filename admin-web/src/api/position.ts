@@ -5,6 +5,7 @@ export interface PositionEditDto {
   id: number;
   name: string;
   enabled: number;
+  jsUrl: string;
   type: number; // 媒体类型 1网站 2pc软件
   adSpecId: number;
   adMediaId: number;

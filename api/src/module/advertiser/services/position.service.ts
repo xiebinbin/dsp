@@ -42,6 +42,7 @@ export class PositionService {
         adSpec: {
           select: {
             id: true,
+            size:true,
             name: true,
           },
         },
@@ -107,5 +108,16 @@ export class PositionService {
       data: position,
       total,
     };
+  }
+  findMaterialsById(id: bigint) {
+    return this.prisma.adMaterial.findMany({
+      select:{
+        id: true,
+      },
+      where: {
+        positionId: id,
+        enabled: true,
+      },
+    });
   }
 }

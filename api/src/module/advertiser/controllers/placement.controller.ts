@@ -6,7 +6,6 @@ import {
   Logger,
   Param,
   Post,
-  Res,
   UseInterceptors,
   Req,
 } from '@nestjs/common';

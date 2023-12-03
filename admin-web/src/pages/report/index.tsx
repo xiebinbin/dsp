@@ -17,14 +17,13 @@ import ReportApi, {
 } from "@/api/report.ts";
 import { useMount, useSafeState } from "ahooks";
 import MaterialApi from "@/api/material.ts";
-// import AgentApi from "@/api/agent.ts";
 import AdvAPI from "@/api/advertiser.ts";
 import { useRecoilState } from "recoil";
 import { AuthInfo } from "@/stores/auth-info";
 import { useNavigate } from "react-router-dom";
 import App from "@/App.tsx";
 import { CloseCircleOutlined } from "@ant-design/icons";
-import { Tag } from "antd";
+import { Divider, Tag } from "antd";
 import dayjs from "dayjs";
 
 export interface ReportPageProps {
@@ -36,7 +35,10 @@ const ReportIndexPage = (props: ReportPageProps) => {
   const { role, roleName } = props;
   const [authUser] = useRecoilState(AuthInfo);
   const actionRef = useRef<ActionType>();
-
+  const [uvTotal, setUvTotal] = useSafeState<number>(0); // 使用 useState 初始化为 0
+  const [displayTotal, setDisplayTotal] = useSafeState<number>(0); // 使用 useState 初始化为 0
+  const [clickTotal, setClickTotal] = useSafeState<number>(0); // 使用 useState 初始化为 0
+  const [usedBudgetTotal, setUsedBudgetTotal] = useSafeState<number>(0); // 使用 useState 初始化为 0
   const plotRef = useRef<Line | null>(null); // 用于引用 G2Plot 的实例
   const formRef = useRef<ProFormInstance>();
   const [materials, setMaterials] = useSafeState<
@@ -45,6 +47,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
   const [placements, setPlacements] = useSafeState<
     { name: string; id: number }[]
   >([]); // 使用 useState 初始化为空数组
+
   const [selectedAgent, setSelectedAgent] = useSafeState<number | string>("");
   const [agents, setAgents] = useSafeState<{ name: string; id: number }[]>([]);
   const [advertisers, setAdvertisers] = useSafeState<
@@ -169,10 +172,14 @@ const ReportIndexPage = (props: ReportPageProps) => {
         }
 
         const response = await ReportApi.getChartData(data);
-
+        setUvTotal(response.reduce((a, b) => a + b.uvCount, 0));
+        setDisplayTotal(response.reduce((a, b) => a + b.displayCount, 0));
+        setClickTotal(response.reduce((a, b) => a + b.clickCount, 0));
+        setUsedBudgetTotal(
+          response.reduce((a, b) => a + b.usedBudget, 0)
+        );
         if (response && response.length > 0) {
           setDetailData(response); // 设置明细表数据
-
           const transformedData: {
             date: string;
             value: number;
@@ -181,6 +188,11 @@ const ReportIndexPage = (props: ReportPageProps) => {
 
           for (const item of response) {
             transformedData.push(
+              {
+                date: item.date,
+                value: item.uvCount,
+                category: "UV数",
+              },
               {
                 date: item.date,
                 value: item.displayCount,
@@ -323,7 +335,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
     console.log("useMount");
     // 发起 POST 请求来获取数据
     setTimeout(() => {
-      const currentDate = new Date();
+      const currentDate = dayjs('2023-08-05').toDate();
 
       // 获取七天前的日期
       const sevenDaysAgo = new Date(currentDate);
@@ -333,17 +345,17 @@ const ReportIndexPage = (props: ReportPageProps) => {
       )
         .toString()
         .padStart(2, "0")}-${sevenDaysAgo
-        .getDate()
-        .toString()
-        .padStart(2, "0")}`;
+          .getDate()
+          .toString()
+          .padStart(2, "0")}`;
       const formattedcurrentDate = `${currentDate.getFullYear()}-${(
         currentDate.getMonth() + 1
       )
         .toString()
         .padStart(2, "0")}-${currentDate
-        .getDate()
-        .toString()
-        .padStart(2, "0")}`;
+          .getDate()
+          .toString()
+          .padStart(2, "0")}`;
       loadInfo({
         startDate: formattedStartDate,
         endDate: formattedcurrentDate,
@@ -353,7 +365,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
         adPlacementId: 0,
       });
       formRef.current?.setFieldsValue({
-        rangeDate: [dayjs(formattedStartDate),dayjs(formattedcurrentDate)],
+        rangeDate: [dayjs(formattedStartDate), dayjs(formattedcurrentDate)],
       });
     }, 500);
     reload();
@@ -364,7 +376,24 @@ const ReportIndexPage = (props: ReportPageProps) => {
       key: "date",
       dataIndex: "date",
       ellipsis: true,
-      valueType: "date",
+      valueType: "text",
+      width: 200,
+      hideInSearch: true,
+      render: (_, record) => {
+        if (record.date == "汇总") {
+          return record.date;
+        }
+        const formattedDate = dayjs(record.date).format("YYYY-MM-DD");
+        return formattedDate;
+
+      }
+    },
+    {
+      title: "UV数",
+      key: "uvCount",
+      dataIndex: "uvCount",
+      ellipsis: true,
+      valueType: "select",
       width: 200,
       hideInSearch: true,
     },
@@ -395,6 +424,10 @@ const ReportIndexPage = (props: ReportPageProps) => {
       width: 200,
 
       render: (_, record) => {
+        if (record.date == '汇总') {
+          const clickRate = (clickTotal / displayTotal) * 100;
+          return clickRate.toFixed(2) + "%(平均)";
+        }
         // 自定义渲染函数，将 AdMaterial 中的 companyName 放到 agentname 处
         const clickRate = (record.clickCount / record.displayCount) * 100;
         return clickRate.toFixed(2) + "%";
@@ -405,7 +438,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
     {
       title: "消耗金额",
       key: "usedBudget",
-      width: 100,
+      width: 120,
       dataIndex: "usedBudget",
       valueType: "money",
       hideInSearch: true,
@@ -434,7 +467,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
               formRef={formRef}
               onFinish={async (values) => {
                 try {
-                  
+
                   const requestData: ChartDataRequest = {
                     startDate: values.rangeDate[0],
                     endDate: values.rangeDate[1],
@@ -543,16 +576,33 @@ const ReportIndexPage = (props: ReportPageProps) => {
             </ProForm>
             <div id="chart-container"></div>
           </ProCard>
-          <ProCard>
+          <Divider type={'horizontal'} />
+          <ProCard title="数据明细">
             {detailData.length > 0 ? (
-              <ProTable<ChartDataResponse>
-                columns={rootcolumns}
-                dataSource={detailData}
-                search={false}
-                scroll={{ x: 1000 }}
-                actionRef={actionRef}
-                pagination={false}
-              />
+              <div>
+                <ProTable<ChartDataResponse>
+                  columns={rootcolumns}
+                  dataSource={detailData.concat([{
+                    date: '汇总', // 日期
+                    agentId: 0,
+                    agentName: '',
+                    advertiserId: 0,
+                    advertiserName: '',
+                    adMaterialId: 0,
+                    adMaterialName: '',
+                    adPlacementId: 0,
+                    adPlacementName: '',
+                    uvCount: uvTotal,
+                    displayCount: displayTotal,
+                    clickCount: clickTotal,
+                    usedBudget: usedBudgetTotal,
+                  }])}
+                  search={false}
+                  scroll={{ x: 1000 }}
+                  actionRef={actionRef}
+                  pagination={false}
+                />
+              </div>
             ) : (
               <div>
                 <Tag icon={<CloseCircleOutlined />} color="error">

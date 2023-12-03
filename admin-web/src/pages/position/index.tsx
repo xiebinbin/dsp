@@ -22,6 +22,7 @@ import { AuthInfo } from "@/stores/auth-info.ts";
 import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 import App from "@/App.tsx";
+import { useCopyToClipboard } from 'usehooks-ts'
 const maps = new Map<
   string | number | boolean,
   ProSchemaValueEnumType | ReactNode
@@ -57,6 +58,7 @@ const PositionIndexPage = (props: PositionPageProps) => {
       reload();
     });
   });
+  const [_, copy] = useCopyToClipboard()
   useUnmount(() => {
     $emit.off("reload", () => {
       reload();
@@ -85,6 +87,20 @@ const PositionIndexPage = (props: PositionPageProps) => {
       formItemProps: {
         name: "q",
       },
+    },
+    {
+      title: "广告位js",
+      key: "jsUrl",
+      dataIndex: "jsUrl",
+      copyable: true,
+      render: (_dom, record) => {
+        return <span className="text-blue-500 cursor-pointer" onClick={() => {
+          copy(`<script src="${record.jsUrl}"></script>`)
+          window.Message.success("复制成功");
+        }}>复制代码</span>;
+      },
+      width: 100,
+      hideInSearch: true,
     },
     {
       title: "媒体类型", // 类型 1 网站 2pc 软件

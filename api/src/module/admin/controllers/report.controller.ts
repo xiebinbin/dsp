@@ -3,14 +3,11 @@
 import {
   Body,
   Controller,
-  Logger,
   Post,
   Req,
-  Res,
   UseInterceptors,
 } from '@nestjs/common';
 import { ReportService } from '../services/report.service';
-import { ReportDto } from '../dto/report.dto';
 import { reportParam } from '../dto/reportparam.dto';
 import { Request } from 'express';
 import { AdvService } from '../services/adv.service';
@@ -22,14 +19,12 @@ export class ReportController {
     private readonly reportService: ReportService,
     private readonly AdvService: AdvService,
   ) {}
-  private readonly logger = new Logger(ReportController.name);
   @UseInterceptors(ApiResInterceptor)
   @Post('/getReportsByDateRange')
   async getReportsByDateRange(
     @Req() req: Request,
     @Body() data: reportParam,
-    @Res() response,
-  ): Promise<ReportDto[]> {
+  ){
     if (req.user.role != 'Root' && req.user.role != 'Operator') {
       data.agentId = req.user.id;
     }
@@ -38,7 +33,6 @@ export class ReportController {
       console.log('role is Operator advs', advs);
       data.advertisers = advs.map((adv) => adv.id);
     }
-    console.log('reportParam data', data);
     const reportparam: reportParam = {
       agentId: data.agentId || null,
       advertiserId: data.advertiserId || null,
@@ -48,41 +42,16 @@ export class ReportController {
       startDate: data.startDate,
       endDate: data.endDate,
     };
-    console.log('reportparam', reportparam);
-    const res = await this.reportService.getReportsByDateRange(reportparam);
-    const result = {
-      data: this.convertReportInfo(res),
-      code: 200,
-    };
-    console.log('report res', result);
-    return response.send(result);
+    return await this.reportService.getReportsByDateRange(reportparam);
+
   }
   @UseInterceptors(ApiResInterceptor)
   @Post('/placementOptlist')
   async getPlacementOptList(
-    @Req() req: Request,
     @Body() queryParams: any,
-    @Res() response,
   ) {
     const { q } = queryParams;
     const materialId = q;
-    const res = await this.reportService.placements(materialId);
-    console.log(res);
-    const result = {
-      data: { data: res, code: 200 },
-    };
-    console.log('report res', result);
-    return response.send(result);
-  }
-  convertReportInfo(report: any): any {
-    const convertedData = report.map((item) => {
-      for (const key in item) {
-        if (typeof item[key] === 'bigint') {
-          item[key] = Number(item[key]);
-        }
-      }
-      return item;
-    });
-    return convertedData;
+    return await this.reportService.placements(materialId);
   }
 }

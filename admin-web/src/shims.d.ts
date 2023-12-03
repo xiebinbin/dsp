@@ -56,6 +56,7 @@ interface AdMaterial {
   name: string;
   // 媒体类型 1网站 2pc软件
   mediaType: Int;
+  pageUrl?:string;
   // 类型 1:图片 2:视频 3:文字
   contentType: Int;
   // 广告位置 1.列表页 2.详情页 3.侧边栏 4.全屏弹窗(仅 pc 有)
@@ -174,6 +175,7 @@ interface RootInfo {
 interface AdPlacement {
   id: bigint;
   name: string;
+  js_url?: string;
   enabled: Int;
   // 广告素材
   adMaterialId: bigint;

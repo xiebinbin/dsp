@@ -2,10 +2,12 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { AuthError } from 'src/utils/err_types';
 import { PrismaClient, AdMaterial } from '@prisma/client';
 import { MaterialDto } from '../dto/material.dto';
+import { ConfigService } from '@nestjs/config';
+import sqids from 'src/utils/sqids';
 
 @Injectable()
 export class MaterialService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient, private readonly config: ConfigService) {}
   async findByUsername(name: string): Promise<AdMaterial | null> {
     return await this.prisma.adMaterial.findFirst({
       where: {
@@ -127,6 +129,7 @@ export class MaterialService {
             adSpec: {
               select: {
                 id: true,
+                size: true, //规格尺寸
                 name: true, //规格名称
                 type: true, //规格类型 图片，视频
               },
@@ -135,9 +138,13 @@ export class MaterialService {
         },
       },
     });
-
+    const appUrl = this.config.get<string>('APP_URL');
     return {
-      data: adMaterials,
+      data: adMaterials.map((material) => {
+        const id = sqids.en(Number(material.id))
+        const pageUrl = `${appUrl}/ad/page/${id}`
+        return { ...material, pageUrl }
+      }),
       total,
     };
   }

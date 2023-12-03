@@ -10,9 +10,6 @@ import { redisStore } from 'cache-manager-redis-yet';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthController } from '../admin/controllers/auth.controller';
 import { UserController } from '../admin/controllers/user.controller';
-// import { AdvAuthController } from '../advertiser/controllers/auth.controller';
-// import { AdvCodeService } from '../advertiser/services/code.service';
-
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -24,9 +21,11 @@ import { UserController } from '../admin/controllers/user.controller';
       ): Promise<CacheModuleOptions<RedisClientOptions>> => {
         const url = config.get<string>('REDIS_URL');
         const password = config.get<string>('REDIS_PASSWORD');
+        const db = config.get<number>('REDIS_DB')
         const store = await redisStore({
           url,
           password,
+          database: db,
         });
 
         return {

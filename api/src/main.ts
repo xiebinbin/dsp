@@ -7,6 +7,8 @@ process.env.TZ = 'Asia/Shanghai';
 import { AdvGlobalErrorFilter } from './module/advertiser/interceptors/adv-GlobalErrorFilter';
 import { AdapiModule } from './adapi.module';
 import { AdapiGlobalErrorFilter } from './module/adinterface/interceptors/adapi-GlobalErrorFilter';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 declare global {
   interface BigInt {
     toJSON(): number;
@@ -25,8 +27,12 @@ async function bootstrap() {
   app.useGlobalFilters(new GlobalErrorFilter()); // 使用全局异常过滤器
   await app.listen(3000, '0.0.0.0');
   //广告主平台
-  const adv = await NestFactory.create(AdvModule);
+  const adv = await NestFactory.create<NestExpressApplication>(AdvModule);
   adv.useGlobalFilters(new AdvGlobalErrorFilter()); // 使用全局异常过滤器
+  adv.useStaticAssets(join(__dirname, '..', 'public'));
+  adv.setBaseViewsDir(join(__dirname, '..', 'views'));
+  adv.setViewEngine('hbs');
+
   await adv.listen(3002, '0.0.0.0');
   //对外接口
   const adapi = await NestFactory.create(AdapiModule);

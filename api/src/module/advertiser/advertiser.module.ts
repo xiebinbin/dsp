@@ -24,6 +24,7 @@ import { MediaController } from './controllers/media.controller';
 import { MediaService } from './services/media.service';
 import { PositionService } from './services/position.service';
 import { PositionController } from './controllers/position.controller';
+import { AdController } from './controllers/ad.controller';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { PositionController } from './controllers/position.controller';
     HttpModule,
   ],
   controllers: [
+    AdController,
     AuthController,
     DashboardController,
     MaterialController,

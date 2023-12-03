@@ -6,14 +6,13 @@ import { utcToZonedTime } from 'date-fns-tz';
 import { PrismaService } from 'src/services/prisma.service';
 import * as fs from 'fs';
 import dayjs from 'dayjs';
-import path from 'path';
 interface ConvertedData {
   placementId: number;
   timerange: { range: string[] }[];
 }
 @Injectable()
 export class PlacementService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService,) {}
   // private filePath: string = path.join(
   //   __dirname,
   //   '..',
@@ -146,7 +145,6 @@ export class PlacementService {
         },
       },
     });
-
     return {
       data: adPlacements,
       total: total,

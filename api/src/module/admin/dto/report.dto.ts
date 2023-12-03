@@ -14,7 +14,8 @@ export class ReportDto {
   //   clickCount: bigint;
   //   usedBudget: bigint;
   date: Date;
-  displayCount: number;
-  clickCount: number;
-  usedBudget: number;
+  uvCount: bigint;
+  displayCount: bigint;
+  clickCount: bigint;
+  usedBudget: bigint;
 }

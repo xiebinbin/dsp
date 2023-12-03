@@ -1,0 +1,30 @@
+
+const createAd = () => {
+    let config = {
+        width: {{ width }},
+        height: {{ height }},
+        url: '{{ url }}',
+    };
+    let script = document.currentScript;
+    let newDiv = document.createElement('div');
+    newDiv.id = 'ad' + config.placement_id;
+    newDiv.style.width = config.width + 'px';
+    newDiv.style.height = config.height + 'px';
+    script.after(newDiv);
+    let iframe = document.createElement('iframe');
+    iframe.src = config.url;
+    iframe.width = config.width + 'px';
+    iframe.height = config.height + 'px';
+    iframe.scrolling = 'no';
+    iframe.frameBorder = 0;
+    iframe.marginWidth = 0;
+    iframe.marginHeight = 0;
+    iframe.style.border = 'none';
+    iframe.style.overflow = 'hidden';
+    iframe.style.width = config.width + 'px';
+    iframe.style.height = config.height + 'px';
+    iframe.style.display = 'block';
+    iframe.style.margin = '0 auto';
+    newDiv.appendChild(iframe);
+}
+createAd();

@@ -33,6 +33,7 @@ export class AdMaterialService {
             adSpec: {
               select: {
                 id: true,
+                size: true,
                 name: true, //规格名称
                 type: true, //规格类型 图片，视频
               },

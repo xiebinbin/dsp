@@ -2,10 +2,12 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { AuthError } from 'src/utils/err_types';
 import { PrismaClient, AdPosition } from '@prisma/client';
 import { PositionDto } from '../dto/position.dto';
+import { ConfigService } from '@nestjs/config';
+import sqids from 'src/utils/sqids';
 
 @Injectable()
 export class PositionService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient, private readonly config: ConfigService) { }
   async findByUsername(name: string, type: number) {
     return await this.prisma.adPosition.findFirst({
       where: {
@@ -76,7 +78,7 @@ export class PositionService {
       where,
     });
 
-    const position = await this.prisma.adPosition.findMany({
+    const positions = await this.prisma.adPosition.findMany({
       where,
       select: {
         id: true,
@@ -105,8 +107,14 @@ export class PositionService {
       skip: (page - 1) * limit,
       take: limit,
     });
+
+    const appUrl = this.config.get<string>('APP_URL');
     return {
-      data: position,
+      data: positions.map((position) => {
+        const id = sqids.en(Number(position.id))
+        const jsUrl = `${appUrl}/ad/js/${id}`
+        return { ...position, jsUrl }
+      }),
       total,
     };
   }
