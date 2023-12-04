@@ -142,7 +142,7 @@ export class MaterialService {
     return {
       data: adMaterials.map((material) => {
         const id = sqids.en(Number(material.id))
-        const pageUrl = `${appUrl}/ad/page/${id}`
+        const pageUrl = `${appUrl}/s/page/${id}`
         return { ...material, pageUrl }
       }),
       total,

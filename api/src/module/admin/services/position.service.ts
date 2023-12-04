@@ -112,7 +112,7 @@ export class PositionService {
     return {
       data: positions.map((position) => {
         const id = sqids.en(Number(position.id))
-        const jsUrl = `${appUrl}/ad/js/${id}`
+        const jsUrl = `${appUrl}/s/js/${id}`
         return { ...position, jsUrl }
       }),
       total,
