@@ -43,16 +43,21 @@ export class AdController{
             throw new Error('广告位没有关联素材')
         }
         materials = materials.filter((v) => {
-            console.log(v.url);
             if (v.url == '' || v.url == "default-ad.jpg") {
                 return false
             }
             return true;
         });
         const material = materials[Math.floor(Math.random() * materials.length)]
+        console.log('选中 material',material);
+        const link = material.jumpUrl ?? '#'
+        console.log({
+            url: `https://cdn.adbaba.net/${material.url}`,
+            link,
+        })
         return {
             url: `https://cdn.adbaba.net/${material.url}`,
-            link: material.jumpUrl ?? '#',
+            link,
         }
     }
     @Get('/js/:positionHashId')
