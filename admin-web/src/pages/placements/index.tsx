@@ -137,14 +137,11 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
   const rootcolumns: ProColumns<AdPlacement>[] = [
     {
       title: "ID",
-      key: "id",
-      dataIndex: "id",
-      render: (_dom, record) => {
-        return record.id.toString();
-      },
-      width: 200,
+      key: "hashId",
+      dataIndex: "hashId",
+      width: 120,
       hideInSearch: true,
-      hideInTable: true,
+      copyable: true,
     },
     {
       title: "广告主",
@@ -190,7 +187,7 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
       dataIndex: "materialname",
       ellipsis: true,
       valueType: "text",
-      width: 200,
+      width: 140,
       formItemProps: {
         name: "q",
       },
@@ -202,7 +199,7 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
     {
       title: "当前消耗",
       key: "usedBudget",
-      width: 100,
+      width: 120,
       dataIndex: "usedBudget",
       valueType: "money",
 
@@ -233,7 +230,7 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
     {
       title: "展现次数",
       key: "displayCount",
-      width: 100,
+      width: 120,
       dataIndex: "displayCount",
       valueType: "text",
       hideInSearch: true,
@@ -241,7 +238,7 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
     {
       title: "点击次数",
       key: "clickCount",
-      width: 100,
+      width: 120,
       dataIndex: "clickCount",
       valueType: "text",
 

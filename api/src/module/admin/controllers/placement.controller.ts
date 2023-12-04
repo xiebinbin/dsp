@@ -72,7 +72,6 @@ export class PlacementController {
         convertdata.timerange = parsedTimeInfo.timerange;
       }
     }
-    console.log(convertdata, 'convertdata');
     return convertdata;
   }
   @Post('store')

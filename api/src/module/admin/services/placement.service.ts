@@ -6,6 +6,8 @@ import { utcToZonedTime } from 'date-fns-tz';
 import { PrismaService } from 'src/services/prisma.service';
 import * as fs from 'fs';
 import dayjs from 'dayjs';
+import { pl } from 'date-fns/locale';
+import sqids from 'src/utils/sqids';
 interface ConvertedData {
   placementId: number;
   timerange: { range: string[] }[];
@@ -146,7 +148,12 @@ export class PlacementService {
       },
     });
     return {
-      data: adPlacements,
+      data: adPlacements.map((placement) => {
+        return {
+          ...placement,
+          hashId: sqids.en(Number(placement.id)),
+        }
+      }),
       total: total,
     };
   }

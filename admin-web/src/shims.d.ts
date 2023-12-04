@@ -173,6 +173,7 @@ interface RootInfo {
   name: string;
 }
 interface AdPlacement {
+  hashId?:string;
   id: bigint;
   name: string;
   js_url?: string;
