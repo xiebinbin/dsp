@@ -33,6 +33,7 @@ export class AdController{
     @Render('pc-screen')
     async screen(@Param('positionHashId') positionHashId: string){
         const id = sqids.de(positionHashId)
+        console.log('id',id);
         const position = await this.positionService.findById(BigInt(id))
         if (!position || position.enabled == false) {
             throw new Error('广告位不存在')

@@ -61,7 +61,6 @@ export class PositionService {
         id,
       },
     });
-    console.log('positioninfo', positioninfo);
     return positioninfo;
   }
   async getList(queryParams: any) {
