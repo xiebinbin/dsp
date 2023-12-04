@@ -50,7 +50,7 @@ export class AdController{
         });
         const material = materials[Math.floor(Math.random() * materials.length)]
         console.log('选中 material',material);
-        const link = material.jumpUrl ?? '#'
+        const link = material.jumpUrl == '' ? '#' : material.jumpUrl;
         console.log({
             url: `https://cdn.adbaba.net/${material.url}`,
             link,
