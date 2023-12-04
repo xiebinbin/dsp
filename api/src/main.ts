@@ -25,7 +25,7 @@ async function bootstrap() {
   //   log: ['query'], // 启用查询日志
   // });
   app.useGlobalFilters(new GlobalErrorFilter()); // 使用全局异常过滤器
-  await app.listen(4000, '0.0.0.0');
+  await app.listen(3000, '0.0.0.0');
   //广告主平台
   const adv = await NestFactory.create<NestExpressApplication>(AdvModule);
   adv.useGlobalFilters(new AdvGlobalErrorFilter()); // 使用全局异常过滤器
@@ -33,11 +33,11 @@ async function bootstrap() {
   adv.setBaseViewsDir(join(__dirname, '..', 'views'));
   adv.setViewEngine('hbs');
 
-  await adv.listen(4002, '0.0.0.0');
+  await adv.listen(3002, '0.0.0.0');
   //对外接口
   const adapi = await NestFactory.create(AdapiModule);
   adapi.useGlobalFilters(new AdapiGlobalErrorFilter()); // 使用全局异常过滤器
 
-  await adapi.listen(4003, '0.0.0.0');
+  await adapi.listen(3003, '0.0.0.0');
 }
 bootstrap();

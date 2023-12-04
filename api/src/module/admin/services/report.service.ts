@@ -87,7 +87,6 @@ export class ReportService {
       by: ['date'],
       where,
       _sum: {
-        uvCount: true,
         displayCount: true,
         clickCount: true,
         usedBudget: true,
@@ -99,7 +98,6 @@ export class ReportService {
 
     const reportSummary: ReportDto[] = reports.map((report) => ({
       date: dayjs(report.date).toDate(),
-      uvCount: report._sum.uvCount,
       displayCount: report._sum.displayCount,
       clickCount: report._sum.clickCount,
       usedBudget: report._sum.usedBudget,

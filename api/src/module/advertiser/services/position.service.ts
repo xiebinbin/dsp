@@ -113,6 +113,8 @@ export class PositionService {
     return this.prisma.adMaterial.findMany({
       select:{
         id: true,
+        url: true,
+        jumpUrl: true,
       },
       where: {
         positionId: id,

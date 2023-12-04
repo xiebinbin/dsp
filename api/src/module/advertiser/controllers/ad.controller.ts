@@ -5,7 +5,7 @@ import { PlacementService } from "../services/placement.service";
 import { PositionService } from "../services/position.service";
 import { ConfigService } from "@nestjs/config";
 
-@Controller('/ad')
+@Controller('/s')
 export class AdController{
     constructor(
         protected adMaterialService: AdMaterialService,
@@ -29,10 +29,36 @@ export class AdController{
             link: material.jumpUrl,
         }
     }
-    @Get('/js/:placmentHashId')
+    @Get('/pc-screen/:positionHashId')
+    @Render('pc-screen')
+    async screen(@Param('positionHashId') positionHashId: string){
+        const id = sqids.de(positionHashId)
+        const position = await this.positionService.findById(BigInt(id))
+        if (!position || position.enabled == false) {
+            throw new Error('广告位不存在')
+        }
+        // 查询出所有关联的广告位
+        let materials = await this.positionService.findMaterialsById(BigInt(id))
+        if (materials.length <= 0){
+            throw new Error('广告位没有关联素材')
+        }
+        materials = materials.filter((v) => {
+            console.log(v.url);
+            if (v.url == '' || v.url == "default-ad.jpg") {
+                return false
+            }
+            return true;
+        });
+        const material = materials[Math.floor(Math.random() * materials.length)]
+        return {
+            url: `https://cdn.adbaba.net/${material.url}`,
+            link: material.jumpUrl ?? '#',
+        }
+    }
+    @Get('/js/:positionHashId')
     @Render('ad-js')
-    async js(@Param('placmentHashId') placmentHashId: string) {
-        const id = sqids.de(placmentHashId)
+    async js(@Param('positionHashId') positionHashId: string) {
+        const id = sqids.de(positionHashId)
         const position = await this.positionService.findById(BigInt(id))
         if (!position || position.enabled == false) {
             throw new Error('广告位不存在')
@@ -61,7 +87,7 @@ export class AdController{
         const height = Number(size[1])
         const idHash = sqids.en(Number(material.id))
         const appUrl = this.configService.get<string>('APP_URL');
-        const pageUrl = `${appUrl}/ad/page/${idHash}`
+        const pageUrl = `${appUrl}/s/page/${idHash}`
         return {
             width,
             height,
