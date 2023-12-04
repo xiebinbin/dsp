@@ -35,7 +35,6 @@ const ReportIndexPage = (props: ReportPageProps) => {
   const { role, roleName } = props;
   const [authUser] = useRecoilState(AuthInfo);
   const actionRef = useRef<ActionType>();
-  const [uvTotal, setUvTotal] = useSafeState<number>(0); // 使用 useState 初始化为 0
   const [displayTotal, setDisplayTotal] = useSafeState<number>(0); // 使用 useState 初始化为 0
   const [clickTotal, setClickTotal] = useSafeState<number>(0); // 使用 useState 初始化为 0
   const [usedBudgetTotal, setUsedBudgetTotal] = useSafeState<number>(0); // 使用 useState 初始化为 0
@@ -172,7 +171,6 @@ const ReportIndexPage = (props: ReportPageProps) => {
         }
 
         const response = await ReportApi.getChartData(data);
-        setUvTotal(response.reduce((a, b) => a + b.uvCount, 0));
         setDisplayTotal(response.reduce((a, b) => a + b.displayCount, 0));
         setClickTotal(response.reduce((a, b) => a + b.clickCount, 0));
         setUsedBudgetTotal(
@@ -188,11 +186,6 @@ const ReportIndexPage = (props: ReportPageProps) => {
 
           for (const item of response) {
             transformedData.push(
-              {
-                date: item.date,
-                value: item.uvCount,
-                category: "UV数",
-              },
               {
                 date: item.date,
                 value: item.displayCount,
@@ -398,15 +391,6 @@ const ReportIndexPage = (props: ReportPageProps) => {
       hideInSearch: true,
     },
     {
-      title: "UV数",
-      key: "uvCount",
-      dataIndex: "uvCount",
-      ellipsis: true,
-      valueType: "select",
-      width: 120,
-      hideInSearch: true,
-    },
-    {
       title: "点击数",
       key: "clickCount",
       dataIndex: "clickCount",
@@ -592,7 +576,6 @@ const ReportIndexPage = (props: ReportPageProps) => {
                     adMaterialName: '',
                     adPlacementId: 0,
                     adPlacementName: '',
-                    uvCount: uvTotal,
                     displayCount: displayTotal,
                     clickCount: clickTotal,
                     usedBudget: usedBudgetTotal,
