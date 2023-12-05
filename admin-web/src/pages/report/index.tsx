@@ -120,7 +120,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
           orderBy,
           extra: {},
         });
-
+        console.log(res.data);
         setMaterials(
           res.data.map((item) => {
             return {
@@ -129,8 +129,8 @@ const ReportIndexPage = (props: ReportPageProps) => {
             };
           }) || []
         );
-      } catch {
-        console.error("An error occurred:");
+      } catch(e) {
+        console.error("An error occurred:",e);
       }
     },
     [setMaterials]
@@ -198,16 +198,16 @@ const ReportIndexPage = (props: ReportPageProps) => {
                 value: item.displayCount,
                 category: "PV数",
               },
-              {
-                date: item.date,
-                value: item.clickCount,
-                category: "点击数",
-              },
-              {
-                date: item.date,
-                value: Number(item.usedBudget / 100),
-                category: "消耗金额",
-              }
+              // {
+              //   date: item.date,
+              //   value: item.clickCount,
+              //   category: "点击数",
+              // },
+              // {
+              //   date: item.date,
+              //   value: Number(item.usedBudget / 100),
+              //   category: "消耗金额",
+              // }
             );
           }
           const line = new Line("chart-container", {
@@ -215,6 +215,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
             xField: "date",
             yField: "value",
             seriesField: "category",
+            smooth: true,
             xAxis: {
               nice: true,
               type: "time",
@@ -234,6 +235,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
             },
             yAxis: {
               nice: true,
+              tickCount: 5,
               label: {
                 offset: 25,
                 // formatter: (v) => Number(v).toFixed(2),
@@ -277,11 +279,6 @@ const ReportIndexPage = (props: ReportPageProps) => {
             },
             legend: {
               position: "top",
-            },
-            animation: {
-              appear: {
-                duration: 3500,
-              },
             },
           });
 
@@ -577,7 +574,11 @@ const ReportIndexPage = (props: ReportPageProps) => {
             <div id="chart-container"></div>
           </ProCard>
           <Divider type={'horizontal'} />
-          <ProCard title="数据明细">
+          <ProCard title="数据汇总">
+            <p>UV总数：{(uvTotal + '').replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`)}</p>
+            <p>PV总数：{(displayTotal+'').replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`)}</p>
+          </ProCard>
+          {true ?null: <ProCard title="数据明细">
             {detailData.length > 0 ? (
               <div>
                 <ProTable<ChartDataResponse>
@@ -610,7 +611,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
                 </Tag>
               </div>
             )}
-          </ProCard>
+          </ProCard>}
         </div>
       );
     } else {
