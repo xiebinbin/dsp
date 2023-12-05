@@ -1,38 +1,179 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="description" content="App" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>pc屏保</title>
+<html lang="zn-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>网页</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.jsdelivr.cn/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+    <script src="https://cdn.jsdelivr.cn/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+    <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/vue/2.6.14/vue.min.js"></script>
     <style>
-      html,body {
-        font-family: sans-serif;
-        font-size: 16px;
-        line-height: 1.5;
-        margin: 0;
-        padding: 0;
-        width: 100vw;
-        height: 100vh;
-      }
-      img{
-        width: 100vw;
-        height: 100vh;
-      }
-      #container{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        width: 100vw;
-      }
+        body {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #app {
+            width: 100%;
+            position: relative;
+        }
+
+        .background-img {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            background-color: white;
+            z-index: 1;
+        }
+
+        .container-box {
+            position: absolute;
+            top: 0px;
+            width: 100%;
+            left: 0px;
+            z-index: 2;
+            margin-top: 100px;
+        }
+
+        .line-box {
+            width: 50%;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .line {
+            width: 100%;
+            height: 2px;
+            background-color: white;
+            display: inline-block;
+        }
+
+        .time-show-item {
+            width: 40%;
+            display: inline-block;
+            background-color: black;
+            color: white;
+            font-size: 26px;
+            text-align: center;
+            line-height: 52px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .date-text {
+
+            text-align: center;
+            color: white;
+            font-weight: bolder;
+            font-size: 16px;
+        }
     </style>
-  </head>
-  <body>
-    <div id="container">
-        <a href="{{ link }}" target="_blank">
-            <img src="{{ url }}" alt="" />
-        </a>
+</head>
+<body>
+<div id="app" :style="{height: appHeight + 'px'}">
+    <div :style="{height: backgroundImgHeight + 'px'}" class="background-img">
+      <img src="{{ url }}" style="width: 100%;height: 100%;" alt=""/>
     </div>
-  </body>
+    <div class="container-box">
+        <div class="row row-no-gutters">
+            <div class="col-sm-2 col-sm-offset-5">
+                <div class="row row-no-gutters">
+                    <div class="col-sm-4 col-xl-4 col-md-4">
+                        <div class="time-show-item" v-text="hours[0]"></div>
+                        <div class="time-show-item" v-text="hours[1]"></div>
+                    </div>
+                    <div class="col-sm-4 col-xl-4 col-md-4 text-center">
+                        <div class="time-show-item" v-text="minutes[0]"></div>
+                        <div class="time-show-item" v-text="minutes[1]"></div>
+                    </div>
+                    <div class="col-sm-4 col-xl-4 col-md-4 text-right">
+                        <div class="time-show-item" v-text="seconds[0]"></div>
+                        <div class="time-show-item" v-text="seconds[1]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row row-no-gutters">
+            <div class="col-sm-2 col-sm-offset-5 text-center">
+                <div class="line-box">
+                    <div class="line"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row row-no-gutters">
+            <div class="col-sm-2 col-sm-offset-5 text-center">
+                <p class="date-text" v-text="dateText"></p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    if (!String.prototype.padStart) {
+        Object.defineProperty(String.prototype, 'padStart', {
+            configurable: true,
+            writable: true,
+            value: function (targetLength, padString) {
+                targetLength = targetLength >> 0; //floor if number or convert non-number to 0;
+                padString = String(typeof padString !== 'undefined' ? padString : ' ');
+                if (this.length > targetLength) {
+                    return String(this);
+                } else {
+                    targetLength = targetLength - this.length;
+                    if (targetLength > padString.length) {
+                        padString += padString.repeat(targetLength / padString.length); //append to original to ensure we are longer than needed
+                    }
+                    return padString.slice(0, targetLength) + String(this);
+                }
+            },
+        });
+    }
+    const app = new Vue({
+        el: '#app',
+        data: function () {
+            const d = new Date();
+            return {
+                seconds: (d.getSeconds() + '').padStart(2, '0').split(''),
+                minutes: (d.getMinutes() + '').padStart(2, '0').split(''),
+                hours: (d.getHours() + '').padStart(2, '0').split(''),
+                appHeight: window.innerHeight,
+                backgroundImgHeight: window.innerHeight,
+                interval: null,
+                dateText: this.getDateText(),
+            }
+        },
+        mounted: function () {
+            self = this;
+            setInterval(function () {
+                const d = new Date();
+                self.dateText = self.getDateText();
+                self.seconds = (d.getSeconds() + '').padStart(2, '0').split('');
+                self.minutes = (d.getMinutes() + '').padStart(2, '0').split('');
+                self.hours = (d.getHours() + '').padStart(2, '0').split('');
+            }, 1000);
+        },
+        methods: {
+            getDateText: function () {
+                const date = new Date();
+                const year = date.getFullYear();
+                const month = date.getMonth() + 1;
+                const day = date.getDate();
+                const week = date.getDay();
+                const weeks = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
+                return year + ' 年 ' + month + ' 月 ' + day + ' 日 ' + weeks[week - 1];
+            }
+        }
+    });
+</script>
 </html>
