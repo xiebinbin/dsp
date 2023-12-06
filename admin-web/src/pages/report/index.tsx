@@ -369,23 +369,6 @@ const ReportIndexPage = (props: ReportPageProps) => {
   });
   const rootcolumns: ProColumns<ChartDataResponse>[] = [
     {
-      title: "日期",
-      key: "date",
-      dataIndex: "date",
-      ellipsis: true,
-      valueType: "text",
-      width: 120,
-      hideInSearch: true,
-      render: (_, record) => {
-        if (record.date == "汇总") {
-          return record.date;
-        }
-        const formattedDate = dayjs(record.date).format("YYYY-MM-DD");
-        return formattedDate;
-
-      }
-    },
-    {
       title: "PV数",
       key: "displayCount",
       dataIndex: "displayCount",
@@ -575,15 +558,11 @@ const ReportIndexPage = (props: ReportPageProps) => {
           </ProCard>
           <Divider type={'horizontal'} />
           <ProCard title="数据汇总">
-            <p>UV总数：{(uvTotal + '').replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`)}</p>
-            <p>PV总数：{(displayTotal+'').replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`)}</p>
-          </ProCard>
-          {true ?null: <ProCard title="数据明细">
             {detailData.length > 0 ? (
               <div>
                 <ProTable<ChartDataResponse>
                   columns={rootcolumns}
-                  dataSource={detailData.concat([{
+                  dataSource={[{
                     date: '汇总', // 日期
                     agentId: 0,
                     agentName: '',
@@ -597,7 +576,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
                     displayCount: displayTotal,
                     clickCount: clickTotal,
                     usedBudget: usedBudgetTotal,
-                  }])}
+                  }]}
                   search={false}
                   scroll={{ x: 1000 }}
                   actionRef={actionRef}
@@ -611,7 +590,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
                 </Tag>
               </div>
             )}
-          </ProCard>}
+          </ProCard>
         </div>
       );
     } else {
