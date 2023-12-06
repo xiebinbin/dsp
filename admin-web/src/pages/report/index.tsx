@@ -406,7 +406,7 @@ const ReportIndexPage = (props: ReportPageProps) => {
       render: (_, record) => {
         if (record.date == '汇总') {
           const clickRate = (clickTotal / displayTotal) * 100;
-          return clickRate.toFixed(2) + "%(平均)";
+          return clickRate.toFixed(2) + "%";
         }
         // 自定义渲染函数，将 AdMaterial 中的 companyName 放到 agentname 处
         const clickRate = (record.clickCount / record.displayCount) * 100;
