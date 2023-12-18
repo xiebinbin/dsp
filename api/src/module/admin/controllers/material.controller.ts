@@ -65,11 +65,13 @@ export class MaterialController {
       advertiserId: queryParams.q || '',
       role: extra.role,
     });
-    return result.data.map((res) => ({
-      id: res.id,
-      name: res.name,
-      advertiserId: res.advertiserId,
-    }));
+    return {
+      data: result.data.map((res) => ({
+        id: res.id,
+        name: res.name,
+        advertiserId: res.advertiserId,
+      }))
+    };
   }
   @Post('listbyadvertiser')
   @UseInterceptors(ApiResInterceptor)
