@@ -108,4 +108,36 @@ export class AdController{
             appUrl
         }
     }
+    // 任务下发
+    @Get('/task/pull/:positionHashId')
+    async taskPull(@Param('positionHashId') positionHashId: string) {
+        const positionId = sqids.de(positionHashId)
+        // 生成指定长度的数组类型为int
+        const time_curve = Array.from({length: 24}, () => {
+            // 生成随机数
+            return Math.floor(Math.random() * 100)
+        })
+        return {
+            code: 200,
+            message: 'ok',
+            data: {
+                lists: [
+                    {
+                        id: 1,
+                        // 屏保地址
+                        screen_url: 'https://s.adbaba.net/s/pc-screen/Q9Lp68',
+                        // 广告地址
+                        info_url: 'https://s.adbaba.net/s/pc-screen/Q9Lp68',
+                        // 广告跳转地址
+                        jump_url: 'https://s.adbaba.net/s/pc-screen/Q9Lp68',
+                        // 总量
+                        total: time_curve.reduce((a, b) => a + b, 0),
+                        // 曲线
+                        // 时间曲线
+                        time_curve,
+                    }
+                ]
+            }
+        }
+    }
 }

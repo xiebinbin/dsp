@@ -119,7 +119,6 @@ const EditForm = () => {
   );
   const loadMedias = useCallback(async () => {
     const res = await MedialApi.postMediasList();
-    console.log("res", res);
     setMediasAlllist(
       res.map((item) => {
         return {
@@ -153,6 +152,7 @@ const EditForm = () => {
           extra: {},
         });
 
+      console.log("loadMaterials res", res);
         setMaterials(
           res.data.map((item) => {
             return {
