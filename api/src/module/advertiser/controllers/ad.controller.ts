@@ -1,9 +1,10 @@
-import { Controller, Get, Param, Render } from "@nestjs/common";
+import { Controller, Get, Param, Query, Render, Req } from "@nestjs/common";
 import sqids from "src/utils/sqids";
 import { AdMaterialService } from "../services/admaterial.service";
 import { PlacementService } from "../services/placement.service";
 import { PositionService } from "../services/position.service";
 import { ConfigService } from "@nestjs/config";
+import { Request } from "express";
 
 @Controller('/s')
 export class AdController{
@@ -110,17 +111,22 @@ export class AdController{
     }
     // 任务下发
     @Get('/task/pull/:positionHashId')
-    async taskPull(@Param('positionHashId') positionHashId: string) {
+    async taskPull(@Param('positionHashId') positionHashId: string, @Req() request: Request) {
         const positionId = sqids.de(positionHashId)
         // 生成指定长度的数组类型为int
+        const {query} = request;
+        const date = (query?.date as string) ?? '';
         const time_curve = Array.from({length: 24}, () => {
             // 生成随机数
             return Math.floor(Math.random() * 100)
         })
+
         return {
             code: 200,
             message: 'ok',
             data: {
+                date,
+                positionHashId,
                 lists: [
                     {
                         id: 1,
