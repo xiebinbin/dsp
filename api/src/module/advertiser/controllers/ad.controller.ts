@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, Render, Req } from "@nestjs/common";
+import { Controller, Get, Param, Render, Req } from "@nestjs/common";
 import sqids from "src/utils/sqids";
 import { AdMaterialService } from "../services/admaterial.service";
 import { PlacementService } from "../services/placement.service";
@@ -26,7 +26,7 @@ export class AdController{
         return {
             width,
             height,
-            url: `https://cdn.adbaba.net/${material.url}`,
+            url: `http://cdn.adbaba.net/${material.url}`,
             link: material.jumpUrl,
         }
     }
@@ -54,11 +54,11 @@ export class AdController{
         console.log('选中 material',material);
         const link = material.jumpUrl == '' ? '#' : material.jumpUrl;
         console.log({
-            url: `https://cdn.adbaba.net/${material.url}`,
+            url: `http://cdn.adbaba.net/${material.url}`,
             link,
         })
         return {
-            url: `https://cdn.adbaba.net/${material.url}`,
+            url: `http://cdn.adbaba.net/${material.url}`,
             link,
         }
     }
@@ -131,14 +131,11 @@ export class AdController{
                     {
                         id: 1,
                         // 屏保地址
-                        screen_url: 'https://s.adbaba.net/s/pc-screen/Q9Lp68',
+                        screen_url: 'http://s.adbaba.net/s/pc-screen/Q9Lp68',
                         // 广告地址
-                        info_url: 'https://s.adbaba.net/s/pc-screen/Q9Lp68',
-                        // 广告跳转地址
-                        jump_url: 'https://s.adbaba.net/s/pc-screen/Q9Lp68',
+                        info_url: 'http://s.adbaba.net/s/pc-screen/Q9Lp68',
                         // 总量
                         total: time_curve.reduce((a, b) => a + b, 0),
-                        // 曲线
                         // 时间曲线
                         time_curve,
                     }
