@@ -13,11 +13,13 @@ import {
 } from './commands/update-user-password';
 import {
   CalculateReportDailyCommand,
-  // CalculateReportDailyQuestions,
 } from './commands/calculate-report-daily.command';
 import { ReportService } from './services/report.service';
 import { CalculateReportPlacementCommand } from './commands/calculate-report-placement.command';
-
+import { GenerateAdPageCommand } from './commands/generate-ad-page.command';
+import { MaterialService } from './services/material.service';
+import { FileService } from './services/file.service';
+import { TimeCurvePlacementByDayService } from './services/time-curve-placement-by-day.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -28,6 +30,7 @@ import { CalculateReportPlacementCommand } from './commands/calculate-report-pla
     PrismaService,
     UserService,
     ConfigService,
+    MaterialService,
     CreateRootUserCommand,
     CreateRootUserQuestions,
     GenerateKeyCommand,
@@ -35,7 +38,10 @@ import { CalculateReportPlacementCommand } from './commands/calculate-report-pla
     UpdateUserPasswordCommand,
     CalculateReportDailyCommand,
     CalculateReportPlacementCommand,
+    GenerateAdPageCommand,
     ReportService,
+    FileService,
+    TimeCurvePlacementByDayService
   ],
 })
 export class ConsoleModule {}

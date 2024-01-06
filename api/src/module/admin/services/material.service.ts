@@ -169,6 +169,8 @@ export class MaterialService {
         url,
         jumpUrl,
         advertiserId,
+        analyticJs,
+        analyticUrl,
       } = materialDto;
       console.log('createMaterial materialDto', materialDto);
       return await this.prisma.adMaterial.create({
@@ -182,6 +184,8 @@ export class MaterialService {
           url,
           jumpUrl,
           advertiserId,
+          analyticJs,
+          analyticUrl,
         },
       });
     } catch (error) {
@@ -202,6 +206,8 @@ export class MaterialService {
           content: materialDto.content,
           url: materialDto.url,
           jumpUrl: materialDto.jumpUrl,
+          analyticJs: materialDto.analyticJs,
+          analyticUrl: materialDto.analyticUrl,
           advertiserId: materialDto.advertiserId,
           updatedAt: new Date(),
         },

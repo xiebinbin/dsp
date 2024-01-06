@@ -10,7 +10,6 @@ export class ApiResInterceptor implements NestInterceptor {
   intercept(_: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       map((data) => {
-        console.log('data', data);
         return {
           data,
           code: 200,

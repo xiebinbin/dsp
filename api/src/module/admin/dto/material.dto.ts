@@ -12,6 +12,8 @@ export class MaterialDto {
   @IsNotEmpty()
   contentType: number;
   // specId: number;
+  analyticJs: string;
+  analyticUrl: string;
   // 广告位置id
   positionId: number;
   adPosition: {

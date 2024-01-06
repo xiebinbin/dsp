@@ -5,6 +5,7 @@ import {
   ProFormRadio,
   ProFormSelect,
   ProFormText,
+  ProFormTextArea,
 } from "@ant-design/pro-components";
 import { Button, message, RadioChangeEvent, Upload, UploadFile } from "antd";
 import { useMount, useSafeState, useUnmount } from "ahooks";
@@ -408,6 +409,8 @@ const EditForm = () => {
         url: "",
         spec: "",
         jumpUrl: "",
+        analyticJs: "",
+        analyticUrl: "",
       });
       // setId(BigInt(0));
       setShow(true);
@@ -451,6 +454,8 @@ const EditForm = () => {
         mediaId: data.adPosition?.adMedia.id,
         jumpUrl: data.jumpUrl,
         specId: data.adPosition?.adSpec.id,
+        analyticJs: data.analyticJs,
+        analyticUrl: data.analyticUrl,
       });
       loadPositionsOpt();
       loadMedias(0);
@@ -548,14 +553,14 @@ const EditForm = () => {
       onFinish={async () => {
         if (formRef.current) {
           const data = await formRef.current.validateFields();
-
+          
           console.log("material data", data);
           // data.avatar = avatar;
           data.url = removeImgUrl(materialurl);
           // console.log("validateFields data", data);
           if (mode === "add") {
             // data.role = role;
-
+            console.log("create data", data);
             await create(data);
           }
           if (mode === "update") {
@@ -680,6 +685,20 @@ const EditForm = () => {
           name="content"
           label="广告内容"
           placeholder="请输入广告内容"
+        />
+        <ProFormText
+          initialValue={""}
+          width="xl"
+          name="analyticUrl"
+          label="数据地址"
+          placeholder="请输入数据地址"
+        />
+        <ProFormTextArea
+          initialValue={""}
+          width="xl"
+          name="analyticJs"
+          label="统计代码"
+          placeholder="请输入统计代码"
         />
         <ProFormRadio.Group
           name="enabled"

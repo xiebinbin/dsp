@@ -148,6 +148,23 @@ const MaterialsIndexPage = (props: MaterialsPageProps) => {
       width: 100,
       hideInSearch: true,
     },
+    // {
+    //   title: "统计页",
+    //   key: "analyticUrl",
+    //   dataIndex: "analyticUrl",
+    //   copyable: true,
+    //   render: (_dom, record) => {
+    //     if (!record.analyticUrl) {
+    //       return "-";
+    //     }
+    //     return <span className="text-blue-500 cursor-pointer" onClick={() => {
+    //       copy(record.analyticUrl ?? '')
+    //       window.Message.success("复制成功");
+    //     }}>复制链接</span>;
+    //   },
+    //   width: 100,
+    //   hideInSearch: true,
+    // },
     {
       title: "代理商",
       key: "agentname",
@@ -222,15 +239,6 @@ const MaterialsIndexPage = (props: MaterialsPageProps) => {
       formItemProps: {
         name: "q",
       },
-    },
-    {
-      title: "更新时间",
-      key: "updatedAt",
-      width: 100,
-      dataIndex: "updatedAt",
-      valueType: "dateTime",
-      sorter: true,
-      hideInSearch: true,
     },
     {
       title: "操作",

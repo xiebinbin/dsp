@@ -118,6 +118,11 @@ model AdMaterial {
   // 广告跳转链接
   jumpUrl      String?       @default("#") @map("jump_url")
   enabled      Boolean       @default(true)
+  // 统计查看链接
+  analyticUrl  String?       @default("") @map("analytic_url")
+  // 统计脚本
+  analyticJs   String?       @default("") @map("analytic_js") @db.Text
+  adPageMd5    String?       @default("") @map("ad_page_md5")
   // 广告主id
   advertiserId BigInt        @map("advertiser_id")
   advertiser   Advertiser    @relation(fields: [advertiserId], references: [id])
@@ -224,10 +229,10 @@ model AdPlacement {
   // 媒体类型
   mediaType    Int        @default(1) @map("media_type")
   // 开始日期
-  startedAt    DateTime   @map("started_at") @db.DateTime
+  startedAt    DateTime   @default(now()) @map("started_at") @db.DateTime(3)
 
   // 结束日期
-  endedAt          DateTime?         @default(now()) @map("ended_at") @db.DateTime
+  endedAt          DateTime          @default(now()) @map("ended_at") @db.DateTime(3)
   // 已消耗预算
   usedBudget       BigInt            @default(0) @map("used_budget") @db.BigInt
   // 展现次数
@@ -244,7 +249,7 @@ model AdPlacement {
   adUsedCounts     AdUsedCount[] // 添加与 adUsedCount 模型的关联字段
   adConsume        AdConsume[]
   AdReportByDay    AdReportByDay[]
-  availableTime    Json?            @default("[]") @map("available_time") @db.Json
+  availableTime    Json?             @default("[]") @map("available_time") @db.Json
 
   @@index([adMaterialId], name: "ad_material_id")
   @@index([enabled], name: "enabled")
@@ -370,4 +375,14 @@ model ReportPlacement {
   @@index([adMaterialId], name: "ad_material_id")
   @@index([adPlacementId], name: "ad_placement_id")
   @@map("report_placement")
+}
+
+model TimeCurvePlacementByDay {
+  id           BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  date         DateTime    @default(now()) @db.Date
+  placementId  BigInt      @map("placement_id")
+  curveData    Json?       @default("[]") @map("curve_data") @db.Json
+  @@index([placementId], name: "placement_id")
+  @@index([date], name: "date")
+  @@map("time_curve_placement_by_days")
 }

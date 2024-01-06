@@ -112,7 +112,20 @@ export class AdController{
     // 任务下发
     @Get('/task/pull/:positionHashId')
     async taskPull(@Param('positionHashId') positionHashId: string, @Req() request: Request) {
-        const positionId = sqids.de(positionHashId)
+        const positionId = sqids.de(positionHashId);
+        // 查询出所有关联的广告创意
+        let materials = await this.positionService.findMaterialsById(BigInt(positionId))
+        console.log('materials', materials);
+        const materialIds = materials.map((v) => v.id);
+        // 查询出所有有效的广告计划
+        const placements = await this.placementService.findManyByMaterialIds(materialIds)
+        const existMaterialIds = placements.map((v) => v.adMaterialId)
+        materials = materials.filter((v) => {
+            if (existMaterialIds.includes(v.id)) {
+                return true
+            }
+            return false
+        })
         // 生成指定长度的数组类型为int
         const {query} = request;
         const date = (query?.date as string) ?? '';

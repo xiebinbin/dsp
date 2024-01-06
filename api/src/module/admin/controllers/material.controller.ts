@@ -169,21 +169,23 @@ export class MaterialController {
           id: Number(material.adPosition.id),
           name: material.adPosition.name,
           type: Number(material.adPosition.type),
-          adSpec: {
+          adSpec:material.adPosition?.adSpec ? {
             id: Number(material.adPosition.adSpec.id),
             name: material.adPosition.adSpec.name, //规格名称
             type: Number(material.adPosition.adSpec.type), //规格类型 图片，视频
-          },
-          adMedia: {
+          } : null,
+          adMedia:material.adPosition.adMedia ? {
             id: Number(material.adPosition.adMedia.id),
             name: material.adPosition.adMedia.name,
-          },
+          } : null,
         }
         : null,
       content: material.content,
       url: this.defaultUrl + material.url,
       advertiserId: Number(material.advertiserId),
       jumpUrl: material.jumpUrl,
+      analyticJs: material.analyticJs,
+      analyticUrl: material.analyticUrl,
       advertiser: {
         domainName: material.advertiser.domainName,
         id: Number(material.advertiser.id), // 将 bigint 转换为 number
@@ -191,7 +193,7 @@ export class MaterialController {
         user: {
           id: Number(material.advertiser.user.id), // 将 bigint 转换为 number
           nickname: material.advertiser.user.nickname,
-        }, // 使用对象字面量设置 user 属性的值
+        }, 
       },
     };
   }
@@ -221,6 +223,8 @@ export class MaterialController {
       url: this.defaultUrl + material.url,
       advertiserId: null,
       jumpUrl: material.jumpUrl,
+      analyticJs: material.analyticJs,
+      analyticUrl: material.analyticUrl,
       advertiser: {
         id: Number(material.advertiser.id),
         companyName: material.advertiser.companyName,
