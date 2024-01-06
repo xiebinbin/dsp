@@ -50,8 +50,9 @@ const uploadcloud = async (file: File): Promise<filelocalres> => {
   // 创建一个FormData对象，用于将文件包装成可上传的形式
   const formData = new FormData();
   formData.append("file", file);
+  formData.append("file_name", file.name);
   return createRequestInstance().post(
-    `/api/admin/upload/${file.name}`,
+    `/api/admin/upload/push`,
     formData,
     {
       headers: {
