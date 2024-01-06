@@ -116,7 +116,7 @@ export class AdController {
         let materials = await this.positionService.findMaterialsById(BigInt(positionId));
         const { query } = request;
         const date = (query?.date as string) ?? dayjs().format('YYYY-MM-DD');
-        const lists = [];
+        let lists:any[] = [];
         if (materials.length > 0 && /(\d{4})-(\d{2})-(\d{2})/.test(date)) {
             const materialIds = materials.map((v) => v.id);
             const placements = await this.placementService.findManyByMaterialIds(materialIds);
@@ -129,10 +129,10 @@ export class AdController {
                     }
                     return false
                 })
-                console.log('materials', materials);
                 const timeCurves = await this.timeCurvePlacementByDayService.findByIds(placements.map((v) => v.id), date);
-                lists.push(...materials.map((v) => {
-                    const timeCurve = (timeCurves.find((item) => item.placementId === v.id)?.curveData ?? []) as number[];
+                lists = materials.map((v) => {
+                    const placement = placements.find((p) => p.adMaterialId === v.id);
+                    const timeCurve = (timeCurves.find((item) => item.placementId === placement.id)?.curveData ?? []) as number[];
                     return {
                         id: v.id,
                         // 屏保地址
@@ -144,7 +144,7 @@ export class AdController {
                         // 时间曲线
                         time_curve: timeCurve,
                     }
-                }));
+                });
             }
         }
 

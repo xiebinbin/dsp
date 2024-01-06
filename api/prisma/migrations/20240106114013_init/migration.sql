@@ -85,6 +85,7 @@ CREATE TABLE `ad_materials` (
     `enabled` BOOLEAN NOT NULL DEFAULT true,
     `analytic_url` VARCHAR(191) NULL DEFAULT '',
     `analytic_js` TEXT NULL DEFAULT '',
+    `ad_page_md5` VARCHAR(191) NULL DEFAULT '',
     `advertiser_id` BIGINT NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
@@ -292,5 +293,17 @@ CREATE TABLE `report_placement` (
     INDEX `advertiser_id`(`advertiser_id`),
     INDEX `ad_material_id`(`ad_material_id`),
     INDEX `ad_placement_id`(`ad_placement_id`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `time_curve_placement_by_days` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `date` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `placement_id` BIGINT NOT NULL,
+    `curve_data` JSON NULL,
+
+    INDEX `placement_id`(`placement_id`),
+    INDEX `date`(`date`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

@@ -35,6 +35,9 @@ export class TimeCurvePlacementByDayService {
           curveData: this.splitNorm(Number(item.displayCount), 24)
         }
       }).filter((item) => item !== null);
+      await this.PrismaService.timeCurvePlacementByDay.createMany({
+        data: createItems
+      });
       if (createItems.length > 0) {
         const newAddItems = await this.PrismaService.timeCurvePlacementByDay.findMany({
           where: {
@@ -46,6 +49,7 @@ export class TimeCurvePlacementByDayService {
         items.push(...newAddItems);
       }
     }
+    console.log('items', items);
     return items;
   }
   async getInfo(placementId: bigint, date: string) {
