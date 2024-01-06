@@ -42,7 +42,7 @@ export class UploadController {
     }),
   )
   @UseInterceptors(ApiResInterceptor)
-  @Post(':filename')
+  @Post('/push')
   async uploadFile(
     @Res() response,
     @UploadedFile() file: Express.Multer.File,
