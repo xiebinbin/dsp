@@ -25,6 +25,7 @@ import { MediaService } from './services/media.service';
 import { PositionService } from './services/position.service';
 import { PositionController } from './controllers/position.controller';
 import { AdController } from './controllers/ad.controller';
+import { TimeCurvePlacementByDayService } from './services/time-curve-placement-by-day.service';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { AdController } from './controllers/ad.controller';
     AdSpecService,
     MediaService,
     PositionService,
+    TimeCurvePlacementByDayService,
   ],
 })
 export class AdvertiserModule {

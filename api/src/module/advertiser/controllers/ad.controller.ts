@@ -5,43 +5,42 @@ import { PlacementService } from "../services/placement.service";
 import { PositionService } from "../services/position.service";
 import { ConfigService } from "@nestjs/config";
 import { Request } from "express";
+import { TimeCurvePlacementByDayService } from "../services/time-curve-placement-by-day.service";
+import dayjs from "dayjs";
 
 @Controller('/s')
-export class AdController{
+export class AdController {
     constructor(
         protected adMaterialService: AdMaterialService,
         protected positionService: PositionService,
         protected placementService: PlacementService,
         protected configService: ConfigService,
-        ) { } 
+        protected timeCurvePlacementByDayService: TimeCurvePlacementByDayService
+    ) { }
     @Get('/page/:hashid')
     @Render('ad')
     async show(@Param('hashid') hashid: string) {
         const id = sqids.de(hashid)
         console.log(id);
-        const material= await this.adMaterialService.findById(BigInt(id))
-        const size = material.adPosition.adSpec.size.split('*')
-        const width = Number(size[0])
-        const height = Number(size[1])
+        const material = await this.adMaterialService.findById(BigInt(id))
+        const link = material.jumpUrl == '' ? '#id' : material.jumpUrl;
         return {
-            width,
-            height,
             url: `http://cdn.adbaba.net/${material.url}`,
-            link: material.jumpUrl,
+            link,
         }
     }
     @Get('/pc-screen/:positionHashId')
     @Render('pc-screen')
-    async screen(@Param('positionHashId') positionHashId: string){
+    async screen(@Param('positionHashId') positionHashId: string) {
         const id = sqids.de(positionHashId)
-        console.log('id',id);
+        console.log('id', id);
         const position = await this.positionService.findById(BigInt(id))
         if (!position || position.enabled == false) {
             throw new Error('广告位不存在')
         }
         // 查询出所有关联的广告位
         let materials = await this.positionService.findMaterialsById(BigInt(id))
-        if (materials.length <= 0){
+        if (materials.length <= 0) {
             throw new Error('广告位没有关联素材')
         }
         materials = materials.filter((v) => {
@@ -51,7 +50,7 @@ export class AdController{
             return true;
         });
         const material = materials[Math.floor(Math.random() * materials.length)]
-        console.log('选中 material',material);
+        console.log('选中 material', material);
         const link = material.jumpUrl == '' ? '#' : material.jumpUrl;
         console.log({
             url: `http://cdn.adbaba.net/${material.url}`,
@@ -72,7 +71,7 @@ export class AdController{
         }
         // 查询出所有关联的广告位
         let materials = await this.positionService.findMaterialsById(BigInt(id))
-        if (materials.length <= 0){
+        if (materials.length <= 0) {
             throw new Error('广告位没有关联素材')
         }
 
@@ -84,7 +83,7 @@ export class AdController{
             }
             return placement
         })
-        if (materials.length <= 0){
+        if (materials.length <= 0) {
             throw new Error('广告位没有关联素材')
         }
         // 随机取一个素材
@@ -112,27 +111,42 @@ export class AdController{
     // 任务下发
     @Get('/task/pull/:positionHashId')
     async taskPull(@Param('positionHashId') positionHashId: string, @Req() request: Request) {
-        const positionId = sqids.de(positionHashId);
+        const positionId = 3n;//sqids.de(positionHashId);
         // 查询出所有关联的广告创意
-        let materials = await this.positionService.findMaterialsById(BigInt(positionId))
-        console.log('materials', materials);
-        const materialIds = materials.map((v) => v.id);
-        // 查询出所有有效的广告计划
-        const placements = await this.placementService.findManyByMaterialIds(materialIds)
-        const existMaterialIds = placements.map((v) => v.adMaterialId)
-        materials = materials.filter((v) => {
-            if (existMaterialIds.includes(v.id)) {
-                return true
+        let materials = await this.positionService.findMaterialsById(BigInt(positionId));
+        const { query } = request;
+        const date = (query?.date as string) ?? dayjs().format('YYYY-MM-DD');
+        const lists = [];
+        if (materials.length > 0 && /(\d{4})-(\d{2})-(\d{2})/.test(date)) {
+            const materialIds = materials.map((v) => v.id);
+            const placements = await this.placementService.findManyByMaterialIds(materialIds);
+            console.log('placements', placements);
+            if (placements.length > 0) {
+                const existMaterialIds = placements.map((v) => v.adMaterialId)
+                materials = materials.filter((v) => {
+                    if (existMaterialIds.includes(v.id)) {
+                        return true
+                    }
+                    return false
+                })
+                console.log('materials', materials);
+                const timeCurves = await this.timeCurvePlacementByDayService.findByIds(placements.map((v) => v.id), date);
+                lists.push(...materials.map((v) => {
+                    const timeCurve = (timeCurves.find((item) => item.placementId === v.id)?.curveData ?? []) as number[];
+                    return {
+                        id: v.id,
+                        // 屏保地址
+                        screen_url: `http://s.adbaba.net/s/page/${sqids.en(Number(v.id))}`,
+                        // 广告地址
+                        info_url: `http://cdn.adbaba.net/pages/s/${sqids.en(Number(v.id)).toLowerCase()}.html`,
+                        // 总量
+                        total: timeCurve.reduce((a, b) => a + b, 0),
+                        // 时间曲线
+                        time_curve: timeCurve,
+                    }
+                }));
             }
-            return false
-        })
-        // 生成指定长度的数组类型为int
-        const {query} = request;
-        const date = (query?.date as string) ?? '';
-        const time_curve = Array.from({length: 24}, () => {
-            // 生成随机数
-            return Math.floor(Math.random() * 100)
-        })
+        }
 
         return {
             code: 200,
@@ -140,19 +154,7 @@ export class AdController{
             data: {
                 date,
                 positionHashId,
-                lists: [
-                    {
-                        id: 1,
-                        // 屏保地址
-                        screen_url: 'http://s.adbaba.net/s/pc-screen/Q9Lp68',
-                        // 广告地址
-                        info_url: 'http://s.adbaba.net/s/pc-screen/Q9Lp68',
-                        // 总量
-                        total: time_curve.reduce((a, b) => a + b, 0),
-                        // 时间曲线
-                        time_curve,
-                    }
-                ]
+                lists: lists
             }
         }
     }

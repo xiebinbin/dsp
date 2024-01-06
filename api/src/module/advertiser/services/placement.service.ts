@@ -174,13 +174,19 @@ export class PlacementService {
   findManyByMaterialIds(ids: bigint[]) {
     return this.prisma.adPlacement.findMany({
       select: {
+        id: true,
         adMaterialId: true,
+        startedAt: true,
+        endedAt: true,
       },
       where: {
         adMaterialId: {
           in: ids,
         },
         enabled: 1,
+        endedAt: {
+          gte: new Date(),
+        },
       },
     });
   }

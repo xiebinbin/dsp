@@ -17,7 +17,8 @@ export class GenerateAdPageCommand extends CommandRunner {
     super();
   }
   async run() {
-    this.timeCurvePlacementByDayService.getInfo(BigInt(1),'2021-08-01');
+    const x = await this.timeCurvePlacementByDayService.getInfo(BigInt(359),'2024-01-07');
+    console.log('x',x);
     // const templateContent = fs.readFileSync(path.join(process.cwd(), 'views', 'empty-ad.hbs'), 'utf-8');
     // const template = Handlebars.compile(templateContent);
     // const result = await this.materialService.getList(1, 1000);
