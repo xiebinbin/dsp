@@ -172,8 +172,8 @@
                 const month = date.getMonth() + 1;
                 const day = date.getDate();
                 const week = date.getDay();
-                const weeks = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
-                return year + ' 年 ' + month + ' 月 ' + day + ' 日 ' + weeks[week - 1];
+                const weeks = ['星期日','星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+                return year + ' 年 ' + month + ' 月 ' + day + ' 日 ' + weeks[week];
             }
         }
     });
