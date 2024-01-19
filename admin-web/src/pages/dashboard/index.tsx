@@ -78,7 +78,38 @@ const DashboardPage = (props: DashbordPageProps) => {
                     )}
                   </ProCard>
                 </Col>
-                <Col style={{}}>
+                <Col style={{ marginTop: "" }}>
+                  <ProCard
+                    title={
+                      <span>
+                        <FireFilled style={{ marginRight: 8 }} />
+                        创意
+                      </span>
+                    }
+                    style={{
+                      textAlign: "left",
+                      marginLeft: "64px",
+                      width: 350,
+                      height: 180,
+                      fontSize: 22,
+                      whiteSpace: "nowrap",
+                      boxShadow: "0 0 2px 3px rgba(147,197,253,0.5)",
+                    }}
+                    headerBordered
+                    boxShadow
+                  >
+                    {infoData ? (
+                      <>
+                        <div>广告创意: {infoData.adMaterialNumber}</div>
+                      </>
+                    ) : (
+                      <>
+                        <div>广告创意: 0</div>
+                      </>
+                    )}
+                  </ProCard>
+                </Col>
+                {/* <Col style={{}}>
                   <ProCard
                     title={
                       <span>
@@ -110,10 +141,10 @@ const DashboardPage = (props: DashbordPageProps) => {
                       </>
                     )}
                   </ProCard>
-                </Col>
+                </Col> */}
               </Row>
               <Row className="level2" gutter={16} style={{ display: "flex" }}>
-                <Col style={{ marginTop: "32px" }}>
+                {/* <Col style={{ marginTop: "32px" }}>
                   <ProCard
                     title={
                       <span>
@@ -144,38 +175,8 @@ const DashboardPage = (props: DashbordPageProps) => {
                       </>
                     )}
                   </ProCard>
-                </Col>
-                <Col style={{ marginTop: "32px" }}>
-                  <ProCard
-                    title={
-                      <span>
-                        <FireFilled style={{ marginRight: 8 }} />
-                        创意
-                      </span>
-                    }
-                    style={{
-                      textAlign: "left",
-                      marginLeft: "64px",
-                      width: 350,
-                      height: 180,
-                      fontSize: 22,
-                      whiteSpace: "nowrap",
-                      boxShadow: "0 0 2px 3px rgba(147,197,253,0.5)",
-                    }}
-                    headerBordered
-                    boxShadow
-                  >
-                    {infoData ? (
-                      <>
-                        <div>广告创意: {infoData.adMaterialNumber}</div>
-                      </>
-                    ) : (
-                      <>
-                        <div>广告创意: 0</div>
-                      </>
-                    )}
-                  </ProCard>
-                </Col>
+                </Col> */}
+
               </Row>
             </div>
           </ProForm.Group>
