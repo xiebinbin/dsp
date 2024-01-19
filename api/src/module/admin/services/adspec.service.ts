@@ -37,6 +37,7 @@ export class AdSpecService {
         enabled: true,
         // 类型 1 网站 2pc 软件
         type: true,
+        size: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -44,7 +45,6 @@ export class AdSpecService {
         id,
       },
     });
-    console.log('adSpecinfo', adSpecinfo);
     return adSpecinfo;
   }
   async getList(queryParams: any) {

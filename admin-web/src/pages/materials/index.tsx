@@ -134,63 +134,63 @@ const MaterialsIndexPage = (props: MaterialsPageProps) => {
       hideInSearch: true,
       hideInTable: true,
     },
-    {
-      title: "广告位页",
-      key: "pageUrl",
-      dataIndex: "pageUrl",
-      copyable: true,
-      render: (_dom, record) => {
-        return <span className="text-blue-500 cursor-pointer" onClick={() => {
-          copy(record.pageUrl ?? '')
-          window.Message.success("复制成功");
-        }}>复制链接</span>;
-      },
-      width: 100,
-      hideInSearch: true,
-    },
     // {
-    //   title: "统计页",
-    //   key: "analyticUrl",
-    //   dataIndex: "analyticUrl",
+    //   title: "媒体位置",
+    //   key: "pageUrl",
+    //   dataIndex: "pageUrl",
     //   copyable: true,
     //   render: (_dom, record) => {
-    //     if (!record.analyticUrl) {
-    //       return "-";
-    //     }
     //     return <span className="text-blue-500 cursor-pointer" onClick={() => {
-    //       copy(record.analyticUrl ?? '')
+    //       copy(record.pageUrl ?? '')
     //       window.Message.success("复制成功");
     //     }}>复制链接</span>;
     //   },
     //   width: 100,
     //   hideInSearch: true,
     // },
-    {
-      title: "代理商",
-      key: "agentname",
-      dataIndex: "agentname",
-      ellipsis: true,
-      valueType: "select",
-      width: 200,
-      fieldProps: {
-        showSearch: true,
-        // onChange: (e) => {
-        //   // 设置代理商状态
-        //   setSelectedAgent(e);
+    // // {
+    // //   title: "统计页",
+    // //   key: "analyticUrl",
+    // //   dataIndex: "analyticUrl",
+    // //   copyable: true,
+    // //   render: (_dom, record) => {
+    // //     if (!record.analyticUrl) {
+    // //       return "-";
+    // //     }
+    // //     return <span className="text-blue-500 cursor-pointer" onClick={() => {
+    // //       copy(record.analyticUrl ?? '')
+    // //       window.Message.success("复制成功");
+    // //     }}>复制链接</span>;
+    // //   },
+    // //   width: 100,
+    // //   hideInSearch: true,
+    // // },
+    // {
+    //   title: "代理商",
+    //   key: "agentname",
+    //   dataIndex: "agentname",
+    //   ellipsis: true,
+    //   valueType: "select",
+    //   width: 200,
+    //   fieldProps: {
+    //     showSearch: true,
+    //     // onChange: (e) => {
+    //     //   // 设置代理商状态
+    //     //   setSelectedAgent(e);
 
-        // },
-        options: agents,
+    //     // },
+    //     options: agents,
 
-        onChange: setSelectedAgent,
-      },
-      formItemProps: {
-        name: "agentid",
-      },
-      render: (_, record) => {
-        // 自定义渲染函数，将 AdMaterial 中的 nickname 放到 agentname 处
-        return record.advertiser?.user?.nickname || "-";
-      },
-    },
+    //     onChange: setSelectedAgent,
+    //   },
+    //   formItemProps: {
+    //     name: "agentid",
+    //   },
+    //   render: (_, record) => {
+    //     // 自定义渲染函数，将 AdMaterial 中的 nickname 放到 agentname 处
+    //     return record.advertiser?.user?.nickname || "-";
+    //   },
+    // },
     {
       title: "广告主",
       key: "advertiserSearch",

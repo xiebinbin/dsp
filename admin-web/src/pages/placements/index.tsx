@@ -356,7 +356,9 @@ const PlacementsIndexPage = (props: PlacementsPageProps) => {
             actionRef={actionRef}
             cardBordered
             request={async (params = {}, sort, filters) => {
-              const orderBy: { [key: string]: "asc" | "desc" } = {};
+              const orderBy: { [key: string]: "asc" | "desc" } = {
+                endedAt: "desc",
+              };
               for (const sortKey in sort) {
                 const field = sortKey.replace(
                   /_(\w)/g,

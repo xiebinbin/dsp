@@ -12,6 +12,7 @@ export interface PositionEditDto {
   adSpec: {
     id: number;
     name: string;
+    size: string;
   };
   adMedia: {
     id: number;

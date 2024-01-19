@@ -56,7 +56,9 @@ export class MediaService {
   }
   async getList(queryParams: any) {
     const { page, limit, name, orderBy, role, type } = queryParams;
-    const where: any = {};
+    const where: any = {
+      type: 2,
+    };
 
     if (name) {
       where.name = name;

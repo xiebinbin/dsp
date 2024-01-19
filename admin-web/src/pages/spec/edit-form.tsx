@@ -68,10 +68,12 @@ const EditForm = () => {
     const data = await speclApi.getInfo(val);
 
     setTimeout(() => {
+      console.log("loadInfo data", data);
       formRef.current?.setFieldsValue({
         name: data.name,
         enabled: data.enabled,
         type: data.type,
+        size: data.size,
       });
     }, 500);
   }, []);

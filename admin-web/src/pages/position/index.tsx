@@ -117,7 +117,7 @@ const PositionIndexPage = (props: PositionPageProps) => {
       // },
     },
     {
-      title: "规格",
+      title: "尺寸",
       dataIndex: "spec",
       ellipsis: true,
       valueType: "text",
@@ -125,7 +125,7 @@ const PositionIndexPage = (props: PositionPageProps) => {
       hideInSearch: true,
 
       render: (_, record) => {
-        return record.adSpec?.name || "-";
+        return record.adSpec?.size || "-";
       },
     },
     {

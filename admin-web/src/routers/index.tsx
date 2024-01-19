@@ -143,13 +143,13 @@ const GetRouter = (userRole: string): Route => {
             access: ["Root"],
           },
           {
-            path: "/admin/position/manage",
-            name: "广告位置管理",
+            path: "/admin/spec/manage",
+            name: "广告规格管理",
             access: ["Root"],
           },
           {
-            path: "/admin/spec/manage",
-            name: "广告规格管理",
+            path: "/admin/position/manage",
+            name: "广告位置管理",
             access: ["Root"],
           },
         ],

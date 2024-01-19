@@ -42,8 +42,9 @@ export class AdSpecController {
   @Get(':id')
   @UseInterceptors(ApiResInterceptor)
   async getMaterial(@Param('id') id: number) {
-    const userinfo = await this.AdSpecService.findById(BigInt(id));
-    return this.convertAdSpecnfo(userinfo);
+    const info = await this.AdSpecService.findById(BigInt(id));
+    console.log('info', info);
+    return this.convertAdSpecnfo(info);
   }
 
   @Post('store')

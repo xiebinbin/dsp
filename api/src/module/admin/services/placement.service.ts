@@ -124,7 +124,7 @@ export class PlacementService {
       where,
       //   select: selectFields,
       orderBy: orderBy ?? {
-        started_at: 'desc',
+        endedAt: 'desc',
       },
       skip: (page - 1) * limit,
       take: limit,
