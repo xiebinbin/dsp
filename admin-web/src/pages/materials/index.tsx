@@ -21,7 +21,6 @@ import { useNavigate } from "react-router-dom";
 import { AuthInfo } from "@/stores/auth-info.ts";
 import { useRecoilState } from "recoil";
 import App from "@/App.tsx";
-import { useCopyToClipboard } from "usehooks-ts";
 
 export interface MaterialsPageProps {
   role: "Root" | "Agent" | "Advertiser";
@@ -45,7 +44,7 @@ const MaterialsIndexPage = (props: MaterialsPageProps) => {
   const reload = useCallback(() => {
     actionRef.current?.reload();
   }, []);
-  const [selectedAgent, setSelectedAgent] = useSafeState<number | string>("");
+  const [selectedAgent, _] = useSafeState<number | string>("");
 
   const loadAgents = useCallback(async () => {
     try {
@@ -97,7 +96,6 @@ const MaterialsIndexPage = (props: MaterialsPageProps) => {
     },
     [setadvertisersList, role]
   );
-  const [_, copy] = useCopyToClipboard()
   useEffect(() => {
     // 在组件加载时触发 loadAdvertisers 并设置值给 advertiserSearch
     loadAgents();
