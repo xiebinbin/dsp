@@ -99,7 +99,7 @@ const PositionIndexPage = (props: PositionPageProps) => {
           window.Message.success("复制成功");
         }}>复制代码</span>;
       },
-      width: 100,
+      width: 80,
       hideInSearch: true,
     },
     {
@@ -107,7 +107,7 @@ const PositionIndexPage = (props: PositionPageProps) => {
       dataIndex: "type",
       ellipsis: true,
       valueType: "text",
-      width: 80,
+      width: 60,
       valueEnum: types,
       hideInSearch: true,
 
@@ -121,7 +121,7 @@ const PositionIndexPage = (props: PositionPageProps) => {
       dataIndex: "spec",
       ellipsis: true,
       valueType: "text",
-      width: 100,
+      width: 80,
       hideInSearch: true,
 
       render: (_, record) => {
