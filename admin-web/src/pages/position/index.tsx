@@ -128,26 +128,26 @@ const PositionIndexPage = (props: PositionPageProps) => {
         return record.adSpec?.size || "-";
       },
     },
-    {
-      title: "媒体",
-      dataIndex: "media",
-      ellipsis: true,
-      valueType: "text",
-      width: 100,
-      hideInSearch: true,
+    // {
+    //   title: "媒体",
+    //   dataIndex: "media",
+    //   ellipsis: true,
+    //   valueType: "text",
+    //   width: 100,
+    //   hideInSearch: true,
 
-      render: (_, record) => {
-        return record.adMedia?.name || "-";
-      },
-    },
-    {
-      title: "更新时间",
-      width: 100,
-      dataIndex: "updatedAt",
-      valueType: "dateTime",
-      sorter: true,
-      hideInSearch: true,
-    },
+    //   render: (_, record) => {
+    //     return record.adMedia?.name || "-";
+    //   },
+    // },
+    // {
+    //   title: "更新时间",
+    //   width: 100,
+    //   dataIndex: "updatedAt",
+    //   valueType: "dateTime",
+    //   sorter: true,
+    //   hideInSearch: true,
+    // },
     {
       title: "状态",
       dataIndex: "enabled",
