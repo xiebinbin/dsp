@@ -95,7 +95,7 @@ const SpecIndexPage = (props: SpecPageProps) => {
       dataIndex: "type",
       ellipsis: true,
       valueType: "text",
-      width: 200,
+      width: 60,
       valueEnum: types,
       hideInSearch: true,
     },
