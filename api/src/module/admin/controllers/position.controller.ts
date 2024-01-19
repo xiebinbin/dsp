@@ -16,7 +16,6 @@ import { AuthError } from 'src/utils/err_types';
 import { PositionService } from '../services/position.service';
 import { GuardMiddlewareRoot } from '../middlewares/guard.middleware';
 import { PositionDto } from '../dto/position.dto';
-import { AdSpecService } from '../services/adspec.service';
 @Controller('/api/admin/position')
 export class PositionController {
   constructor(

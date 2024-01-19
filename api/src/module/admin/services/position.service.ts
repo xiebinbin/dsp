@@ -90,6 +90,7 @@ export class PositionService {
           select: {
             id: true,
             name: true,
+            size: true,
           },
         },
         adMediaId: true,
