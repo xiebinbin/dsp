@@ -20,6 +20,7 @@ import { GenerateAdPageCommand } from './commands/generate-ad-page.command';
 import { MaterialService } from './services/material.service';
 import { FileService } from './services/file.service';
 import { TimeCurvePlacementByDayService } from './services/time-curve-placement-by-day.service';
+import { ImportPostionCommand } from './commands/import-postion';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -41,7 +42,8 @@ import { TimeCurvePlacementByDayService } from './services/time-curve-placement-
     GenerateAdPageCommand,
     ReportService,
     FileService,
-    TimeCurvePlacementByDayService
+    TimeCurvePlacementByDayService,
+    ImportPostionCommand
   ],
 })
 export class ConsoleModule {}

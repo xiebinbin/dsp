@@ -7,7 +7,9 @@ import { ConfigService } from "@nestjs/config";
 import { Request } from "express";
 import { TimeCurvePlacementByDayService } from "../services/time-curve-placement-by-day.service";
 import dayjs from "dayjs";
-
+import CryptoJS from "crypto-js";
+import axios from "axios";
+import fs from 'fs'
 @Controller('/s')
 export class AdController {
     constructor(
@@ -17,15 +19,39 @@ export class AdController {
         protected configService: ConfigService,
         protected timeCurvePlacementByDayService: TimeCurvePlacementByDayService
     ) { }
+    async urlToBase64(url: string) {
+        const hash = CryptoJS.MD5(url).toString();
+        // 判断缓存文件是否存在
+        const tmpFile = `./tmp/${hash}`
+        
+        if(fs.existsSync(tmpFile)){
+            const data = fs.readFileSync(tmpFile,{
+                encoding: 'base64'
+            })
+            return data;
+        }
+        const response = await axios.get(url, {
+            responseType: 'arraybuffer'
+        });
+        const data = Buffer.from(response.data);
+        // 将响应数据转换为 Base64
+        fs.writeFileSync(tmpFile,data)
+        const base64 = data.toString('base64');
+        return base64;
+    }
     @Get('/page/:hashid')
     @Render('ad')
     async show(@Param('hashid') hashid: string) {
         const id = sqids.de(hashid)
-        console.log(id);
         const material = await this.adMaterialService.findById(BigInt(id))
         const link = material.jumpUrl == '' ? '#id' : material.jumpUrl;
+        // 加载素材并转为base64
+        const url = `http://cdn.adbaba.net/${material.url}`
+        // 加载url中的图片并转为base64
+        const data =await this.urlToBase64(url)
+
         return {
-            url: `http://cdn.adbaba.net/${material.url}`,
+            url:data,
             link,
         }
     }
@@ -116,7 +142,7 @@ export class AdController {
         let materials = await this.positionService.findMaterialsById(BigInt(positionId));
         const { query } = request;
         const date = (query?.date as string) ?? dayjs().format('YYYY-MM-DD');
-        let lists:any[] = [];
+        let lists: any[] = [];
         if (materials.length > 0 && /(\d{4})-(\d{2})-(\d{2})/.test(date)) {
             const materialIds = materials.map((v) => v.id);
             const placements = await this.placementService.findManyByMaterialIds(materialIds);
