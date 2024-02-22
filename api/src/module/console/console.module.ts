@@ -21,6 +21,8 @@ import { MaterialService } from './services/material.service';
 import { FileService } from './services/file.service';
 import { TimeCurvePlacementByDayService } from './services/time-curve-placement-by-day.service';
 import { ImportPostionCommand } from './commands/import-postion';
+import { ClearAdvDataCommand, ClearAdvDataQuestion } from './commands/clear-adv-data.command';
+import { AdvertiserService } from './services/advertiser.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -43,7 +45,12 @@ import { ImportPostionCommand } from './commands/import-postion';
     ReportService,
     FileService,
     TimeCurvePlacementByDayService,
-    ImportPostionCommand
+    //ImportPostionCommand,
+
+    AdvertiserService,
+
+    ClearAdvDataQuestion,
+    ClearAdvDataCommand,
   ],
 })
 export class ConsoleModule {}
