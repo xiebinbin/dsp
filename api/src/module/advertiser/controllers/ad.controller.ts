@@ -23,9 +23,9 @@ export class AdController {
         const hash = CryptoJS.MD5(url).toString();
         // 判断缓存文件是否存在
         const tmpFile = `./tmp/${hash}`
-        
-        if(fs.existsSync(tmpFile)){
-            const data = fs.readFileSync(tmpFile,{
+
+        if (fs.existsSync(tmpFile)) {
+            const data = fs.readFileSync(tmpFile, {
                 encoding: 'base64'
             })
             return data;
@@ -35,7 +35,7 @@ export class AdController {
         });
         const data = Buffer.from(response.data);
         // 将响应数据转换为 Base64
-        fs.writeFileSync(tmpFile,data)
+        fs.writeFileSync(tmpFile, data)
         const base64 = data.toString('base64');
         return base64;
     }
@@ -46,12 +46,14 @@ export class AdController {
         const material = await this.adMaterialService.findById(BigInt(id))
         const link = material.jumpUrl == '' ? '#id' : material.jumpUrl;
         // 加载素材并转为base64
+        if(!material.url) {
+            material.url = 'default/advertiser/0/lDob43Lgz70YGWge.jpg';
+        }
         const url = `http://cdn.adbaba.net/${material.url}`
         // 加载url中的图片并转为base64
-        const data =await this.urlToBase64(url)
-
+        const data = await this.urlToBase64(url)
         return {
-            url:data,
+            url: data,
             link,
         }
     }
